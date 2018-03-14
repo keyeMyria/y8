@@ -12,14 +12,11 @@ yarn add eslint-config-rallycoding --dev
 yarn add lodash uuid
 yarn add moment
 yarn add axios
-yarn add redux react-redux redux-logger redux-persist redux-thunk react-navigation
-yarn add react-native-modal
+yarn add redux react-redux redux-logger redux-persist redux-thunk
+yarn add react-native-navigation
 yarn add react-native-segmented-control-tab
 yarn add react-native-loading-spinner-overlay@latest
-yarn add react-native-root-toast
-yarn add react-native-dropdownalert
-yarn add prop-types
-yarn add hoist-non-react-statics
+yarn add react-native-extended-stylesheet
 yarn add react-native-vector-icons
 react-native link react-native-vector-icons
 cp ../fb_install/.eslintrc .
