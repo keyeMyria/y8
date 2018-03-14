@@ -1,0 +1,279 @@
+import _ from 'lodash';
+import React from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Animated,
+  LayoutAnimation,
+} from 'react-native';
+import moment from 'moment';
+import Card from './Card';
+import CardHeader from './CardHeader';
+import CardContent from './CardContent';
+import CardFooter from './CardFooter';
+import TextButton from './TextButton';
+import {
+  globalTextColor,
+  globalSubTextColor
+} from '../styles/Global';
+
+class ActivityCard extends React.PureComponent {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      started: false,
+    };
+    const position = new Animated.ValueXY();
+    //position.setValue({ x: 0, y: 0 });
+    this.position = position;
+  }
+  componentWillMount() {
+    const { startedAt, stoppedAt } = this.props;
+    //console.log(startedAt, stoppedAt);
+    if (!_.isNull(startedAt) && _.isNull(stoppedAt)) {
+      this.setState({
+        started: true,
+      });
+    } else if (!_.isNull(startedAt) && !_.isNull(stoppedAt)) {
+      this.setState({
+        started: false,
+      });
+    }
+  }
+
+  componentDidMount() {
+
+    // Animated.timing(                  // Animate over time
+    //   this.state.fadeAnim,            // The animated value to drive
+    //   {
+    //     toValue: 1,                   // Animate to opacity: 1 (opaque)
+    //     duration: 800,              // Make it take a while
+    //   }
+    // ).start();
+  }
+
+  componentWillReceiveProps() {
+    // this.setState({
+    //   fadeAnim: new Animated.Value(0)
+    // });
+    //
+
+  }
+
+  componentWillUpdate() {
+    LayoutAnimation.spring();
+    const timeout = setTimeout(() => {
+      clearTimeout(timeout);
+      const { startedAt, stoppedAt } = this.props;
+      if (!_.isNull(startedAt) && _.isNull(stoppedAt)) {
+        const temp1 = moment.duration(startedAt).asSeconds();
+        const temp2 = moment.duration(moment().valueOf()).asSeconds();
+        const tempTimeDiff = temp2 - temp1;
+
+        if (tempTimeDiff > 3) {
+          return false;
+        }
+
+        this.position.setValue({ x: 10, y: 0 });
+
+        Animated.spring(
+          this.position,
+          {
+            toValue: { x: 0, y: 0 },
+            bounciness: 40,
+            //duration: 1500,
+            //useNativeDriver: true,
+          }
+        ).start();
+      }
+    }, 100);
+  }
+
+  componentDidUpdate() {
+    // const timeout = setTimeout(() => {
+    //   clearTimeout(timeout);
+    //   const { startedAt, stoppedAt } = this.props;
+    //   if (!_.isNull(startedAt) && _.isNull(stoppedAt)) {
+    //     const temp1 = moment.duration(startedAt).asSeconds();
+    //     const temp2 = moment.duration(moment().valueOf()).asSeconds();
+    //     const tempTimeDiff = temp2 - temp1;
+    //
+    //     if (tempTimeDiff > 3) {
+    //       return false;
+    //     }
+    //
+    //     this.position.setValue({ x: 20, y: 0 });
+    //
+    //     Animated.spring(
+    //       this.position,
+    //       {
+    //         toValue: { x: 0, y: 0 },
+    //         bounciness: 40,
+    //         //duration: 1500,
+    //         //useNativeDriver: true,
+    //       }
+    //     ).start();
+    //   }
+    // }, 500);
+  }
+
+  onStartStopPress = (id, groupId) => {
+    //console.log(this.state.started);
+    this.setState({
+      started: !this.state.started
+    }, () => {
+      //console.log(this.state.started);
+      this.props.toggleActivity(id, groupId, this.state.started);
+      if (this.state.started) {
+        this.props.scrollToOffset();
+      }
+    });
+  }
+
+  showTags = () => {
+    if (!this.state.started) {
+      this.props.showTags(this.props.id);
+    }
+  }
+  renderTagsSentence = (name, tags) => (
+    tags.map((id) => `#${this.props.tags.byId[id].name.toLowerCase()} `)
+  );
+
+  render() {
+    const { id, name, groupId, tagsGroup, startedTag, stoppedTag } = this.props;
+
+    const activityName = name[0].toUpperCase() + name.slice(1).toLowerCase();
+
+    let timeDiff = startedTag;
+    let textAlign = 'right';
+    if (_.isNull(startedTag) && !_.isNull(stoppedTag)) {
+      textAlign = 'left';
+      timeDiff = stoppedTag;
+    }
+
+    /*let timeDiff = startedAt > 0 ? moment(startedAt).fromNow() : '';
+    let prefix = 'started';
+    if (!this.state.started) {
+      prefix = 'stopped';
+      timeDiff = stoppedAt > 0 ? moment(stoppedAt).fromNow() : '';
+    }
+
+    if (!_.isNull(startedAt)) {
+      timeDiff = `${prefix} ${timeDiff}`;
+    }
+    let aa = 0;
+    if (_.isNull(stoppedAt)) {
+      aa = moment().valueOf();
+    } else {
+      aa = stoppedAt;
+    }
+    const temp = aa - startedAt;
+
+    <CardHeader>
+      <View style={styles.cardHeaderRow}>
+        <Text style={styles.cardHeaderName}>{name}</Text>
+      </View>
+    </CardHeader>
+
+    //{tagsGroup && activityName}
+    //{' '}
+    */
+    return (
+
+      <Card>
+        <CardHeader>
+          <View style={styles.cardHeaderRow}>
+            <Text style={styles.cardHeaderName}>{activityName}</Text>
+          </View>
+        </CardHeader>
+        <CardContent style={styles.cardContent}>
+          <TouchableOpacity
+            onPress={this.showTags}
+          >
+            <View
+              style={{
+                marginVertical: 0,
+                //marginHorizontal: 10,
+                //borderLeftWidth: 5,
+                //borderColor: 'lightgreen',
+                //paddingLeft: 5
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: globalTextColor,
+                  letterSpacing: 0.8,
+                  //fontWeight: '400'
+                }}
+              >
+
+              {tagsGroup && this.renderTagsSentence(name, tagsGroup)}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <Animated.View style={{ ...this.position.getLayout() }}>
+          <Text
+            style={{
+              paddingTop: 10,
+              //backgroundColor: 'red',
+              color: globalSubTextColor,
+              textAlign,
+            }}
+          >{timeDiff}</Text>
+          </Animated.View>
+
+        </CardContent>
+        <CardFooter style={styles.cardFooter}>
+          <TextButton
+            title={this.state.started ? 'STOP' : 'START'}
+            titleStyle={{
+              fontSize: 14,
+              color: this.state.started ? 'rgba(255, 51, 79,0.8)' : '#38B211',
+              fontWeight: '600'
+            }}
+            containerStyle={{
+              borderWidth: 0.3,
+              borderRadius: 3,
+              borderColor: this.state.started ? 'rgba(255, 51, 79,0.8)' : '#38B211',
+              height: 25,
+            }}
+            onPress={() => { this.onStartStopPress(id, groupId); }}
+          />
+        </CardFooter>
+      </Card>
+
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  cardHeaderRow: {
+    paddingHorizontal: 5,
+    paddingTop: 5,
+    flexDirection: 'row',
+    //backgroundColor: 'lightpink',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  cardHeaderName: {
+    fontSize: 21,
+    fontWeight: '600',
+    color: globalTextColor
+  },
+  cardContent: {
+    backgroundColor: '#ffffff',
+    paddingTop: 0,
+    paddingBottom: 10,
+    paddingHorizontal: 15,
+  },
+  cardFooter: {
+    //backgroundColor: '#f7f8f9'
+
+  }
+});
+
+export default ActivityCard;

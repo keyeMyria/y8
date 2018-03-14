@@ -1,0 +1,2 @@
+export const APP_ROOT = 'APP_ROOT';
+export const APP_INIT_ACTIVITIES_DONE = 'APP_INIT_ACTIVITIES_DONE';

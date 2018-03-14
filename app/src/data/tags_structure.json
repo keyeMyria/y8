@@ -1,0 +1,42 @@
+{
+  "tags": {
+    "byId": {
+      "tagId1": {
+        "id": "tagId1",
+        "name": "Tennis",
+        "times": [
+          "timeId1",
+          "timeId2"
+        ]
+      },
+      "tagId2": {
+        "id": "tagId2",
+        "name": "Cricket"
+      }
+    },
+    "allIds": [
+      "tagId1",
+      "tagId2"
+    ],
+    "byActivityId": {
+      "act1": {
+        "byId": {
+          "group1": [
+            "tag1",
+            "tag2",
+            "tag3"
+          ],
+          "group2": [
+            "tag1",
+            "tag2",
+            "tag3"
+          ]
+        },
+        "allIds": [
+          "group1",
+          "group2"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+const services = require('../services');
+const router = require('express').Router();
+const AuthService = new services.Auth();
+router.use(AuthService.authorize);
+require('./sampleRoutes')(router);
+require('./AuthRoutes')(router);
+require('./ActivityRoutes')(router);
+require('./TagRoutes')(router);
+require('./MyActivityRoutes')(router);
+module.exports = router;
