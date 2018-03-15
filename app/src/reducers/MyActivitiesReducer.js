@@ -249,9 +249,14 @@ const getMyActivitiesError = (state, action) => {
 };
 
 const getMyActivitiesReset = (state, action) => {
-  const newState = Object.assign({}, state);
-  newState.error = null;
-  return Object.assign({}, newState);
+  return Object.assign({}, state, {
+    error: null,
+    loading: false,
+    addingMyActivity: false,
+    addingGroup: false,
+    removingGroup: false,
+    removingTag: false,
+  });
 };
 
 const INITIAL_MY_ACTIVITIES_STATE = {

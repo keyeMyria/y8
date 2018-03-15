@@ -199,7 +199,7 @@ export const activities = (state = INITIAL_ACTIVITIES_STATE, action) => {
     case ACTIVITY_ADD_RESET:
     case ACTIVITY_UPDATE_RESET:
     case ACTIVITY_DELETE_RESET:
-    //case ACTIVITIES_FETCH_RESET:
+    case ACTIVITIES_FETCH_RESET:
       return activitiesReset(state, action);
     default:
       return state;

@@ -305,6 +305,7 @@ export const addTagsGroupToMyActivity = (activity, tags) => (
         payload: group
       });
     } catch (error) {
+      console.log('addTagsGroupToMyActivity', error);
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         dispatch({
           type: AUTH_ERROR,

@@ -78,7 +78,7 @@ class TagsScreen extends React.Component {
 
     this.setState({
       activity,
-      selectedIndex: hasTags ? 1 : 0
+      selectedIndex: hasTags ? 0 : 1
     });
 
     if (this.props.navigator) {
@@ -103,35 +103,84 @@ class TagsScreen extends React.Component {
   }
 
   async componentDidUpdate(nextProps) {
-    if (!_.isNull(nextProps.tags.error)) {
-      // this.props.showToast(nextProps.tags.error, {
-      //   backgroundColor: 'red'
-      // });
-    }
-    /*if (this.props.myActivities.addingGroup
-      && !nextProps.myActivities.addingGroup) {
-      //ResetNavigation('main', this.props);
-    }
-    if (this.props.myActivities.addingMyActivity
-      && !nextProps.myActivities.addingMyActivity) {
-      //ResetNavigation('main', this.props);
+    //console.log('componentDidUpdate', nextProps.myActivities.removingTag, this.props.myActivities.removingTag, this.props.myActivities.error);
+
+    if (nextProps.myActivities.removingTag &&
+      !this.props.myActivities.removingTag &&
+      _.isNull(this.props.myActivities.error)) {
+      await this.showSnackBar('Tag removed from group');
+    } else if (nextProps.myActivities.removingTag &&
+      !this.props.myActivities.removingTag &&
+      !_.isNull(this.props.myActivities.error) &&
+      !_.isUndefined(this.props.myActivities.error)) {
+      await this.showSnackBar(this.props.myActivities.error.status);
+    } else if (nextProps.myActivities.removingTag &&
+      !this.props.myActivities.removingTag &&
+      _.isUndefined(this.props.myActivities.error)) {
+      await this.showSnackBar('Service down, please try later');
     }
 
-    if (this.props.myActivities.removingTag
-      && !nextProps.myActivities.removingTag) {
-      //this.props.showToast('Tag removed from group');
+    if (nextProps.myActivities.removingGroup &&
+      !this.props.myActivities.removingGroup &&
+      _.isNull(this.props.myActivities.error)) {
+      await this.showSnackBar('Group removed from activity');
+    } else if (nextProps.myActivities.removingGroup &&
+      !this.props.myActivities.removingGroup &&
+      !_.isNull(this.props.myActivities.error) &&
+      !_.isUndefined(this.props.myActivities.error)) {
+      await this.showSnackBar(this.props.myActivities.error.status);
+    } else if (nextProps.myActivities.removingGroup &&
+      !this.props.myActivities.removingGroup &&
+      _.isUndefined(this.props.myActivities.error)) {
+      await this.showSnackBar('Service down, please try later');
     }
 
-    if (this.props.myActivities.removingGroup
-      && !nextProps.myActivities.removingGroup) {
-      //this.props.showToast('Group removed from activity');
+    if (nextProps.tags.adding &&
+      !this.props.tags.adding &&
+      _.isNull(this.props.tags.addingError)) {
+      await this.showSnackBar('Tag created!');
+    } else if (nextProps.tags.adding &&
+      !this.props.tags.adding &&
+      !_.isNull(this.props.tags.addingError) &&
+      !_.isUndefined(this.props.tags.addingError)) {
+      await this.showSnackBar(this.props.tags.addingError.status);
+    } else if (nextProps.tags.adding &&
+      !this.props.tags.adding &&
+      _.isUndefined(this.props.tags.addingError)) {
+      await this.showSnackBar('Service down, please try later');
     }
 
-    if (this.props.myActivities.addingMyActivity
-      && !nextProps.myActivities.addingMyActivity) {
-      //this.props.showToast('Added to your activities');
-    }*/
+    if (nextProps.tags.updating &&
+      !this.props.tags.updating &&
+      _.isNull(this.props.tags.updatingError)) {
+      await this.showSnackBar('Tag updated!');
+    } else if (nextProps.tags.updating &&
+      !this.props.tags.updating &&
+      !_.isNull(this.props.tags.updatingError) &&
+      !_.isUndefined(this.props.tags.updatingError)) {
+      await this.showSnackBar(this.props.tags.updatingError.status);
+    } else if (nextProps.tags.updating &&
+      !this.props.tags.updating &&
+      _.isUndefined(this.props.tags.updatingError)) {
+      await this.showSnackBar('Service down, please try later');
+    }
 
+    if (nextProps.tags.deleting &&
+      !this.props.tags.deleting &&
+      _.isNull(this.props.tags.deletingError)) {
+      await this.showSnackBar('Tag deleted!');
+    } else if (nextProps.tags.deleting &&
+      !this.props.tags.deleting &&
+      !_.isNull(this.props.tags.deletingError) &&
+      !_.isUndefined(this.props.tags.deletingError)) {
+      await this.showSnackBar(this.props.tags.deletingError.status);
+    } else if (nextProps.tags.deleting &&
+      !this.props.tags.deleting &&
+      _.isUndefined(this.props.tags.deletingError)) {
+      await this.showSnackBar('Service down, please try later');
+    }
+
+    /*
     if (nextProps.tags.adding === true &&
       this.props.tags.adding === false &&
       nextProps.tags.addingError === null) {
@@ -156,7 +205,7 @@ class TagsScreen extends React.Component {
       this.props.tags.deleting === false &&
       nextProps.tags.deletingError !== null) {
       await this.showSnackBar('TODO:Network error');
-    }
+    }*/
   }
 
   onNavigatorEvent = (event) => {
@@ -362,6 +411,10 @@ class TagsScreen extends React.Component {
     const { tags, myActivities } = this.props;
     const { byActivityId } = myActivities;
     const { isSearchOn, searchIds, activity, selectedTags } = this.state;
+
+    if (_.isNull(activity)) {
+      return null;
+    }
     return (
       <View style={styles.container}>
         <View
@@ -376,14 +429,14 @@ class TagsScreen extends React.Component {
             tabStyle={{ borderColor: EStyleSheet.value('$iconColor') }}
             activeTabStyle={{ backgroundColor: EStyleSheet.value('$iconColor') }}
             tabTextStyle={{ color: EStyleSheet.value('$textColor'), fontWeight: '600' }}
-            values={['Tags', 'Used Tags']}
+            values={['Used Tags', 'Tags']}
             selectedIndex={this.state.selectedIndex}
             onTabPress={(selectedIndex) => {
               this.setState({
                 selectedIndex
               }, () => {
                 let showAdd = false;
-                if (this.state.selectedIndex === 0) {
+                if (this.state.selectedIndex === 1) {
                   showAdd = true;
                 }
                 if (showAdd) {
@@ -410,7 +463,7 @@ class TagsScreen extends React.Component {
           />
         </View>
         {
-          this.state.selectedIndex === 0 &&
+          this.state.selectedIndex === 1 &&
 
           <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -494,7 +547,7 @@ class TagsScreen extends React.Component {
         </KeyboardAvoidingView>
       }
       {
-        this.state.selectedIndex === 1 &&
+        this.state.selectedIndex === 0 &&
         <View style={{ flex: 1 }}>
           <View
             style={{
@@ -535,13 +588,11 @@ class TagsScreen extends React.Component {
       }
         <Spinner
           visible={
-            this.props.myActivities.addingGroup
-            || this.props.myActivities.removingTag
-            || this.props.myActivities.removingGroup
-            || this.props.myActivities.addingMyActivity
-            || this.props.tags.adding
-            || this.props.tags.updating
-            || this.props.tags.deleting
+            this.props.myActivities.removingTag ||
+            this.props.myActivities.removingGroup ||
+            this.props.tags.adding ||
+            this.props.tags.updating ||
+            this.props.tags.deleting
           }
           color={EStyleSheet.value('$textColor')}
           textContent={'Loading...'}

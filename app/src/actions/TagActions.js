@@ -124,7 +124,7 @@ export const getTags = () => (
           [tagId]: tag
         };
 
-        dispatch({
+        await dispatch({
           type: TAG_ADD_SUCCESS,
           payload: {
             byId: tag,
@@ -132,17 +132,18 @@ export const getTags = () => (
           }
         });
       } catch (error) {
-        dispatch({
-          type: TAG_ADD_ERROR,
-          payload: error
-        });
         if (!_.isUndefined(error.response) && error.response.status === 401) {
-          dispatch({
+          await dispatch({
             type: AUTH_ERROR,
             payload: error.response
           });
+        } else {
+          await dispatch({
+            type: TAG_ADD_ERROR,
+            payload: error.response
+          });
         }
-        dispatch({
+        await dispatch({
           type: TAG_ADD_RESET
         });
       }
@@ -172,36 +173,35 @@ export const getTags = () => (
           await ApiRequest(payload);
           //const { data } = response;
         } else {
-          dispatch({
+          await dispatch({
             type: OFFLINE_QUEUE,
             payload
           });
           await fakePromise(100);
         }
 
-        dispatch({
+        await dispatch({
           type: TAG_UPDATE_SUCCESS,
           payload: {
             tag
           }
         });
       } catch (error) {
-        dispatch({
-          type: TAG_UPDATE_ERROR,
-          payload: 'TAG_UPDATE_ERROR'
-        });
         if (!_.isUndefined(error.response) && error.response.status === 401) {
-          dispatch({
+          await dispatch({
             type: AUTH_ERROR,
             payload: error.response
           });
+        } else {
+          await dispatch({
+            type: TAG_UPDATE_ERROR,
+            payload: error.response
+          });
         }
-      }
-      setTimeout(() => {
-        dispatch({
+        await dispatch({
           type: TAG_UPDATE_RESET
         });
-      }, 200);
+      }
     }
   );
 
@@ -238,13 +238,14 @@ export const getTags = () => (
           }
         });
       } catch (error) {
-        await dispatch({
-          type: TAG_DELETE_ERROR,
-          payload: error
-        });
         if (!_.isUndefined(error.response) && error.response.status === 401) {
           await dispatch({
             type: AUTH_ERROR,
+            payload: error.response
+          });
+        } else {
+          await dispatch({
+            type: TAG_DELETE_ERROR,
             payload: error.response
           });
         }

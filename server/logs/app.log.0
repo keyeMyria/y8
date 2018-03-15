@@ -1,206 +1,43 @@
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.236Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.236Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.237Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.237Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.238Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.238Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.239Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.239Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.384Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.384Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.386Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.386Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.387Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.387Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.426Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.426Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.526Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.526Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.527Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.527Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.527Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.527Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.528Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.528Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.576Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.576Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.578Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.578Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.580Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.580Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.582Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.582Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.626Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.626Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.628Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.628Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.629Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.629Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.630Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.630Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.726Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.726Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.727Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.727Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.729Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.729Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.730Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.730Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.776Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.776Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.778Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.778Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.779Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.780Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.781Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.781Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.876Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.876Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.879Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.879Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.880Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.880Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:36.881Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:36.882Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.326Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.326Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.328Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.328Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.329Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.329Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.330Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.330Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.476Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.476Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.478Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.478Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.479Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.479Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.480Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.480Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.529Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.529Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.530Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.530Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.531Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.531Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.532Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.532Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.576Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.576Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.578Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.578Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.580Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.580Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.676Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.676Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.678Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.678Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.679Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.679Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.681Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.681Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.726Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.726Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.728Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.728Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.729Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.729Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.730Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.730Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.776Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.776Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.778Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.778Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.779Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.779Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.780Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.781Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.876Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.876Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.878Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.878Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.879Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.879Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:37.881Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:37.881Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.134Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.135Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.140Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.141Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.142Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.142Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.176Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.176Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.178Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.178Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.179Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.179Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.180Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.180Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.192Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.192Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.276Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.276Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.278Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.278Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.279Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.280Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.281Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.281Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.326Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.326Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.576Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.576Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.578Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.578Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.579Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.579Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.580Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.580Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.626Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.626Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.628Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.628Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.629Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.629Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.630Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.630Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.692Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.692Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.726Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.726Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.728Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.728Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.730Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.730Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.731Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.731Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.926Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.926Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.927Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.927Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.928Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.928Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.929Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.930Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.988Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.988Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:38.989Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:38.989Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:39.076Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:39.076Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:39.078Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:39.078Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:39.091Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:39.091Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:39.126Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:39.126Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt expired","time":"2018-03-15T03:34:39.128Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:39.128Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt malformed","time":"2018-03-15T03:34:53.839Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:34:53.839Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"authToken generated successfully","time":"2018-03-15T03:35:10.792Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":50,"msg":"jwt malformed","time":"2018-03-15T03:37:22.877Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"Invalid access token","time":"2018-03-15T03:37:22.877Z","v":0}
-{"name":"myapp","hostname":"HOME.local","pid":30829,"level":30,"msg":"authToken generated successfully","time":"2018-03-15T03:37:33.226Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37276,"level":30,"msg":"Mongodb connected successfully","time":"2018-03-15T20:19:27.593Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37276,"level":30,"msg":"Api Server listening at 3000","time":"2018-03-15T20:19:27.866Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37294,"level":30,"msg":"Mongodb connected successfully","time":"2018-03-15T20:20:25.627Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37294,"level":30,"msg":"Api Server listening at 3000","time":"2018-03-15T20:20:25.757Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Mongodb connected successfully","time":"2018-03-15T20:21:17.023Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Api Server listening at 3000","time":"2018-03-15T20:21:17.149Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:27:48.647Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:27:48.647Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:28:05.702Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:28:05.702Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:28:46.992Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:28:46.992Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:31:15.276Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:31:15.276Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:35:17.340Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:35:17.340Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:40:36.678Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:40:36.678Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"authToken generated successfully","time":"2018-03-15T20:41:41.441Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:44:39.590Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:44:39.590Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:46:00.835Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:46:00.835Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:47:11.542Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:47:11.543Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"authToken generated successfully","time":"2018-03-15T20:48:45.737Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:50:59.815Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:50:59.815Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"authToken generated successfully","time":"2018-03-15T20:51:09.210Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:54:59.458Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:54:59.458Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"authToken generated successfully","time":"2018-03-15T20:55:05.641Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:58:52.759Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:58:52.759Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:58:52.763Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:58:52.763Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:58:52.766Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:58:52.766Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:58:52.816Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:58:52.816Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":50,"msg":"jwt expired","time":"2018-03-15T20:58:55.310Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"Invalid access token","time":"2018-03-15T20:58:55.310Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":37363,"level":30,"msg":"authToken generated successfully","time":"2018-03-15T20:59:09.708Z","v":0}

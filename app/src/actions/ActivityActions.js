@@ -70,11 +70,11 @@ export const getActivities = () => (
           payload: error.response
         });
       }
+      await fakePromise(100);
+      dispatch({
+        type: ACTIVITIES_FETCH_RESET
+      });
     }
-    // await fakePromise(100);
-    // dispatch({
-    //   type: ACTIVITIES_FETCH_RESET
-    // });
   }
 );
 
@@ -134,13 +134,14 @@ export const addActivity = (newActivity) => (
       // await fakePromise(100);
       // await callback();
     } catch (error) {
-      dispatch({
-        type: ACTIVITY_ADD_ERROR,
-        payload: error
-      });
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         dispatch({
           type: AUTH_ERROR,
+          payload: error.response
+        });
+      } else {
+        dispatch({
+          type: ACTIVITY_ADD_ERROR,
           payload: error.response
         });
       }
@@ -187,21 +188,21 @@ export const updateActivity = (updatedActivity) => (
         }
       });
     } catch (error) {
-      dispatch({
-        type: ACTIVITY_UPDATE_ERROR,
-        payload: error
-      });
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         dispatch({
           type: AUTH_ERROR,
           payload: error.response
         });
+      } else {
+        dispatch({
+          type: ACTIVITY_UPDATE_ERROR,
+          payload: error.response
+        });
       }
+      dispatch({
+        type: ACTIVITY_UPDATE_RESET
+      });
     }
-
-    dispatch({
-      type: ACTIVITY_UPDATE_RESET
-    });
   }
 );
 
@@ -238,19 +239,20 @@ export const deleteActivity = (id) => (
         }
       });
     } catch (error) {
-      dispatch({
-        type: ACTIVITY_DELETE_ERROR,
-        payload: error
-      });
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         dispatch({
           type: AUTH_ERROR,
           payload: error.response
         });
+      } else {
+        dispatch({
+          type: ACTIVITY_DELETE_ERROR,
+          payload: error.response
+        });
       }
+      dispatch({
+        type: ACTIVITY_DELETE_RESET
+      });
     }
-    dispatch({
-      type: ACTIVITY_DELETE_RESET
-    });
   }
 );

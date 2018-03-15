@@ -89,12 +89,33 @@ class DashboardScreen extends React.Component {
 
   async componentDidUpdate(nextProps) {
     if (nextProps.myActivities.addingMyActivity &&
-      !this.props.myActivities.addingMyActivity) {
+      !this.props.myActivities.addingMyActivity &&
+      _.isNull(this.props.myActivities.error)) {
       await this.showSnackBar('Added to your activities!');
+    } else if (nextProps.myActivities.addingMyActivity &&
+      !this.props.myActivities.addingMyActivity &&
+      !_.isNull(this.props.myActivities.error) &&
+      !_.isUndefined(this.props.myActivities.error)) {
+      await this.showSnackBar(this.props.myActivities.error.status);
+    } else if (nextProps.myActivities.addingMyActivity &&
+      !this.props.myActivities.addingMyActivity &&
+      _.isUndefined(this.props.myActivities.error)) {
+      await this.showSnackBar('Service down, please try later');
     }
+
     if (nextProps.myActivities.addingGroup &&
-      !this.props.myActivities.addingGroup) {
+      !this.props.myActivities.addingGroup &&
+      _.isNull(this.props.myActivities.error)) {
       await this.showSnackBar('Added to your activities!');
+    } else if (nextProps.myActivities.addingGroup &&
+      !this.props.myActivities.addingGroup &&
+      !_.isNull(this.props.myActivities.error) &&
+      !_.isUndefined(this.props.myActivities.error)) {
+      await this.showSnackBar(this.props.myActivities.error.status);
+    } else if (nextProps.myActivities.addingGroup &&
+      !this.props.myActivities.addingGroup &&
+      _.isUndefined(this.props.myActivities.error)) {
+      await this.showSnackBar('Service down, please try later');
     }
   }
 

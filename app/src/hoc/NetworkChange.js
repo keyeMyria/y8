@@ -1,11 +1,11 @@
-//import _ from 'lodash';
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { NetInfo, AppState, Text, Platform } from 'react-native';
 import { connect } from 'react-redux';
-//import { LoginManager } from 'react-native-fbsdk';
-import Spinner from 'react-native-loading-spinner-overlay';
-//import { ClearLoginToken } from '../services/AuthService';
-import { fakePromise } from '../services/Common';
+import { LoginManager } from 'react-native-fbsdk';
+//import Spinner from 'react-native-loading-spinner-overlay';
+import { ClearLoginToken } from '../services/AuthService';
+//import { fakePromise } from '../services/Common';
 
 import {
   setConnectionStatus
@@ -14,6 +14,10 @@ import {
 import {
   offlineRequest
 } from '../actions/OfflineActions';
+
+import {
+  changeAppRoot
+} from '../actions/AppActions';
 
 
 export default (ComposedComponent) => {
@@ -45,12 +49,6 @@ export default (ComposedComponent) => {
     //   await this.isLoggedIn(nextProps);
     // }
 
-    componentWillUnmount() {
-      //console.log("NetworkChange: componentWillUnmount ");
-      NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
-      AppState.removeEventListener('change', this.handleAppStateChange);
-    }
-
     /*isLoggedIn = async (props) => {
       const { isAuthorized, error } = props.auth;
       const { isConnected } = props.network;
@@ -78,6 +76,25 @@ export default (ComposedComponent) => {
         // TODO
       }
     }*/
+
+    componentDidUpdate(nextProps) {
+      //console.log('componentDidUpdate-Auth', nextProps.auth, this.props.auth);
+      if (!_.isNull(this.props.auth.error) && _.isNull(nextProps.auth.error)) {
+        //console.log('Inside');
+        ClearLoginToken().then((cleared) => {
+          if (cleared) {
+            LoginManager.logOut();
+            this.props.changeAppRoot('LoginScreen');
+          }
+        });
+      }
+    }
+
+    componentWillUnmount() {
+      //console.log("NetworkChange: componentWillUnmount ");
+      NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
+      AppState.removeEventListener('change', this.handleAppStateChange);
+    }
 
     handleConnectionChange = async (isConnected) => {
       //console.log('handleConnectionChange', isConnected);
@@ -138,7 +155,8 @@ export default (ComposedComponent) => {
   const mapStateToProps = (state) => state;
   return connect(mapStateToProps, {
     setConnectionStatus,
-    offlineRequest
+    offlineRequest,
+    changeAppRoot
   })(NetworkChange);
 };
 
