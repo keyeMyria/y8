@@ -3,7 +3,7 @@ import {
 } from '../types/ConnectionTypes.js';
 
 const INITIAL_AUTH_STATE = {
-  isConnected: false,
+  isConnected: true, //TODO URGENT
 };
 export const network = (state = INITIAL_AUTH_STATE, action) => {
   switch (action.type) {

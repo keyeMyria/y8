@@ -135,6 +135,9 @@ const startApp = (root) => {
             selectedIcon: heart, //require('../img/one_selected.png'), // iOS only
             title: 'Your activities',
             navigatorStyle: {
+              //navBarTextFontSize: 40,
+              //largeTitle: true,
+              navBarTextColor: EStyleSheet.value('$textColor'),
               navBarButtonColor: EStyleSheet.value('$iconColor')
             }
           },

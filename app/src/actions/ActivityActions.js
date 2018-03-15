@@ -30,34 +30,34 @@ import { fakePromise } from '../services/Common';
 export const getActivities = () => (
   async (dispatch, getState) => {
     try {
-      dispatch({
-        type: ACTIVITIES_FETCH_REQUEST
-      });
       const { isConnected } = getState().network;
-      const payload = {
-        data: null,
-        apiUrl: '/api/private/activity',
-        method: 'get'
-      };
-
-      const activities = {
-        byId: {},
-        allIds: []
-      };
-
       if (isConnected) {
+        dispatch({
+          type: ACTIVITIES_FETCH_REQUEST
+        });
+
+        const payload = {
+          data: null,
+          apiUrl: '/api/private/activity',
+          method: 'get'
+        };
+        const activities = {
+          byId: {},
+          allIds: []
+        };
+
         const response = await ApiRequest(payload);
         const { data } = response;
         data.forEach((activity) => {
           activities.byId[activity.id] = activity;
           activities.allIds.push(activity.id);
         });
-      }
 
-      dispatch({
-        type: ACTIVITIES_FETCH_SUCCESS,
-        payload: activities
-      });
+        dispatch({
+          type: ACTIVITIES_FETCH_SUCCESS,
+          payload: activities
+        });
+      }
     } catch (error) {
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         dispatch({
@@ -71,10 +71,10 @@ export const getActivities = () => (
         });
       }
     }
-    await fakePromise(100);
-    dispatch({
-      type: ACTIVITIES_FETCH_RESET
-    });
+    // await fakePromise(100);
+    // dispatch({
+    //   type: ACTIVITIES_FETCH_RESET
+    // });
   }
 );
 

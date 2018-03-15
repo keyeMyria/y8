@@ -19,6 +19,9 @@ import TagModal from '../modals/TagModal';
 import FirstTabScreen from './FirstTabScreen';
 import SecondTabScreen from './SecondTabScreen';
 
+// HOC
+import NetworkChange from '../hoc/NetworkChange';
+
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
   // Single apps
@@ -27,7 +30,7 @@ export function registerScreens(store, Provider) {
   Navigation.registerComponent('app.LoginScreen', () => LoginScreen, store, Provider);
 
   // Main Tabs
-  Navigation.registerComponent('app.DashboardScreen', () => DashboardScreen, store, Provider);
+  Navigation.registerComponent('app.DashboardScreen', () => NetworkChange(DashboardScreen), store, Provider);
   Navigation.registerComponent('app.FeedScreen', () => FeedScreen, store, Provider);
   Navigation.registerComponent('app.FriendsScreen', () => FriendsScreen, store, Provider);
   Navigation.registerComponent('app.MoreScreen', () => MoreScreen, store, Provider);

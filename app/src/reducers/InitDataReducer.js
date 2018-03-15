@@ -25,8 +25,8 @@ export const initData = (state = INITIAL_DATA_STATE, action) => {
         loading: false,
         dataLoaded: true
       });
+    //case INIT_FETCH_DATA_RESET:
     case AUTH_ERROR:
-    case INIT_FETCH_DATA_RESET:
       return INITIAL_DATA_STATE;
     default:
       return state;

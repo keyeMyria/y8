@@ -33,6 +33,21 @@ class AuthorizeScreen extends React.Component {
       console.error(error);
     });
   }
+
+  async componentDidUpdate(nextProps) {
+    console.log(nextProps.initData, this.props.initData);
+    if (nextProps.network.isConnected &&
+      nextProps.initData.loading === true &&
+      this.props.initData.loading === false) {
+      this.props.changeAppRoot('afterLogin');
+    }
+
+    if (_.isNull(nextProps.auth.error) &&
+      !_.isNull(this.props.auth.error)) {
+      this.props.changeAppRoot('LoginScreen');
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>

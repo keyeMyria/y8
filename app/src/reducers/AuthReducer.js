@@ -8,13 +8,13 @@ import {
 } from '../types/AuthTypes.js';
 
 const authError = (state, action) => {
-  if (!_.isUndefined(action.payload) && action.payload.status === 401) {
-    return Object.assign({}, state, {
-      isAuthorized: false,
-      loading: false,
-      error: null
-    });
-  }
+  // if (!_.isUndefined(action.payload) && action.payload.status === 401) {
+  //   return Object.assign({}, state, {
+  //     isAuthorized: false,
+  //     loading: false,
+  //     error: action.payload
+  //   });
+  // }
   return Object.assign({}, state, {
     isAuthorized: false,
     loading: false,

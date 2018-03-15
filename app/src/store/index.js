@@ -45,8 +45,8 @@ const configureStore = () => {
     reducer,
     {},
     compose(
-      applyMiddleware(thunk, createLogger()),
-      //applyMiddleware(thunk),
+      //applyMiddleware(thunk, createLogger()),
+      applyMiddleware(thunk),
     )
   );
   return store;

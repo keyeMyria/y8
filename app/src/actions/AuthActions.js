@@ -57,7 +57,7 @@ export const doAuthAndLoadInitData = () => (
         await dispatch({
           type: INIT_FETCH_DATA_DONE
         });
-        await dispatch({ type: INIT_FETCH_DATA_RESET });
+        //await dispatch({ type: INIT_FETCH_DATA_RESET });
       }
       //await dispatch({ type: AUTH_RESET_ERROR });
     } catch (error) {

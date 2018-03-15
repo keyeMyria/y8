@@ -4,7 +4,8 @@ import {
   OFFLINE_CLEAR,
   OFFLINE_DONE,
   OFFLINE_QUEUE,
-  OFFLINE_RESET
+  OFFLINE_RESET,
+  OFFLINE_ERROR
 } from '../types/OfflineTypes.js';
 
 
@@ -34,6 +35,7 @@ const clearQueue = (state, action) => {
 };*/
 
 const INITIAL_OFFLINE_STATE = {
+  error: null,
   syncing: false,
   payloads: []
 };
@@ -41,7 +43,8 @@ export const offlineQueue = (state = INITIAL_OFFLINE_STATE, action) => {
   switch (action.type) {
     case OFFLINE_RESET:
       return Object.assign({}, state, {
-        syncing: false
+        syncing: false,
+        error: null
       });
     case OFFLINE_QUEUE:
       return addToQueue(state, action);
@@ -55,6 +58,11 @@ export const offlineQueue = (state = INITIAL_OFFLINE_STATE, action) => {
       return Object.assign({}, state, {
         syncing: false,
         payloads: []
+      });
+    case OFFLINE_ERROR:
+      return Object.assign({}, state, {
+        syncing: false,
+        error: action.payload
       });
     default:
       return state;

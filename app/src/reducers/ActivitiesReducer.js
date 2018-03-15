@@ -35,13 +35,15 @@ const getActivities = (state, action) => {
   newState.deleting = null;
   newState.deletingError = null;
 
-  if (action.payload.allIds.length > 0) {
+  // TODO: need to fix for it when offline
+
+  //if (action.payload.allIds.length > 0) {
     newState.byId = { ...action.payload.byId, ...InitialActivities.byId };
     newState.allIds = [...action.payload.allIds, ...InitialActivities.allIds];
-  } else {
-    newState.byId = { ...InitialActivities.byId };
-    newState.allIds = [...InitialActivities.allIds];
-  }
+  // } else {
+  //   newState.byId = { ...InitialActivities.byId };
+  //   newState.allIds = [...InitialActivities.allIds];
+  // }
 
   return Object.assign({}, newState);
 };
@@ -197,7 +199,7 @@ export const activities = (state = INITIAL_ACTIVITIES_STATE, action) => {
     case ACTIVITY_ADD_RESET:
     case ACTIVITY_UPDATE_RESET:
     case ACTIVITY_DELETE_RESET:
-    case ACTIVITIES_FETCH_RESET:
+    //case ACTIVITIES_FETCH_RESET:
       return activitiesReset(state, action);
     default:
       return state;
