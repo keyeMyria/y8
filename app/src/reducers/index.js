@@ -9,7 +9,12 @@ import { times } from './TimesReducer';
 import { auth } from './AuthReducer';
 import { network } from './ConnectionReducer';
 import { offlineQueue } from './OfflineReducer';
-
+import { users } from './SearchUsersReducer';
+import { friendActions } from './FriendActionsReducer';
+//import { acceptFriendRequest } from './AcceptFriendRequestReducer';
+import { friendRequests } from './FriendRequestsReducer';
+import { user } from './UserReducer';
+import { login } from './LoginReducer';
 
 export default {
   app,
@@ -21,5 +26,12 @@ export default {
   times,
   auth,
   network,
-  offlineQueue
+  offlineQueue,
+  user,
+  // no state for below data
+  users,
+  friendActions,
+  //acceptFriendRequest,
+  friendRequests,
+  login
 };

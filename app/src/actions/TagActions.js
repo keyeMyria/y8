@@ -30,35 +30,37 @@ import { fakePromise } from '../services/Common';
 export const getTags = () => (
   async (dispatch, getState) => {
     try {
-      dispatch({
-        type: TAGS_FETCH_REQUEST
-      });
       const { isConnected } = getState().network;
-      const payload = {
-        data: null,
-        apiUrl: '/api/private/tag',
-        method: 'get'
-      };
-
-      const tags = {
-        byId: {},
-        allIds: []
-      };
-
       if (isConnected) {
-        const response = await ApiRequest(payload);
-        const { data } = response;
+        dispatch({
+          type: TAGS_FETCH_REQUEST
+        });
+        const payload = {
+          data: null,
+          apiUrl: '/api/private/tag',
+          method: 'get'
+        };
 
-        data.forEach((tag) => {
-          tags.byId[tag.id] = tag;
-          tags.allIds.push(tag.id);
+        const tags = {
+          byId: {},
+          allIds: []
+        };
+
+        //if (isConnected) {
+          const response = await ApiRequest(payload);
+          const { data } = response;
+
+          data.forEach((tag) => {
+            tags.byId[tag.id] = tag;
+            tags.allIds.push(tag.id);
+          });
+        //}
+
+        dispatch({
+          type: TAGS_FETCH_SUCCESS,
+          payload: tags
         });
       }
-
-      dispatch({
-        type: TAGS_FETCH_SUCCESS,
-        payload: tags
-      });
     } catch (error) {
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         dispatch({
@@ -143,10 +145,10 @@ export const getTags = () => (
             payload: error.response
           });
         }
-        await dispatch({
-          type: TAG_ADD_RESET
-        });
       }
+      await dispatch({
+        type: TAG_ADD_RESET
+      });
     }
   );
 
@@ -198,10 +200,10 @@ export const getTags = () => (
             payload: error.response
           });
         }
-        await dispatch({
-          type: TAG_UPDATE_RESET
-        });
       }
+      await dispatch({
+        type: TAG_UPDATE_RESET
+      });
     }
   );
 
@@ -249,77 +251,9 @@ export const getTags = () => (
             payload: error.response
           });
         }
-        await dispatch({
-          type: TAG_DELETE_RESET
-        });
       }
-    }
-  );
-
-  // add activity action
-  export const createTagsGroupRemoveThisMethod = (activity, tags) => (
-    async dispatch => {
-      try {
-        const activityId = activity.id;
-        const groupId = uuidv4();
-        const group = {
-          [activityId]: {
-            byGroupId: {
-              [groupId]: tags,
-            },
-            allIds: [groupId]
-          }
-        };
-        console.log(group);
-
-        // let tag = {};
-        //
-        // if (!_.has(tag, 'id')) {
-        //   tag.id = uuidv4();
-        // }
-        // if (!_.has(tag, 'createdAt')) {
-        //   tag.createdAt = Date.now();
-        // }
-        // if (!_.has(tag, 'updatedAt')) {
-        //   tag.updatedAt = Date.now();
-        // }
-        //
-        // const tagId = tag.id;
-        // tag = {
-        //   [tagId]: tag
-        // };
-
-        //console.log(activity);
-
-        let done = false;
-        if (!done) {
-          //TODO: Make api call if network available, otherwise store in activity queue
-          done = true;
-        } else {
-          /*
-          dispatch({
-            type: ACTIVITIES_ADD_QUEUE,
-            payload: activity
-          });*/
-        }
-
-        if (done === true) {
-          dispatch({
-            type: 'group_success',
-            payload: group
-          });
-        } else {
-          dispatch({
-            type: 'group_error',
-            payload: 'TAG_ADD_ERROR'
-          });
-        }
-      } catch (error) {
-        console.log(activity, tags);
-        dispatch({
-          type: 'group_error',
-          payload: 'TAG_ADD_ERROR'
-        });
-      }
+      await dispatch({
+        type: TAG_DELETE_RESET
+      });
     }
   );

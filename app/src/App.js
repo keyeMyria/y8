@@ -17,6 +17,7 @@ let heart;
 let feed;
 let users;
 let menu;
+let plus;
 
 const store = configureStore();
 registerScreens(store, Provider); // this is where you register all of your app's screens
@@ -39,7 +40,8 @@ const populateIcons = () => {
           Feather.getImageSource('heart', 30),
           FontAwesome.getImageSource('feed', 30),
           Feather.getImageSource('users', 30),
-          Feather.getImageSource('menu', 30)
+          Feather.getImageSource('menu', 30),
+          Feather.getImageSource('plus', 30, EStyleSheet.value('$iconColor'))
 
         ]
       ).then((values) => {
@@ -53,6 +55,8 @@ const populateIcons = () => {
         feed = values[1];
         users = values[2];
         menu = values[3];
+        plus = values[4];
+
         resolve(true);
       }).catch((error) => {
         console.log(error);
@@ -135,10 +139,15 @@ const startApp = (root) => {
             selectedIcon: heart, //require('../img/one_selected.png'), // iOS only
             title: 'Your activities',
             navigatorStyle: {
-              //navBarTextFontSize: 40,
-              //largeTitle: true,
               navBarTextColor: EStyleSheet.value('$textColor'),
               navBarButtonColor: EStyleSheet.value('$iconColor')
+            },
+            navigatorButtons: {
+              rightButtons: [{
+                id: 'add',
+                icon: plus,
+                disableIconTint: true, // disable default color,
+              }]
             }
           },
           {
@@ -158,7 +167,15 @@ const startApp = (root) => {
             selectedIcon: users, // iOS only
             title: 'Friends',
             navigatorStyle: {
+              navBarTextColor: EStyleSheet.value('$textColor'),
               navBarButtonColor: EStyleSheet.value('$iconColor')
+            },
+            navigatorButtons: {
+              rightButtons: [{
+                id: 'add',
+                icon: plus,
+                disableIconTint: true, // disable default color,
+              }]
             }
           },
           {

@@ -23,37 +23,37 @@ class ActivityCard extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = {
-      started: false,
-    };
+    // this.state = {
+    //   started: false,
+    // };
     const position = new Animated.ValueXY();
     //position.setValue({ x: 0, y: 0 });
     this.position = position;
   }
-  componentWillMount() {
-    const { startedAt, stoppedAt } = this.props;
-    //console.log(startedAt, stoppedAt);
-    if (!_.isNull(startedAt) && _.isNull(stoppedAt)) {
-      this.setState({
-        started: true,
-      });
-    } else if (!_.isNull(startedAt) && !_.isNull(stoppedAt)) {
-      this.setState({
-        started: false,
-      });
-    }
-  }
+  // componentDidMount() {
+  //   const { startedAt, stoppedAt } = this.props;
+  //   //console.log(startedAt, stoppedAt);
+  //   if (!_.isNull(startedAt) && _.isNull(stoppedAt)) {
+  //     this.setState({
+  //       started: true,
+  //     });
+  //   } else if (!_.isNull(startedAt) && !_.isNull(stoppedAt)) {
+  //     this.setState({
+  //       started: false,
+  //     });
+  //   }
+  // }
 
-  componentDidMount() {
-
-    // Animated.timing(                  // Animate over time
-    //   this.state.fadeAnim,            // The animated value to drive
-    //   {
-    //     toValue: 1,                   // Animate to opacity: 1 (opaque)
-    //     duration: 800,              // Make it take a while
-    //   }
-    // ).start();
-  }
+  // componentDidMount() {
+  //
+  //   // Animated.timing(                  // Animate over time
+  //   //   this.state.fadeAnim,            // The animated value to drive
+  //   //   {
+  //   //     toValue: 1,                   // Animate to opacity: 1 (opaque)
+  //   //     duration: 800,              // Make it take a while
+  //   //   }
+  //   // ).start();
+  // }
 
   componentWillReceiveProps() {
     // this.setState({
@@ -64,6 +64,7 @@ class ActivityCard extends React.PureComponent {
   }
 
   componentWillUpdate() {
+    //LayoutAnimation.easeInEaseOut();
     LayoutAnimation.spring();
     const timeout = setTimeout(() => {
       clearTimeout(timeout);
@@ -83,7 +84,7 @@ class ActivityCard extends React.PureComponent {
           this.position,
           {
             toValue: { x: 0, y: 0 },
-            bounciness: 40,
+            bounciness: 20,
             //duration: 1500,
             //useNativeDriver: true,
           }
@@ -120,21 +121,24 @@ class ActivityCard extends React.PureComponent {
     // }, 500);
   }
 
-  onStartStopPress = (id, groupId) => {
+  onStartStopPress = (id, groupId, started) => {
     //console.log(this.state.started);
-    this.setState({
-      started: !this.state.started
-    }, () => {
+    // this.setState({
+    //   started: !this.state.started
+    // }, () => {  });
       //console.log(this.state.started);
-      this.props.toggleActivity(id, groupId, this.state.started);
-      if (this.state.started) {
-        this.props.scrollToOffset();
-      }
-    });
+    const toggle = !started;
+    if (toggle) {
+      this.props.startActivity(id, groupId);
+      this.props.scrollToOffset();
+    } else {
+      this.props.stopActivity(id, groupId);
+    }
+    //this.props.toggleActivity(id, groupId, this.state.started);
   }
 
-  showTags = () => {
-    if (!this.state.started) {
+  showTags = (started, individualLoading) => {
+    if (!started & !individualLoading) {
       this.props.showTags(this.props.id);
     }
   }
@@ -143,7 +147,8 @@ class ActivityCard extends React.PureComponent {
   );
 
   render() {
-    const { id, name, groupId, tagsGroup, startedTag, stoppedTag } = this.props;
+    const { id, name, groupId, tagsGroup, startedTag, stoppedTag, individualLoading } = this.props;
+    const { loading } = this.props;
 
     const activityName = name[0].toUpperCase() + name.slice(1).toLowerCase();
 
@@ -153,6 +158,30 @@ class ActivityCard extends React.PureComponent {
       textAlign = 'left';
       timeDiff = stoppedTag;
     }
+
+
+    const { startedAt, stoppedAt } = this.props;
+    let started = false;
+    if (!_.isNull(startedAt) && _.isNull(stoppedAt)) {
+      started = true;
+    } else if (!_.isNull(startedAt) && !_.isNull(stoppedAt)) {
+      started = false;
+    }
+
+    let btnTitle = '';
+    if (individualLoading) {
+      if (started) {
+        btnTitle = 'Stopping...';
+      } else {
+        btnTitle = 'Starting...';
+      }
+      //btnTitle = 'Loading...';
+    } else if (started) {
+      btnTitle = 'STOP';
+    } else {
+      btnTitle = 'START';
+    }
+
 
     /*let timeDiff = startedAt > 0 ? moment(startedAt).fromNow() : '';
     let prefix = 'started';
@@ -191,7 +220,7 @@ class ActivityCard extends React.PureComponent {
         </CardHeader>
         <CardContent style={styles.cardContent}>
           <TouchableOpacity
-            onPress={this.showTags}
+            onPress={() => { this.showTags(started, individualLoading); }}
           >
             <View
               style={{
@@ -216,32 +245,34 @@ class ActivityCard extends React.PureComponent {
             </View>
           </TouchableOpacity>
           <Animated.View style={{ ...this.position.getLayout() }}>
-          <Text
-            style={{
-              paddingTop: 10,
-              //backgroundColor: 'red',
-              color: globalSubTextColor,
-              textAlign,
-            }}
-          >{timeDiff}</Text>
+            <Text
+              style={{
+                paddingTop: 10,
+                //backgroundColor: 'red',
+                color: globalSubTextColor,
+                textAlign,
+              }}
+            >{timeDiff}</Text>
           </Animated.View>
+
 
         </CardContent>
         <CardFooter style={styles.cardFooter}>
           <TextButton
-            title={this.state.started ? 'STOP' : 'START'}
+            disabled={loading}
+            title={btnTitle}
             titleStyle={{
               fontSize: 14,
-              color: this.state.started ? 'rgba(255, 51, 79,0.8)' : '#38B211',
+              color: started ? 'rgba(255, 51, 79,0.8)' : '#38B211',
               fontWeight: '600'
             }}
             containerStyle={{
               borderWidth: 0.3,
               borderRadius: 3,
-              borderColor: this.state.started ? 'rgba(255, 51, 79,0.8)' : '#38B211',
+              borderColor: started ? 'rgba(255, 51, 79,0.8)' : '#38B211',
               height: 25,
             }}
-            onPress={() => { this.onStartStopPress(id, groupId); }}
+            onPress={() => { this.onStartStopPress(id, groupId, started); }}
           />
         </CardFooter>
       </Card>

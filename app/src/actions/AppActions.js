@@ -13,7 +13,7 @@ export const initApp = () => (
     // put all initialization code here.
     dispatch({
       type: APP_ROOT,
-      payload: 'AuthorizeScreen'
+      payload: 'LoginScreen'
     });
   });
 

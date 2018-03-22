@@ -1,0 +1,2 @@
+export const USER_SET_USER_ID = 'USER_SET_USER_ID';
+export const USER_USER_ID_RESET = 'USER_USER_ID_RESET';

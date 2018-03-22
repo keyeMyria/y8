@@ -21,9 +21,10 @@ import {
   deleteActivity
 } from '../actions/ActivityActions';
 
-const NETWORK_ERR = 'Network error, try again';
 const ERROR_MSG = 'Only these a-zA-Z0-9_!@#$& and space are allowed';
 class ActivityModal extends React.Component {
+
+
   constructor(props) {
     super(props);
     this.state = {
@@ -60,9 +61,9 @@ class ActivityModal extends React.Component {
     }
   }
 
-  shouldComponentUpdate() {
-    return this.state.canUpdateComp;
-  }
+  // shouldComponentUpdate() {
+  //   return this.state.canUpdateComp;
+  // }
 /*
   //componentWillReceiveProps(nextProps) {
   async componentDidUpdate(nextProps) {
@@ -189,7 +190,8 @@ class ActivityModal extends React.Component {
   }
 
   onItemPress = async (activityId) => {
-    this.props.navigator.push({
+
+    await this.props.navigator.push({
       screen: 'app.TagsScreen',
       title: 'Tags',
       passProps: {
@@ -197,6 +199,12 @@ class ActivityModal extends React.Component {
       }
     });
   }
+
+  // async componentWilUnmount() {
+  //   await this.props.navigator.dismissAllModals({
+  //     animationType: 'none'
+  //   });
+  // }
 
   isValid = (name) => {
     const regex = /^[a-zA-Z0-9_!@#$&*-]{3,20}$/;
@@ -379,7 +387,7 @@ const styles = EStyleSheet.create({
 //   }
 // });
 const mapStateToProps = (state) => state;
-export default connect(mapStateToProps,{
+export default connect(mapStateToProps, {
   addActivity,
   updateActivity,
   deleteActivity

@@ -38,10 +38,10 @@ config.log.stdout_level = 'fatal';
 config.log.period = '1h',
 config.log.copies = 5,
 
-// pagination settings for friends
-config.paging.friends = {};
-config.paging.friends.limit = 5;
-config.paging.friends.max_limit = 10;
+// pagination settings for times
+config.paging.times = {};
+config.paging.times.limit = 5;
+config.paging.times.max_limit = 10;
 
 
 

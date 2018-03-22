@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { NetInfo, AppState, Text, Platform } from 'react-native';
+import { NetInfo, AppState, Text, View, Platform, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { LoginManager } from 'react-native-fbsdk';
 //import Spinner from 'react-native-loading-spinner-overlay';
@@ -19,6 +19,10 @@ import {
   changeAppRoot
 } from '../actions/AppActions';
 
+import {
+  doAuthAndLoadInitData
+} from '../actions/AuthActions';
+
 
 export default (ComposedComponent) => {
   class NetworkChange extends Component {
@@ -28,6 +32,7 @@ export default (ComposedComponent) => {
       this.state = {
         didChange: false
       };
+      this.timeout = 0;
     }
 
     componentDidMount() {
@@ -97,15 +102,32 @@ export default (ComposedComponent) => {
     }
 
     handleConnectionChange = async (isConnected) => {
-      //console.log('handleConnectionChange', isConnected);
+      //clearTimeout(this.timeout);
+      console.log('handleConnectionChange', isConnected);
       this.props.setConnectionStatus(isConnected);
-      if (isConnected && this.props.offlineQueue.payloads.length > 0) {
-        this.props.offlineRequest();
+      if (isConnected) {
+        if (this.props.offlineQueue.payloads.length > 0) {
+          this.props.offlineRequest();
+        }
       }
       // await fakePromise(300);
-      // this.setState({
-      //   didChange: true
-      // });
+      // this.timeout = setTimeout(() => {
+      //   this.props.setConnectionStatus(isConnected);
+      //   if (isConnected) {
+      //     if (this.props.offlineQueue.payloads.length > 0) {
+      //       this.props.offlineRequest();
+      //     }
+      //
+      //     // if (this.props.initData.dataLoaded !== true) {
+      //     //   this.props.doAuthAndLoadInitData();
+      //     // }
+      //     //this.props.getFriendRequests();
+      //     // this.setState({
+      //     //   didChange: true
+      //     // });
+      //   }
+      //   clearTimeout(this.timeout);
+      // }, 1000);
     };
 
     handleAppStateChange = (nextAppState) => {
@@ -146,9 +168,20 @@ export default (ComposedComponent) => {
       //     <ComposedComponent {...this.props} />
       //   );
       // }
-      return (
-        <ComposedComponent {...this.props} />
-      );
+
+      //if (this.state.didChange === true) {
+        return (
+          <ComposedComponent {...this.props} />
+        );
+      //}
+
+      // return (
+      //   <View style={styles.container}>
+      //     <Text style={styles.welcome}>
+      //       Loading...
+      //     </Text>
+      //   </View>
+      // );
     }
   }
 
@@ -156,11 +189,30 @@ export default (ComposedComponent) => {
   return connect(mapStateToProps, {
     setConnectionStatus,
     offlineRequest,
-    changeAppRoot
+    changeAppRoot,
+    doAuthAndLoadInitData
   })(NetworkChange);
 };
 
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+});
 // In some other location ...not in this file...
 // we ant to use this HOC
 

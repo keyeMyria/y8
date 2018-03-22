@@ -12,15 +12,19 @@ import MoreScreen from './MoreScreen';
 import ActivitiesScreen from './ActivitiesScreen';
 import TagsScreen from './TagsScreen';
 
+
 // modals
 import ActivityModal from '../modals/ActivityModal';
 import TagModal from '../modals/TagModal';
-
-import FirstTabScreen from './FirstTabScreen';
-import SecondTabScreen from './SecondTabScreen';
+import FriendModal from '../modals/FriendModal';
 
 // HOC
 import NetworkChange from '../hoc/NetworkChange';
+
+//TODO: samples need to delete these
+import FirstTabScreen from './FirstTabScreen';
+import SecondTabScreen from './SecondTabScreen';
+
 
 // register all screens of the app (including internal ones)
 export function registerScreens(store, Provider) {
@@ -42,6 +46,7 @@ export function registerScreens(store, Provider) {
   // Modals
   Navigation.registerComponent('app.ActivityModal', () => ActivityModal, store, Provider);
   Navigation.registerComponent('app.TagModal', () => TagModal, store, Provider);
+  Navigation.registerComponent('app.FriendModal', () => FriendModal, store, Provider);
 
   //TODO: need to remove
   Navigation.registerComponent('app.FirstTabScreen', () => FirstTabScreen, store, Provider);

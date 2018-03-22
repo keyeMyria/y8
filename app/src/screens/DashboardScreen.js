@@ -18,7 +18,10 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import ActivityCard from '../components/ActivityCard';
 
 import {
-  toggleActivity
+  startActivity,
+  stopActivity,
+  toggleActivity,
+  getTimes
 } from '../actions/TimeActions';
 
 import {
@@ -42,9 +45,6 @@ import {
   getMyActivities
 } from '../actions/MyActivityActions';
 
-import {
-  loadInitData
-} from '../actions/InitDataLoadingAction';
 
 const iconColor = 'rgba(221,93,89,1)';
 let ADD_ICON;
@@ -59,7 +59,7 @@ class DashboardScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      refreshing: false,
+      //refreshing: false,
       rand: 0,
     };
 
@@ -69,22 +69,24 @@ class DashboardScreen extends React.Component {
     }
 
     if (this.props.navigator) {
-      Feather.getImageSource('plus', 30, styles._icon.color).then((source) => {
-        this.props.navigator.setButtons({
-          rightButtons: [{
-            id: 'add',
-            icon: source,
-            disableIconTint: true, // disable default color,
-          }]
-        });
-      });
+      // Feather.getImageSource('plus', 30, styles._icon.color).then((source) => {
+      //   this.props.navigator.setButtons({
+      //     rightButtons: [{
+      //       id: 'add',
+      //       icon: source,
+      //       disableIconTint: true, // disable default color,
+      //     }]
+      //   });
+      // });
       // if you want to listen on navigator events, set this up
       this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     console.log('componentDidMount Dashboard');
+    //TODO
+    //await this.props.getTimes();
   }
 
   async componentDidUpdate(nextProps) {
@@ -140,11 +142,6 @@ class DashboardScreen extends React.Component {
 
   onRefresh = () => {
     this.props.getMyActivities();
-    this.setState({ refreshing: true });
-    setTimeout(() => {
-      this.setState({ refreshing: false, rand: moment().valueOf() });
-      //this.props.alertWithType('error', 'Fetch', 'Complete!');
-    }, 800);
   }
 
   showSnackBar = (msg) => {
@@ -154,26 +151,6 @@ class DashboardScreen extends React.Component {
     });
   }
 
-  handleConnectionChange = (isConnected) => {
-    this.props.setConnectionStatus(isConnected);
-    if (isConnected) {
-      this.props.getActivities();
-      this.props.getTags();
-    }
-    if (isConnected && this.props.offlineQueue.payloads.length > 0) {
-      this.props.offlineRequest();
-    }
-  };
-
-  /*handleAppStateChange = (nextAppState) => {
-    //if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-    if (nextAppState === 'active') {
-      console.log('App has come to the foreground!');
-      this.props.offlineRequest();
-    }
-    //this.setState({ appState: nextAppState });
-  }*/
-
   showTags = (activityId) => {
     this.props.navigator.push({
       screen: 'app.TagsScreen',
@@ -182,29 +159,37 @@ class DashboardScreen extends React.Component {
         activity: this.props.activities.byId[activityId]
       }
     });
-    // this.props.navigation.navigate('tags', {
-    //   activity: this.props.activities.byId[activityId]
-    // });
   }
   scrollToOffset = () => {
     this.flatListRef.scrollToIndex({ animated: true, index: 0 });
     //this.flatListRef.scrollToOffset({ x: 0, y: 0, animated: true });
   }
   renderRow = ({ item }) => {
+    const activityId = item;
     const { activities, tags, myActivities, times } = this.props;
-    const { name } = activities.byId[item];
-    const groupId = myActivities.byActivityId[item].allGroupIds[0]; // latest groupId
-    let tagsGroup = myActivities.byActivityId[item].byGroupId[groupId];
+    const { name } = activities.byId[activityId];
+
+    const groupId = myActivities.byActivityId[activityId].allGroupIds[0]; // latest groupId
+    let tagsGroup = myActivities.byActivityId[activityId].byGroupId[groupId];
     tagsGroup = Array.from(tagsGroup);
+
+    let individualLoading = false;
+    let loading = false;
+    if (times.loading !== false) {
+      loading = true;
+      if (times.loading.activityId === activityId && times.loading.groupId === groupId) {
+        individualLoading = true;
+      }
+    }
 
 
     let startedAt = null;
     let stoppedAt = null;
-    if (!_.isEmpty(times.byActivityId[item]) &&
-        !_.isEmpty(times.byActivityId[item][groupId]) &&
-        times.byActivityId[item][groupId].length > 0) {
-          startedAt = times.byActivityId[item][groupId][0].startedAt;
-          stoppedAt = times.byActivityId[item][groupId][0].stoppedAt;
+    if (!_.isEmpty(times.byActivityId[activityId]) &&
+        !_.isEmpty(times.byActivityId[activityId][groupId]) &&
+        times.byActivityId[activityId][groupId].length > 0) {
+          startedAt = times.byActivityId[activityId][groupId][0].startedAt;
+          stoppedAt = times.byActivityId[activityId][groupId][0].stoppedAt;
     }
 
     let startedTag = null;
@@ -244,11 +229,12 @@ class DashboardScreen extends React.Component {
 
       stoppedTag = `stopped ${moment(stoppedAt).fromNow()} - ${diff}`;
     }
-    //console.log(startedTag, stoppedTag);
 
     return (
       <ActivityCard
-        id={item}
+        individualLoading={individualLoading}
+        loading={loading}
+        id={activityId}
         name={name}
         groupId={groupId}
         tagsGroup={tagsGroup}
@@ -258,6 +244,8 @@ class DashboardScreen extends React.Component {
         startedTag={startedTag}
         stoppedTag={stoppedTag}
         showTags={this.showTags}
+        startActivity={this.props.startActivity}
+        stopActivity={this.props.stopActivity}
         toggleActivity={this.props.toggleActivity}
         scrollToOffset={this.scrollToOffset}
         rand={rand}
@@ -283,7 +271,7 @@ class DashboardScreen extends React.Component {
           //ListFooterComponent={this.renderListFooter}
           refreshControl={
             <RefreshControl
-              refreshing={this.state.refreshing}
+              refreshing={myActivities.loading}
               onRefresh={this.onRefresh}
             />
           }
@@ -319,22 +307,23 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = (state) => {
   //console.log('DashboardScreen:mapStateToProps:', state);
-  const { myActivities, activities, tags, times, network, offlineQueue } = state;
+  const { myActivities, activities, tags, times, network } = state;
   return {
     myActivities,
     activities,
     tags,
     times,
     network,
-    offlineQueue
   };
 };
 export default connect(mapStateToProps, {
+  stopActivity,
+  startActivity,
   toggleActivity,
   getActivities,
   getMyActivities,
   getTags,
   setConnectionStatus,
   offlineRequest,
-  loadInitData,
+  getTimes,
 })(DashboardScreen);

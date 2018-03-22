@@ -22,7 +22,24 @@ const UserSchema = new Schema({
   profileId: {
     type: String,
     unique: true
+  },
+  pic:{
+    type: String,
+  },
+  status: {
+    type: Number,
+    default: 9 // 0 - inactive, 9 - active
   }
+});
+
+UserSchema.virtual('id').get(function(){
+    return this._id;
+});
+//Ensure virtual fields are serialised.
+UserSchema.set('toJSON', {
+  virtuals: true,
+  versionKey:false,
+  transform: function (doc, ret) {   delete ret._id  }
 });
 
 mongoose.model('users', UserSchema);

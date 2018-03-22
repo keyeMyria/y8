@@ -55,7 +55,8 @@ export const getActivities = () => (
 
         dispatch({
           type: ACTIVITIES_FETCH_SUCCESS,
-          payload: activities
+          payload: activities,
+          isOnline: isConnected
         });
       }
     } catch (error) {
@@ -70,11 +71,11 @@ export const getActivities = () => (
           payload: error.response
         });
       }
-      await fakePromise(100);
-      dispatch({
-        type: ACTIVITIES_FETCH_RESET
-      });
     }
+    await fakePromise(100);
+    dispatch({
+      type: ACTIVITIES_FETCH_RESET
+    });
   }
 );
 
@@ -145,10 +146,10 @@ export const addActivity = (newActivity) => (
           payload: error.response
         });
       }
-      dispatch({
-        type: ACTIVITY_ADD_RESET
-      });
     }
+    dispatch({
+      type: ACTIVITY_ADD_RESET
+    });
   }
 );
 
@@ -199,10 +200,10 @@ export const updateActivity = (updatedActivity) => (
           payload: error.response
         });
       }
-      dispatch({
-        type: ACTIVITY_UPDATE_RESET
-      });
     }
+    dispatch({
+      type: ACTIVITY_UPDATE_RESET
+    });
   }
 );
 
@@ -250,9 +251,9 @@ export const deleteActivity = (id) => (
           payload: error.response
         });
       }
-      dispatch({
-        type: ACTIVITY_DELETE_RESET
-      });
     }
+    dispatch({
+      type: ACTIVITY_DELETE_RESET
+    });
   }
 );

@@ -20,11 +20,12 @@ const VerifyAccessToken = (accessToken) => {
 };
 
 const GetProfile = async (accessToken) => {
+  console.log(accessToken);
   var config = {
     headers: {'Authorization': `Bearer ${accessToken}`}
   };
   //axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-  return axios.get(`https://graph.facebook.com/v2.11/me`,config)
+  return axios.get(`https://graph.facebook.com/v2.12/me?fields=id,name,picture,email,first_name,last_name`,config)
     .then((response) => response.data)
     .catch((error) => {
       console.error('TODO: ', error);

@@ -208,6 +208,7 @@ class TagsScreen extends React.Component {
     }*/
   }
 
+
   onNavigatorEvent = (event) => {
     if (event.type === 'NavBarButtonPress') {
       if (event.id === 'add' && this.props.navigator) {
@@ -218,7 +219,9 @@ class TagsScreen extends React.Component {
             tag: null,
             tags: this.props.tags
           },
-          navigatorStyle: {},
+          navigatorStyle: {
+            navBarTextColor: EStyleSheet.value('$textColor')
+          },
           animationType: 'slide-up'
         });
       }
@@ -275,6 +278,12 @@ class TagsScreen extends React.Component {
 
   onRefresh = () => {
     this.props.getTags();
+  }
+
+  async componentWilUnmount() {
+    await this.props.navigator.dismissAllModals({
+      animationType: 'none'
+    });
   }
 
   showSnackBar = (msg) => {
@@ -417,51 +426,46 @@ class TagsScreen extends React.Component {
     }
     return (
       <View style={styles.container}>
-        <View
-          style={{
+        <SegmentedControlTab
+          tabsContainerStyle={{
             paddingTop: this.state.SegmentedControlTabTopPadding,
             paddingVertical: 10,
             paddingHorizontal: 30,
             backgroundColor: '#FFFFFF',
           }}
-        >
-          <SegmentedControlTab
-            tabStyle={{ borderColor: EStyleSheet.value('$iconColor') }}
-            activeTabStyle={{ backgroundColor: EStyleSheet.value('$iconColor') }}
-            tabTextStyle={{ color: EStyleSheet.value('$textColor'), fontWeight: '600' }}
-            values={['Used Tags', 'Tags']}
-            selectedIndex={this.state.selectedIndex}
-            onTabPress={(selectedIndex) => {
-              this.setState({
-                selectedIndex
-              }, () => {
-                let showAdd = false;
-                if (this.state.selectedIndex === 1) {
-                  showAdd = true;
-                }
-                if (showAdd) {
-                  Feather.getImageSource('plus', 30, EStyleSheet.value('$iconColor')).then((source) => {
-                    this.props.navigator.setButtons({
-                      rightButtons: [{
-                        id: 'add',
-                        icon: source,
-                        disableIconTint: true, // disable default color,
-                      }]
-                    });
+          tabStyle={{ borderColor: EStyleSheet.value('$iconColor') }}
+          activeTabStyle={{ backgroundColor: EStyleSheet.value('$iconColor') }}
+          tabTextStyle={{ color: EStyleSheet.value('$textColor'), fontWeight: '600' }}
+          values={['Used Tags', 'Tags']}
+          selectedIndex={this.state.selectedIndex}
+          onTabPress={(selectedIndex) => {
+            this.setState({
+              selectedIndex
+            }, () => {
+              let showAdd = false;
+              if (this.state.selectedIndex === 1) {
+                showAdd = true;
+              }
+              if (showAdd) {
+                Feather.getImageSource('plus', 30, EStyleSheet.value('$iconColor')).then((source) => {
+                  this.props.navigator.setButtons({
+                    rightButtons: [{
+                      id: 'add',
+                      icon: source,
+                      disableIconTint: true, // disable default color,
+                    }]
                   });
-                } else {
-                  Feather.getImageSource('plus', 30, EStyleSheet.value('$iconColor')).then((source) => {
-                    this.props.navigator.setButtons({
-                      rightButtons: []
-                    });
+                });
+              } else {
+                Feather.getImageSource('plus', 30, EStyleSheet.value('$iconColor')).then((source) => {
+                  this.props.navigator.setButtons({
+                    rightButtons: []
                   });
-                }
-
-                //this.props.navigation.setParams({ showAdd, hideHeader: false });
-              });
-            }}
-          />
-        </View>
+                });
+              }
+            });
+          }}
+        />
         {
           this.state.selectedIndex === 1 &&
 

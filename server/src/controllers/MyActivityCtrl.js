@@ -17,15 +17,6 @@ class MyActivityCtrl {
 
     const { userId } = req;
     const data = {
-      _id: groupId,
-      userId,
-      activityId,
-      tags,
-      createdAt,
-      updatedAt
-    }
-
-    const data1 = {
       userId,
       activityId,
       groups: [{
@@ -47,7 +38,6 @@ class MyActivityCtrl {
     MyActivity.findOne(criteria, {
       groups: 1,
     }).then((result) => {
-
       if (result) {
         let isExists = false;
         console.log(result.groups);
@@ -76,7 +66,7 @@ class MyActivityCtrl {
 
       } else {
         // create first activity with group
-        return MyActivity.create(data1);
+        return MyActivity.create(data);
       }
 
     }).then((result) => {
@@ -159,19 +149,36 @@ class MyActivityCtrl {
       groups: 1,
     }).then((result) => {
       _.forEach(result.groups, (group, groupIndex) => {
-        if (group.groupId === groupId) {
-          const index = group.tags ? group.tags.indexOf(tagId) : -1;
-          // is it valid?
-          if (index !== -1) {
-            group.tags.splice(index, 1);
+
+        // if (!_.isUndefined(group)) {
+        //   const index = group.tags.indexOf(tagId);
+        //   if (index !== -1) {
+        //     group.tags.splice(index, 1);
+        //   }
+        //   // if tags are empty, then delete group also.
+        //   if (group.tags.length === 0) {
+        //     //myactivity.groups.splice(groupIndex, 1);
+        //     delete myactivity.groups[groupIndex];
+        //   }
+        // }
+
+        if (!_.isUndefined(group)) {
+          if (group.groupId === groupId) {
+            const index = group.tags.indexOf(tagId);
+            // is it valid?
+            if (index !== -1) {
+              group.tags.splice(index, 1);
+            }
+          }
+          // if tags are empty, then delete group also.
+          if (group.tags.length === 0) {
+            delete result.groups[groupIndex];
+            //result.groups.splice(groupIndex, 1);
           }
         }
 
-        // if tags are empty, then delete group also.
-        if (group.tags.length === 0) {
-          result.groups.splice(groupIndex, 1);
-        }
       });
+        result.groups = _.filter(result.groups);
       // if groups are empty then delete activity
       if (result.groups.length === 0) {
         return result.remove();

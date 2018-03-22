@@ -16,6 +16,7 @@ import {
   MY_ACTIVITY_ADD_REQUEST,
   MY_ACTIVITY_ADD_SUCCESS,
   MY_ACTIVITY_ADD_ERROR,
+  MY_ACTIVITY_ADD_RESET,
 
   MY_ACTIVITY_REMOVE_TAG_REQUEST,
   MY_ACTIVITY_REMOVE_TAG_SUCCESS,
@@ -46,28 +47,32 @@ export const getMyActivities = () => (
     };
 
     try {
-      dispatch({
-        type: MY_ACTIVITIES_FETCH_REQUEST
-      });
       const { isConnected } = getState().network;
-      const payload = {
-        data: null,
-        apiUrl: '/api/private/myactivity',
-        method: 'get'
-      };
-
       if (isConnected) {
-        const response = await ApiRequest(payload);
-        //console.log('responseGetMyActivities:');
-        //console.log(response);
-        const { data } = response;
-        myactivities = data;
-      }
+        dispatch({
+          type: MY_ACTIVITIES_FETCH_REQUEST
+        });
 
-      dispatch({
-        type: MY_ACTIVITIES_FETCH_SUCCESS,
-        payload: myactivities
-      });
+        const payload = {
+          data: null,
+          apiUrl: '/api/private/myactivity',
+          method: 'get'
+        };
+
+        //if (isConnected) {
+          const response = await ApiRequest(payload);
+          //console.log('responseGetMyActivities:');
+          //console.log(response);
+          const { data } = response;
+          myactivities = data;
+        //}
+
+        dispatch({
+          type: MY_ACTIVITIES_FETCH_SUCCESS,
+          payload: myactivities,
+          isOnline: isConnected
+        });
+      }
     } catch (error) {
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         dispatch({
@@ -318,5 +323,8 @@ export const addTagsGroupToMyActivity = (activity, tags) => (
         });
       }
     }
+    dispatch({
+      type: MY_ACTIVITY_ADD_RESET,
+    });
   }
 );

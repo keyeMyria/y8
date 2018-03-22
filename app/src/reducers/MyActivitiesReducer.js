@@ -4,9 +4,10 @@ import {
   //ACTIVITIES_FETCH_REQUEST,
 
   //ACTIVITIES_FETCH_ERROR,
-  MY_ACTIVITIES_FETCH_RESET,
+  MY_ACTIVITIES_FETCH_REQUEST,
   MY_ACTIVITIES_FETCH_SUCCESS,
   MY_ACTIVITIES_FETCH_ERROR,
+  MY_ACTIVITIES_FETCH_RESET,
 
 
   MY_ACTIVITY_GROUP_ADD_REQUEST,
@@ -43,10 +44,10 @@ import {
 } from '../types/TimeTypes';
 
 const getMyActivities = (state, action) => {
-  const { payload } = action;
+  const { payload, isOnline } = action;
   const newState = Object.assign({}, state);
 
-  if (payload.allActivityIds.length !== 0) {
+  if (isOnline) {
     newState.allActivityIds = payload.allActivityIds;
     newState.byActivityId = payload.byActivityId;
     newState.loading = false;
@@ -271,13 +272,21 @@ const INITIAL_MY_ACTIVITIES_STATE = {
 };
 export const myActivities = (state = INITIAL_MY_ACTIVITIES_STATE, action) => {
   switch (action.type) {
-    case MY_ACTIVITIES_FETCH_RESET:
-      return getMyActivitiesReset(state, action);
+    case MY_ACTIVITIES_FETCH_REQUEST:
+      return Object.assign({}, state, {
+        error: null,
+        loading: true,
+        addingMyActivity: false,
+        addingGroup: false,
+        removingGroup: false,
+        removingTag: false,
+      });
     case MY_ACTIVITIES_FETCH_SUCCESS:
       return getMyActivities(state, action);
     case MY_ACTIVITIES_FETCH_ERROR:
       return getMyActivitiesError(state, action);
-
+    case MY_ACTIVITIES_FETCH_RESET:
+      return getMyActivitiesReset(state, action);
     case MY_ACTIVITY_ADD_REQUEST:
       return Object.assign({}, state, {
         addingMyActivity: true,
@@ -302,7 +311,6 @@ export const myActivities = (state = INITIAL_MY_ACTIVITIES_STATE, action) => {
 
     case MY_ACTIVITY_REMOVE_TAG_REQUEST:
       return Object.assign({}, state, {
-        addingGroup: false,
         removingTag: true,
         error: null
       });

@@ -4,6 +4,8 @@ const AuthCtrl = require('./AuthCtrl');
 const ActivityCtrl = require('./ActivityCtrl');
 const TagCtrl = require('./TagCtrl');
 const MyActivityCtrl = require('./MyActivityCtrl');
+const TimeCtrl = require('./TimeCtrl');
+const FriendCtrl = require('./FriendCtrl');
 
 module.exports = {
   Sample: SampleCtrl,
@@ -11,5 +13,7 @@ module.exports = {
   Auth: AuthCtrl,
   Activity: ActivityCtrl,
   Tag: TagCtrl,
-  MyActivity: MyActivityCtrl
+  MyActivity: MyActivityCtrl,
+  Time: TimeCtrl,
+  Friend: FriendCtrl
 };

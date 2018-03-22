@@ -1,14 +1,19 @@
+const uuid = require('uuid');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const FriendSchema = new Schema({
+  _id: {
+    type: String,
+    default: uuid.v4
+  },
   fromUser: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'users',
     required: true
   },
   toUser: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'users',
     required: true,
     /*validate: {
@@ -28,7 +33,7 @@ const FriendSchema = new Schema({
     default: 0
   },
   actionUser: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'users'
   },
   createdAt: {
@@ -41,5 +46,18 @@ const FriendSchema = new Schema({
   }
 
 });
+
+// Duplicate the ID field.
+FriendSchema.virtual('id').get(function(){
+    return this._id;
+});
+
+//Ensure virtual fields are serialised.
+FriendSchema.set('toJSON', {
+  virtuals: true,
+  versionKey:false,
+  transform: function (doc, ret) {   delete ret._id  }
+});
+
 
 mongoose.model('friends', FriendSchema);

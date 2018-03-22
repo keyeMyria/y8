@@ -25,15 +25,6 @@ const clearQueue = (state, action) => {
   return Object.assign({}, newState);
 };
 
-/*const clearQueue = (state, action) => {
-  const newState = Object.assign({}, state);
-  const id = action.payload.data.id;
-  const index = _.findIndex(newState.payloads,
-    o => o.data.id.indexOf(id) !== -1);
-  newState.payloads.splice(index, 1);
-  return Object.assign({}, newState);
-};*/
-
 const INITIAL_OFFLINE_STATE = {
   error: null,
   syncing: false,

@@ -1,7 +1,8 @@
 'use strict'
 class AuthCtrl {
   testAuth(req, res, next) {
-    res.status(200).send('ok');
+    console.log('testAuth', req.userId);
+    res.status(200).send({id:req.userId});
     next();
   }
 }

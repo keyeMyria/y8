@@ -4,7 +4,7 @@ import {
 } from '../types/AppTypes';
 
 const INITIAL_APP_STATE = {
-  root: 'AuthorizeScreen',
+  root: 'LoginScreen',
   hasInitialActivities: false
 };
 export const app = (state = INITIAL_APP_STATE, action) => {

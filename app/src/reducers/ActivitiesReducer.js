@@ -37,9 +37,14 @@ const getActivities = (state, action) => {
 
   // TODO: need to fix for it when offline
 
-  //if (action.payload.allIds.length > 0) {
+  if (action.isOnline) {
     newState.byId = { ...action.payload.byId, ...InitialActivities.byId };
     newState.allIds = [...action.payload.allIds, ...InitialActivities.allIds];
+  }
+
+  //if (action.payload.allIds.length > 0) {
+  // newState.byId = { ...action.payload.byId, ...InitialActivities.byId };
+  // newState.allIds = [...action.payload.allIds, ...InitialActivities.allIds];
   // } else {
   //   newState.byId = { ...InitialActivities.byId };
   //   newState.allIds = [...InitialActivities.allIds];

@@ -34,13 +34,18 @@ class LoginCtrl {
             throw new Error('Unable to get facebook User profile');
           }
           console.log(profile);
-
+          user.loginType = 'facebook';
           user.profileId = profile.id;
           user.fullName = profile.name;
+          user.email = profile.email;
+          user.pic = profile.picture.data.url;
+          user.firstName = profile.first_name;
+          user.lastName = profile.last_name;
+
           return User.findOne({ profileId: profile.id }, {_id: 1});
         }).then((result) => {
           if(_.isNull(result)) {
-            
+
             req.log.info('User created successfully: '+user.fullName+' ('+user.profileId+')');
             return User.create(user);
           } else {
@@ -58,7 +63,7 @@ class LoginCtrl {
           const authToken = jwt.sign(payload, keys.appSecureKey, { expiresIn: keys.secureKeyExpiresIn }); // '30 days'
           res.set('x-app-auth-0', false);
           req.log.info('authToken generated successfully');
-          res.status(200).send({ authToken });
+          res.status(200).send({ authToken, userId: data._id });
           next();
         }).catch((error)=>{
           console.log(error,4);

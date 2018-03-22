@@ -1,10 +1,13 @@
 import _ from 'lodash';
 import {
-    TIME_TOGGLE_SUCCESS,
-  } from '../types/TimeTypes.js';
+  TIME_TOGGLE_REQUEST,
+  TIME_TOGGLE_SUCCESS,
+  TIME_TOGGLE_ERROR,
+  TIME_TOGGLE_RESET,
+} from '../types/TimeTypes.js';
 
 
-const toggleActivity = (state, action) => {
+const toggActivity = (state, action) => {
   const { activityId, groupId, isStart } = action.payload;
   const newState = Object.assign({}, state);
 
@@ -26,11 +29,53 @@ const toggleActivity = (state, action) => {
   return Object.assign({}, newState);
 };
 
-// {
-//   "activityId": {
-//     "groupId": []
-//   }
-//}
+
+const startActivity = (state, action) => {
+  const { activityId, groupId, startedAt } = action.payload;
+  const newState = Object.assign({}, state);
+
+  if (_.isEmpty(newState.byActivityId[activityId])) {
+    newState.byActivityId[activityId] = {};
+  }
+  if (_.isEmpty(newState.byActivityId[activityId][groupId])) {
+    newState.byActivityId[activityId][groupId] = [];
+  }
+  const times = newState.byActivityId[activityId][groupId];
+  times.unshift({ startedAt, stoppedAt: null });
+
+  return Object.assign({}, newState, {
+    error: null,
+    loading: false
+  });
+};
+
+const stopActivity = (state, action) => {
+  const { activityId, groupId, stoppedAt } = action.payload;
+  const newState = Object.assign({}, state);
+
+  if (_.isEmpty(newState.byActivityId[activityId])) {
+    newState.byActivityId[activityId] = {};
+  }
+  if (_.isEmpty(newState.byActivityId[activityId][groupId])) {
+    newState.byActivityId[activityId][groupId] = [];
+  }
+  const times = newState.byActivityId[activityId][groupId];
+  times[0].stoppedAt = stoppedAt;
+
+  return Object.assign({}, newState, {
+    error: null,
+    loading: false
+  });
+};
+
+const toggleActivity = (state, action) => {
+  const { startedAt, stoppedAt } = action.payload;
+  if (!_.isUndefined(startedAt)) {
+    return startActivity(state, action);
+  } else if (!_.isUndefined(stoppedAt)) {
+    return stopActivity(state, action);
+  }
+};
 
 const INITIAL_TIMES_STATE = {
   error: null,
@@ -39,8 +84,27 @@ const INITIAL_TIMES_STATE = {
 };
 export const times = (state = INITIAL_TIMES_STATE, action) => {
   switch (action.type) {
+    case TIME_TOGGLE_REQUEST:
+      return Object.assign({}, state, {
+        error: null,
+        loading: {
+          activityId: action.payload.activityId,
+          groupId: action.payload.groupId
+        }
+      });
     case TIME_TOGGLE_SUCCESS:
       return toggleActivity(state, action);
+      //return toggActivity(state, action);
+    case TIME_TOGGLE_ERROR:
+      return Object.assign({}, state, {
+        error: action.payload,
+        loading: false
+      });
+    case TIME_TOGGLE_RESET:
+      return Object.assign({}, state, {
+        error: null,
+        loading: false
+      });
     default:
       return state;
   }

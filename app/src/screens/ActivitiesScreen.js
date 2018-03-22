@@ -6,7 +6,8 @@ import {
   Keyboard,
   UIManager,
   KeyboardAvoidingView,
-  LayoutAnimation
+  LayoutAnimation,
+  View
 } from 'react-native';
 import _ from 'lodash';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -32,6 +33,9 @@ Feather.getImageSource('plus', 30, iconColor).then((source) => {
 });
 
 class ActivitiesScreen extends React.Component {
+  static navigatorStyle = {
+    //largeTitle: true
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -164,7 +168,9 @@ class ActivitiesScreen extends React.Component {
             activity: null,
             activities: this.props.activities
           },
-          navigatorStyle: {},
+          navigatorStyle: {
+            navBarTextColor: EStyleSheet.value('$textColor')
+          },
           animationType: 'slide-up'
         });
       }
@@ -294,13 +300,14 @@ class ActivitiesScreen extends React.Component {
     const { activities } = this.props;
 
     return (
+      <View style={styles.container}>
+
       <KeyboardAvoidingView
         style={styles.container}
         behavior="padding"
         keyboardVerticalOffset={20}
         ref="myRef"
       >
-
         <SearchBar
           outerContainerStyle={{
             backgroundColor: EStyleSheet.value('$backgroundColor'),
@@ -311,6 +318,7 @@ class ActivitiesScreen extends React.Component {
           onFocus={this.onSearchBarFocus}
           onCancel={this.onSearchCancel}
         />
+
         <FlatList
           //removeClippedSubviews={false}
           keyboardShouldPersistTaps='always'
@@ -342,6 +350,7 @@ class ActivitiesScreen extends React.Component {
           textStyle={{ color: EStyleSheet.value('$textColor') }}
         />
       </KeyboardAvoidingView>
+      </View>
     );
   }
 }

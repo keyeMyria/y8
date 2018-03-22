@@ -2,16 +2,13 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  TouchableHighlight,
   Text
 } from 'react-native';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
-//const FBSDK = require('react-native-fbsdk');
-//import ResetNavigation from '../helpers/ResetNavigation';
-import { SetLoginToken, ClearLoginToken } from '../services/AuthService';
+import { ClearLoginToken } from '../services/AuthService';
 import { changeAppRoot } from '../actions/AppActions';
+import { doLogin } from '../actions/AuthActions';
 import { fakePromise } from '../services/Common';
 
 class LoginScreen extends Component {
@@ -21,6 +18,7 @@ class LoginScreen extends Component {
       loginFinished: false,
     };
   }
+
   onLoginFinished = async (error, result) => {
     this.setState({
       loginFinished: true
@@ -32,20 +30,15 @@ class LoginScreen extends Component {
       } else {
         try {
           const data = await AccessToken.getCurrentAccessToken();
-          const response = await axios.post('/api/public/login', {
-            loginType: 'facebook',
-            accessToken: data.accessToken
-          });
-          const isLoggedIn = await SetLoginToken(response.data.authToken);
-          await fakePromise(300);
-          if (isLoggedIn) {
-            this.props.changeAppRoot('AuthorizeScreen');
-          }
+          console.log(data.accessToken);
+          await fakePromise(800);
+          this.props.doLogin(data.accessToken);
         } catch (err) {
           console.error(err);
         }
       }
     });
+
 
       /*AccessToken.getCurrentAccessToken()
         .then((data) => data.accessToken.toString())
@@ -79,15 +72,16 @@ class LoginScreen extends Component {
   onLogoutFinished = () => {
     ClearLoginToken().then((cleared) => {
       if (cleared) {
-        this.props.changeAppRoot('AuthorizeScreen');
+        this.props.changeAppRoot('LoginScreen');
       }
     });
   };
 
   render() {
     if (this.state.loginFinished) {
-      return <View style={styles.container}><Text style={styles.welcome}>Logging in...</Text></View>;
+      return <View style={styles.container}><Text style={styles.welcome}>Loading...</Text></View>;
     }
+
     return (
       <View style={styles.container}>
         <LoginButton
@@ -121,8 +115,12 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   // console.log('ActivitiesScreen:mapStateToProps:', state);
-  return state;
+  return {
+    login: state.login,
+    //initData: state.initData
+  };
 };
-export default connect(mapStateToProps,{
-  changeAppRoot
+export default connect(mapStateToProps, {
+  changeAppRoot,
+  doLogin
 })(LoginScreen);

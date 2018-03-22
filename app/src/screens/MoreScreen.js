@@ -1,48 +1,61 @@
 import React from 'react';
 import {
   StyleSheet,
+  Text,
   View,
-  Platform
+  Platform,
+  Switch
 } from 'react-native';
 import { LoginButton } from 'react-native-fbsdk';
 import { connect } from 'react-redux';
 import { ClearLoginToken } from '../services/AuthService';
-import TabBarMoreIcon from '../components/TabBarMoreIcon';
-import HeaderAddIcon from '../components/HeaderAddIcon';
 import { changeAppRoot } from '../actions/AppActions';
+import { setConnectionStatus } from '../actions/ConnectionActions';
+import {
+  offlineRequest
+} from '../actions/OfflineActions';
+import { resetUserId } from '../actions/UserActions';
 
 
 class MoreScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    const { navigate } = navigation;
-    return {
-      title: 'Settings',
-      tabBarLabel: 'More',
-      headerStyle: {
-        marginTop: Platform.OS === 'android' ? 24 : 0
-      },
-      tabBarIcon: ({ tintColor }) => (
-        <TabBarMoreIcon color={tintColor} />
-      ),
-      headerRight: (
-        <HeaderAddIcon onPress={() => { navigate('activities'); }} />
-      )
-    };
+  state = {
+    isOffline: false
   };
 
   onLogoutFinished = () => {
+    this.props.resetUserId();
     ClearLoginToken().then((cleared) => {
       if (cleared) {
-        this.props.changeAppRoot('AuthorizeScreen');
+        this.props.changeAppRoot('LoginScreen');
       }
     });
   };
+
+  onValueChange = (isOffline) => {
+    this.props.setConnectionStatus(!isOffline);
+    if (!isOffline) {
+      this.props.offlineRequest();
+    }
+    // this.setState({
+    //   isOffline
+    // }, () => {
+    //   this.props.setConnectionStatus(!isOffline);
+    //   if (!isOffline) {
+    //     this.props.offlineRequest();
+    //   }
+    // });
+  }
 
   render() {
     return (
       <View style={styles.container}>
         <LoginButton
           onLogoutFinished={this.onLogoutFinished}
+        />
+        <Text>Offline mode</Text>
+        <Switch
+         value={!this.props.network.isConnected}
+         onValueChange={this.onValueChange}
         />
       </View>
     );
@@ -70,5 +83,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => state;
 
 export default connect(mapStateToProps, {
-  changeAppRoot
+  changeAppRoot,
+  setConnectionStatus,
+  offlineRequest,
+  resetUserId
 })(MoreScreen);
