@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import {
   View,
@@ -147,7 +148,18 @@ class FriendModal extends React.Component {
   }
 
   renderRow = ({ item }) => {
-    const { _id, fullName, pic, friendship } = item;
+    console.log(item);
+    const { _id, fullName, profileId, pic, friendship } = item;
+    let id = _id;
+    if (_.isUndefined(_id)){
+      id = item.id;
+    }
+
+    const userObj = {
+      id,
+      fullName,
+      profileId
+    };
 
     let action = 'send';
     if (friendship) {
@@ -158,13 +170,10 @@ class FriendModal extends React.Component {
       }
     }
 
-    const id = _id;
-
     return (
       <FriendRowItem
-        id={id}
-        fullname={fullName}
-        picUrl={pic}
+        id={id} // this is userId here. but not in other places
+        userObj={userObj}
         action={action}
         sendFriendRequest={this.sendFriendRequest}
       />

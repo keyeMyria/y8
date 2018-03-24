@@ -23,7 +23,6 @@ import {
   doAuthAndLoadInitData
 } from '../actions/AuthActions';
 
-
 export default (ComposedComponent) => {
   class NetworkChange extends Component {
     static navigationOptions = ComposedComponent.navigationOptions;

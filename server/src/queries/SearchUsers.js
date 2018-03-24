@@ -6,7 +6,7 @@ module.exports = (criteria, sortBy, page, offset = 0, limit = 20) => {
     id: 1,
     fullName: 1,
     email: 1,
-    pic: 1
+    profileId: 1
   })//.populate({path: 'fromUser', select: ['email','firstName']})
     //.populate({path: 'toUser', select: 'email'})
     .sort({[sortBy]: 1})

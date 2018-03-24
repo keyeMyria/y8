@@ -8,6 +8,7 @@ class FriendCtrl {
 
   sendRequest(req, res, next) {
     let { toUser } = req.body;
+    console.log(req.body);
 
     // check if  toUser is valid
     // if (!mongoose.Types.ObjectId.isValid(toUser)) {
@@ -81,6 +82,41 @@ class FriendCtrl {
       $and: [
         {
           status: 0
+        },
+        {
+          $or: [
+            {
+              fromUser: userId
+            },
+            {
+              toUser: userId
+            }
+          ] // or
+        }
+      ] // and
+    };
+
+    SearchFriends(criteria, 'updatedAt', offset,limit)
+      .then((friendRequests)=>{
+        console.log(friendRequests);
+        res.status(200).send(friendRequests);
+        next();
+      }).catch((err)=>{
+        req.log.error(err.message);
+        res.status(400).send("Bad request");
+        next();
+      })
+  }
+
+  // This is just an example like how we can implement pagination
+  getFriends(req, res, next) {
+    const { page, offset, limit } = Pagination(req);
+    const { userId } = req;
+    // build search criteria
+    const criteria =  {
+      $and: [
+        {
+          status: 1
         },
         {
           $or: [

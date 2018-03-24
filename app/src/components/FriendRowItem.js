@@ -1,29 +1,25 @@
-import _ from 'lodash';
 import React from 'react';
 import {
-  StyleSheet,
   View,
   Text,
   Image,
   TouchableHighlight,
-  TouchableOpacity
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import TextButton from './TextButton';
-import {
-  globalTextColor,
-} from '../styles/Global';
 
 class FriendRowItem extends React.PureComponent {
   static defaultProps = {
     showEditIcon: false,
     onItemPress: () => null,
     acceptFriendRequest: () => null,
+    sendFriendRequest: () => null,
+    onFriendPress: () => null,
   }
 
   onItemPress = () => {
-    this.props.onItemPress(this.props.id);
+    this.props.onFriendPress(this.props.userObj);
   }
 
   onAccept = () => {
@@ -31,21 +27,22 @@ class FriendRowItem extends React.PureComponent {
   }
 
   sendFriendRequest = () => {
+    console.log(this.props);
+    // fix id here, it can be userId or requests id
     this.props.sendFriendRequest(this.props.id);
   }
 
   render() {
-    const { fullname, action, picUrl, currentActivity } = this.props;
+
+    const { userObj, action } = this.props;
+    const fullname = userObj.fullName;
+    const fbApiProfileUrl = `https://graph.facebook.com/v2.12/${userObj.profileId}/picture?height=50&width=50&redirect=true`;
+
     let status = '';
     if (action === 'pending') {
       status = action;
     } else if (action !== 'accept' && action !== 'send') {
       status = 'show current activity here';
-    }
-
-    let profilePic = 'http://via.placeholder.com/50x50';
-    if (!_.isNull(picUrl) && !_.isUndefined(picUrl) && picUrl !== '') {
-      profilePic = picUrl;
     }
 
     return (
@@ -60,13 +57,18 @@ class FriendRowItem extends React.PureComponent {
               //justifyContent: 'flex-start',
               justifyContent: 'center',
               paddingHorizontal: 10,
-              paddingTop: 5,
+              paddingTop: 0,
               //backgroundColor: 'red'
             }}
           >
             <Image
-              style={{ borderRadius: 25, width: 50, height: 50 }}
-              source={{ uri: profilePic }}
+              style={{
+                borderRadius: 25,
+                width: 50,
+                height: 50,
+                backgroundColor: EStyleSheet.value('$backgroundColor')
+              }}
+              source={{ uri: fbApiProfileUrl }}
             />
           </View>
           <View style={[styles.innerContainer]}>
@@ -114,7 +116,7 @@ class FriendRowItem extends React.PureComponent {
           <Ionicons
             name='ios-arrow-forward'
             size={25} color='lightgray'
-            style={{ paddingRight: 20 }}
+            style={{ paddingRight: 10 }}
           />
         </View>
       </TouchableHighlight>
@@ -130,7 +132,7 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     height: 80,
     backgroundColor: '#FFFFFF',
-    borderBottomWidth: 0.21,
+    borderBottomWidth: 0.17,
     borderColor: 'gray',
   },
   innerContainer: {

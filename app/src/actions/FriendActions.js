@@ -141,25 +141,16 @@ export const getFriends = () => (
 
         const payload = {
           data: null,
-          apiUrl: '/api/private/friend',
+          apiUrl: '/api/private/friend/list',
           method: 'get'
-        };
-        const activities = {
-          byId: {},
-          allIds: []
         };
 
         const response = await ApiRequest(payload);
         const { data } = response;
-        data.forEach((activity) => {
-          activities.byId[activity.id] = activity;
-          activities.allIds.push(activity.id);
-        });
 
         dispatch({
           type: FRIENDS_FETCH_SUCCESS,
-          payload: activities,
-          isOnline: isConnected
+          payload: data
         });
       }
     } catch (error) {

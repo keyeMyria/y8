@@ -4,6 +4,7 @@ const friendRoutes = (router) => {
   const ctrl = new CTRLS.Friend();
   router.get('/friend/user', ctrl.searchUser);
   router.get('/friend/requests', ctrl.getRequests);
+  router.get('/friend/list', ctrl.getFriends);
   router.post('/friend/send', ctrl.sendRequest);
   router.post('/friend/accept', ctrl.acceptRequest);
   router.post('/friend/reject', ctrl.rejectRequest);

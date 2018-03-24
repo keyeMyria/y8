@@ -25,6 +25,12 @@ config.db.username = 'root';
 config.db.password = 'root';
 config.db.console_logging = false;
 
+// config.db.name = 'app';
+// config.db.host = '192.168.0.22';
+// config.db.port = ''; // '' for default;
+// config.db.username = 'root';
+// config.db.password = 'root';
+// config.db.console_logging = false;
 
 // log settings
 // Please refer here https://www.npmjs.com/package/bunyan

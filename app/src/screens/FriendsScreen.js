@@ -23,7 +23,8 @@ import SearchBar from '../components/SearchBar';
 import FriendRowItem from '../components/FriendRowItem';
 import {
   getFriendRequests,
-  acceptFriendRequest
+  acceptFriendRequest,
+  getFriends
 } from '../actions/FriendActions';
 
 class FriendsScreen extends React.Component {
@@ -175,6 +176,10 @@ class FriendsScreen extends React.Component {
     });
   }
 
+  onRefreshFriends = () => {
+    this.props.getFriends();
+  }
+
   onRefreshFriendRequests = () => {
     this.props.getFriendRequests();
   }
@@ -244,67 +249,49 @@ class FriendsScreen extends React.Component {
   removeGroupFromActivity = (activityId, groupId) => {
     this.props.removeGroupFromActivity(activityId, groupId);
   }
-  renderListHeader = () => {
-    const { activity } = this.state;
-    let name = '';
-    if (!_.isNull(activity) && !_.isEmpty(activity)) {
-      name = activity.name;
-    }
-    if (name === '') {
-      return null;
-    }
-    name = name[0].toUpperCase() + name.slice(1).toLowerCase();
-    return (
-      <View
-        style={{
-          backgroundColor: EStyleSheet.value('$backgroundColor'),
-          justifyContent: 'center',
-          paddingBottom: 15,
-          paddingTop: 5,
-          paddingHorizontal: 10
-
-        }}
-      >
-      <ScrollView
-        style={{
-          maxHeight: 80
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 17,
-            color: EStyleSheet.value('$textColor')
-            //flexGrow: 1,
-          }}
-        >{name} {this.state.sentence}</Text>
-      </ScrollView>
-      </View>
-    );
-  };
+  onFriendPress = (userObj) => {
+    this.props.navigator.showModal({
+      screen: 'app.FriendInfoModal',
+      title: 'Profile',
+      passProps: {
+        friend: userObj
+      },
+      navigatorStyle: {},
+      animationType: 'slide-up'
+    });
+  }
   renderListFooter = () => null;
-  renderRow = ({ item }) => {
+  renderFriendRow = ({ item }) => {
+    const { id, fromUser, toUser } = item;
+
+    let userObj = toUser;
+    if (toUser.id === this.props.user.userId) {
+      userObj = fromUser;
+    }
     return (
-      <Text>{item}</Text>
+      <FriendRowItem
+        id={id}
+        userObj={userObj}
+        action={''}
+        onFriendPress={this.onFriendPress}
+      />
     );
   };
 
   renderRequestRow = ({ item }) => {
-    const { id, fromUser, toUser, status } = item;
+    const { id, fromUser, toUser } = item;
 
-    let fullname = toUser.fullName; //Pending
+    let userObj = toUser;
     let action = 'pending';
-    let picUrl = toUser.pic;
-    if (toUser.id === this.props.user.userId && status === 0) {
-      fullname = fromUser.fullName; // Accecpt Delete
+    if (toUser.id === this.props.user.userId) {
       action = 'accept';
-      picUrl = fromUser.pic;
+      userObj = fromUser;
     }
 
     return (
       <FriendRowItem
         id={id}
-        fullname={fullname}
-        picUrl={picUrl}
+        userObj={userObj}
         action={action}
         acceptFriendRequest={this.props.acceptFriendRequest}
 
@@ -330,28 +317,6 @@ class FriendsScreen extends React.Component {
           onTabPress={(selectedIndex) => {
             this.setState({
               selectedIndex
-            }, () => {
-              let showAdd = false;
-              if (this.state.selectedIndex === 0) {
-                showAdd = true;
-              }
-              if (showAdd) {
-                Feather.getImageSource('plus', 30, EStyleSheet.value('$iconColor')).then((source) => {
-                  this.props.navigator.setButtons({
-                    rightButtons: [{
-                      id: 'add',
-                      icon: source,
-                      disableIconTint: true, // disable default color,
-                    }]
-                  });
-                });
-              } else {
-                Feather.getImageSource('plus', 30, EStyleSheet.value('$iconColor')).then((source) => {
-                  this.props.navigator.setButtons({
-                    rightButtons: []
-                  });
-                });
-              }
             });
           }}
         />
@@ -371,19 +336,19 @@ class FriendsScreen extends React.Component {
           <FlatList
             //removeClippedSubviews={false}
             keyboardShouldPersistTaps='always'
-            ref={(ref) => { this.flatListRef = ref; }}
-            //extraData={tags}
+            //ref={(ref) => { this.flatListRef = ref; }}
+            extraData={this.props.friends.data.rows}
             //ListHeaderComponent={this.renderListHeader}
-            keyExtractor={item => item.toString()}
-            data={[1,2,3,4,5]}
-            renderItem={this.renderRow}
+            keyExtractor={item => item}
+            data={this.props.friends.data.rows}
+            renderItem={this.renderFriendRow}
             ListFooterComponent={this.renderListFooter}
-            // refreshControl={
-            //   <RefreshControl
-            //     refreshing={tags.loading}
-            //     onRefresh={this.onRefresh}
-            //   />
-            // }
+            refreshControl={
+              <RefreshControl
+                refreshing={this.props.friends.loading}
+                onRefresh={this.onRefreshFriends}
+              />
+            }
           />
         </KeyboardAvoidingView>
       }
@@ -431,14 +396,16 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = (state) => {
   //console.log('FriendsScreen:mapStateToProps:', state);
-  const { friendActions, friendRequests, user } = state;
+  const { friendActions, friendRequests, friends, user } = state;
   return {
     friendActions,
     friendRequests,
+    friends,
     user
   };
 };
 export default connect(mapStateToProps, {
   acceptFriendRequest,
-  getFriendRequests
+  getFriendRequests,
+  getFriends
 })(FriendsScreen);

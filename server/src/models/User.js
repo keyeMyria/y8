@@ -23,9 +23,6 @@ const UserSchema = new Schema({
     type: String,
     unique: true
   },
-  pic:{
-    type: String,
-  },
   status: {
     type: Number,
     default: 9 // 0 - inactive, 9 - active

@@ -25,7 +25,7 @@ const GetProfile = async (accessToken) => {
     headers: {'Authorization': `Bearer ${accessToken}`}
   };
   //axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-  return axios.get(`https://graph.facebook.com/v2.12/me?fields=id,name,picture,email,first_name,last_name`,config)
+  return axios.get(`https://graph.facebook.com/v2.12/me?fields=id,name,email,first_name,last_name`,config)
     .then((response) => response.data)
     .catch((error) => {
       console.error('TODO: ', error);

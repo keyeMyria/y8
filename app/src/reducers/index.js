@@ -13,6 +13,7 @@ import { users } from './SearchUsersReducer';
 import { friendActions } from './FriendActionsReducer';
 //import { acceptFriendRequest } from './AcceptFriendRequestReducer';
 import { friendRequests } from './FriendRequestsReducer';
+import { friends } from './FriendsReducer';
 import { user } from './UserReducer';
 import { login } from './LoginReducer';
 
@@ -28,10 +29,10 @@ export default {
   network,
   offlineQueue,
   user,
+  friendRequests,
+  friends,
   // no state for below data
   users,
   friendActions,
-  //acceptFriendRequest,
-  friendRequests,
   login
 };

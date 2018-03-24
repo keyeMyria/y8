@@ -34,7 +34,8 @@ const config = {
     'offlineQueue',
     'initData',
     'user',
-    'friendRequests'
+    'friendRequests',
+    'friends'
   ],
   debounce: 100,
   migrate: (state) => {
@@ -123,8 +124,8 @@ const configureStore = () => {
     reducer,
     {},
     compose(
-      //applyMiddleware(thunk, createLogger()),
-      applyMiddleware(thunk),
+      applyMiddleware(thunk, createLogger()),
+      //applyMiddleware(thunk),
     )
   );
   return store;

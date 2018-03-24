@@ -38,7 +38,6 @@ class LoginCtrl {
           user.profileId = profile.id;
           user.fullName = profile.name;
           user.email = profile.email;
-          user.pic = profile.picture.data.url;
           user.firstName = profile.first_name;
           user.lastName = profile.last_name;
 
