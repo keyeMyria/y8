@@ -23,7 +23,7 @@ import {
 } from './ActivityActions';
 import {
   getMyActivities
-} from './MyActivityActions';
+} from './GroupActions';
 
 import {
   getFriendRequests

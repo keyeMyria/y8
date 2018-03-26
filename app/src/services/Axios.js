@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { GetLoginToken, SetLoginToken } from '../services/AuthService';
 
 axios.defaults.baseURL = 'http://192.168.0.9:3000';
+//axios.defaults.baseURL = 'http://76.183.223.3:3000';
 //axios.defaults.baseURL = 'http://localhost:3000';
 //axios.defaults.headers.common.TMPAUTH = 'naveen1@gmail.com';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';

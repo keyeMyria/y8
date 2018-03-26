@@ -6,7 +6,7 @@ require('./sampleRoutes')(router);
 require('./AuthRoutes')(router);
 require('./ActivityRoutes')(router);
 require('./TagRoutes')(router);
-require('./MyActivityRoutes')(router);
 require('./TimeRoutes')(router);
 require('./FriendRoutes')(router);
+require('./GroupRoutes')(router);
 module.exports = router;

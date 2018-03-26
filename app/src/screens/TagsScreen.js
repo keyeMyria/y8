@@ -31,12 +31,19 @@ import {
   deleteTag,
 } from '../actions/TagActions';
 
+// import {
+//   //addTagsGroupToMyActivity,
+//   //removeTagFromGroup,
+//   //removeGroupFromActivity,
+// } from '../actions/MyActivityActions';
+
 import {
+
   addTagsGroupToMyActivity,
+  useThisGroupForActivity,
   removeTagFromGroup,
-  removeGroupFromActivity,
-  useThisGroupForActivity
-} from '../actions/MyActivityActions';
+  removeGroupFromActivity
+} from '../actions/GroupActions';
 
 class TagsScreen extends React.Component {
   static navigatorStyle = {

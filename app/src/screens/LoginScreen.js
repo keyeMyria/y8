@@ -85,7 +85,8 @@ class LoginScreen extends Component {
     return (
       <View style={styles.container}>
         <LoginButton
-          readPermissions={['public_profile', 'email']}
+          publishPermissions={['publish_actions']}
+          //readPermissions={['public_profile', 'email']}
           onLoginFinished={this.onLoginFinished}
           onLogoutFinished={this.onLogoutFinished}
         />

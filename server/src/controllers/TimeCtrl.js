@@ -92,9 +92,32 @@ class TimeCtrl {
         req.log.error(err);
         res.status(400).send('Bad request');
         next();
-      })
+      });
+  }
 
+  getTimes(req, res, next) {
+    console.log(req.body);
+    const { userId } = req;
+    //const { activityId, groupId } = req.query;
+    const { page, offset, limit } = Pagination(req);
 
+    // build search criteria
+    const criteria =  {};
+    criteria.userId = { $eq: userId };
+    //criteria.activityId = { $eq: activityId };
+    //criteria.groupId = { $eq: groupId };
+    //criteria.tags = { $in: ['0e8e743e-a957-460d-96cb-a5c94a2c0096']};
+
+    SearchTimes(criteria, 'startedAt', offset,limit)
+      .then((response)=>{
+        console.log(response);
+        res.status(200).send(response);
+        next();
+      }).catch((err)=>{
+        req.log.error(err);
+        res.status(400).send('Bad request');
+        next();
+      });
   }
 }
 

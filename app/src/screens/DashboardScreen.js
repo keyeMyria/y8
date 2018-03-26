@@ -25,13 +25,8 @@ import {
 } from '../actions/TimeActions';
 
 import {
-  getActivities,
-} from '../actions/ActivityActions';
-
-import {
   getTags,
 } from '../actions/TagActions';
-
 
 import {
   setConnectionStatus
@@ -41,9 +36,13 @@ import {
   offlineRequest
 } from '../actions/OfflineActions';
 
+// import {
+//   getMyActivities
+// } from '../actions/MyActivityActions';
+
 import {
   getMyActivities
-} from '../actions/MyActivityActions';
+} from '../actions/GroupActions';
 
 
 const iconColor = 'rgba(221,93,89,1)';
@@ -320,7 +319,6 @@ export default connect(mapStateToProps, {
   stopActivity,
   startActivity,
   toggleActivity,
-  getActivities,
   getMyActivities,
   getTags,
   setConnectionStatus,

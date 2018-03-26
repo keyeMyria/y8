@@ -1,35 +1,32 @@
 import _ from 'lodash';
 import {
-  //ACTIVITIES_FETCH_RESET,
-  //ACTIVITIES_FETCH_REQUEST,
-
-  //ACTIVITIES_FETCH_ERROR,
-  MY_ACTIVITIES_FETCH_REQUEST,
-  MY_ACTIVITIES_FETCH_SUCCESS,
-  MY_ACTIVITIES_FETCH_ERROR,
-  MY_ACTIVITIES_FETCH_RESET,
+  GROUP_FETCH_REQUEST,
+  GROUP_FETCH_SUCCESS,
+  GROUP_FETCH_ERROR,
+  GROUP_FETCH_RESET,
 
 
-  MY_ACTIVITY_GROUP_ADD_REQUEST,
-  MY_ACTIVITY_GROUP_ADD_SUCCESS,
-  MY_ACTIVITY_GROUP_ADD_ERROR,
-  MY_ACTIVITY_GROUP_ADD_RESET,
+  GROUP_GROUP_ADD_REQUEST,
+  GROUP_GROUP_ADD_SUCCESS,
+  GROUP_GROUP_ADD_ERROR,
+  GROUP_GROUP_ADD_RESET,
 
-  MY_ACTIVITY_ADD_REQUEST,
-  MY_ACTIVITY_ADD_SUCCESS,
-  MY_ACTIVITY_ADD_ERROR,
-  MY_ACTIVITY_ADD_RESET,
+  GROUP_ADD_REQUEST,
+  GROUP_ADD_SUCCESS,
+  GROUP_ADD_ERROR,
+  GROUP_ADD_RESET,
 
-  MY_ACTIVITY_REMOVE_GROUP_REQUEST,
-  MY_ACTIVITY_REMOVE_GROUP_SUCCESS,
-  MY_ACTIVITY_REMOVE_GROUP_ERROR,
-  MY_ACTIVITY_REMOVE_GROUP_RESET,
+  GROUP_REMOVE_GROUP_REQUEST,
+  GROUP_REMOVE_GROUP_SUCCESS,
+  GROUP_REMOVE_GROUP_ERROR,
+  GROUP_REMOVE_GROUP_RESET,
 
-  MY_ACTIVITY_REMOVE_TAG_REQUEST,
-  MY_ACTIVITY_REMOVE_TAG_SUCCESS,
-  MY_ACTIVITY_REMOVE_TAG_ERROR,
-  MY_ACTIVITY_REMOVE_TAG_RESET,
-} from '../types/MyActivityTypes.js';
+  GROUP_REMOVE_TAG_REQUEST,
+  GROUP_REMOVE_TAG_SUCCESS,
+  GROUP_REMOVE_TAG_ERROR,
+  GROUP_REMOVE_TAG_RESET,
+
+} from '../types/GroupTypes.js';
 
 import {
   ACTIVITY_DELETE_SUCCESS
@@ -260,7 +257,7 @@ const getMyActivitiesReset = (state, action) => {
   });
 };
 
-const INITIAL_MY_ACTIVITIES_STATE = {
+const INITIAL_GROUP_STATE = {
   error: null,
   loading: false,
   addingMyActivity: false,
@@ -270,9 +267,9 @@ const INITIAL_MY_ACTIVITIES_STATE = {
   byActivityId: {},
   allActivityIds: [],
 };
-export const myActivities = (state = INITIAL_MY_ACTIVITIES_STATE, action) => {
+export const myActivities = (state = INITIAL_GROUP_STATE, action) => {
   switch (action.type) {
-    case MY_ACTIVITIES_FETCH_REQUEST:
+    case GROUP_FETCH_REQUEST:
       return Object.assign({}, state, {
         error: null,
         loading: true,
@@ -281,25 +278,25 @@ export const myActivities = (state = INITIAL_MY_ACTIVITIES_STATE, action) => {
         removingGroup: false,
         removingTag: false,
       });
-    case MY_ACTIVITIES_FETCH_SUCCESS:
+    case GROUP_FETCH_SUCCESS:
       return getMyActivities(state, action);
-    case MY_ACTIVITIES_FETCH_ERROR:
+    case GROUP_FETCH_ERROR:
       return getMyActivitiesError(state, action);
-    case MY_ACTIVITIES_FETCH_RESET:
+    case GROUP_FETCH_RESET:
       return getMyActivitiesReset(state, action);
-    case MY_ACTIVITY_ADD_REQUEST:
+    case GROUP_ADD_REQUEST:
       return Object.assign({}, state, {
         addingMyActivity: true,
         error: null
       });
-    case MY_ACTIVITY_ADD_SUCCESS:
+    case GROUP_ADD_SUCCESS:
       return addTagsGroupToMyActivity(state, action);
-    case MY_ACTIVITY_ADD_ERROR:
+    case GROUP_ADD_ERROR:
       return Object.assign({}, state, {
         addingMyActivity: false,
         error: action.payload
       });
-    case MY_ACTIVITY_ADD_RESET:
+    case GROUP_ADD_RESET:
       return Object.assign({}, state, {
         addingMyActivity: false,
         error: null
@@ -309,55 +306,55 @@ export const myActivities = (state = INITIAL_MY_ACTIVITIES_STATE, action) => {
     case ACTIVITY_DELETE_SUCCESS:
       return deleteActivityFromMyActivity(state, action);
 
-    case MY_ACTIVITY_REMOVE_TAG_REQUEST:
+    case GROUP_REMOVE_TAG_REQUEST:
       return Object.assign({}, state, {
         removingTag: true,
         error: null
       });
-    case MY_ACTIVITY_REMOVE_TAG_SUCCESS:
+    case GROUP_REMOVE_TAG_SUCCESS:
       return removeTagFromGroup(state, action);
-    case MY_ACTIVITY_REMOVE_TAG_ERROR:
+    case GROUP_REMOVE_TAG_ERROR:
       return Object.assign({}, state, {
         removingTag: false,
         error: action.payload
       });
-    case MY_ACTIVITY_REMOVE_TAG_RESET:
+    case GROUP_REMOVE_TAG_RESET:
       return Object.assign({}, state, {
         removingTag: false,
         error: null
       });
 
-    case MY_ACTIVITY_REMOVE_GROUP_REQUEST:
+    case GROUP_REMOVE_GROUP_REQUEST:
       return Object.assign({}, state, {
         removingGroup: true,
         error: null
       });
-    case MY_ACTIVITY_REMOVE_GROUP_SUCCESS:
+    case GROUP_REMOVE_GROUP_SUCCESS:
       return removeGroupFromActivity(state, action);
-    case MY_ACTIVITY_REMOVE_GROUP_ERROR:
+    case GROUP_REMOVE_GROUP_ERROR:
       return Object.assign({}, state, {
         removingGroup: false,
         error: action.payload
       });
-    case MY_ACTIVITY_REMOVE_GROUP_RESET:
+    case GROUP_REMOVE_GROUP_RESET:
       return Object.assign({}, state, {
         removingGroup: false,
         error: null
       });
 
-    case MY_ACTIVITY_GROUP_ADD_REQUEST:
+    case GROUP_GROUP_ADD_REQUEST:
       return Object.assign({}, state, {
         addingGroup: true,
         error: null
       });
-    case MY_ACTIVITY_GROUP_ADD_SUCCESS:
+    case GROUP_GROUP_ADD_SUCCESS:
       return addGroupToMyActivity(state, action);
-    case MY_ACTIVITY_GROUP_ADD_ERROR:
+    case GROUP_GROUP_ADD_ERROR:
       return Object.assign({}, state, {
         addingGroup: false,
         error: action.payload
       });
-    case MY_ACTIVITY_GROUP_ADD_RESET:
+    case GROUP_GROUP_ADD_RESET:
       return Object.assign({}, state, {
         addingGroup: false,
         error: null

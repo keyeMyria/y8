@@ -6,8 +6,8 @@ module.exports = (criteria, sortBy, offset = 0, limit = 20) => {
     fromUser: 1,
     toUser: 1,
     status: 1
-  }).populate({path: 'fromUser', select: ['fullName','pic', 'profileId', 'email']})
-    .populate({path: 'toUser', select: ['fullName','pic', 'profileId', 'email']})
+  }).populate({path: 'fromUser', select: ['fullName', 'profileId', 'email']})
+    .populate({path: 'toUser', select: ['fullName', 'profileId', 'email']})
     .sort({[sortBy]: 1})
     .skip(offset)
     .limit(limit);
