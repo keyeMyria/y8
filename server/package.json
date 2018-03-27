@@ -19,6 +19,7 @@
     "lodash": "^4.17.4",
     "moment": "^2.19.2",
     "mongoose": "^4.13.5",
+    "node-pushnotifications": "^1.0.18",
     "uuid": "^3.1.0"
   },
   "devDependencies": {
