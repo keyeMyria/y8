@@ -67,7 +67,15 @@ class UsedTagsItem extends React.PureComponent {
       { cancelable: false }
     );
   }
+  onShare = () => {
+    const { groupId, myActivities, activity } = this.props;
 
+    const tags = myActivities.byActivityId[activity.id].byGroupId[groupId];
+
+    const sentence = tags.map((id) => `${this.props.tags.byId[id].name} `);
+
+    this.props.onShare(groupId, activity, tags, sentence);
+  }
   useThisGroupForActivity = (activityId, groupId) => {
     this.props.useThisGroupForActivity(activityId, groupId);
   }
@@ -90,6 +98,8 @@ class UsedTagsItem extends React.PureComponent {
       </View>
     ));
   }
+
+
   render() {
     const { groupId, myActivities, activity } = this.props;
     const { byActivityId } = myActivities;
@@ -118,13 +128,23 @@ class UsedTagsItem extends React.PureComponent {
           <TextButton
             containerStyle={{ marginLeft: 10 }}
             title='Share'
-            onPress={() => { console.log(123); }}
+            onPress={this.onShare}
           />
           <TextButton
-            containerStyle={{ marginRight: 10 }}
-            title='Continue'
+            containerStyle={{
+              borderWidth: 0.3,
+              borderRadius: 3,
+              borderColor: '#38B211',
+              height: 25,
+              marginRight: 10
+            }}
+            titleStyle={{
+              fontSize: 14,
+              color: '#38B211',
+              fontWeight: '600'
+            }}
+            title='START'
             onPress={() => {
-              //this.props.addTagsGroupToMyActivity(activity, selectedTags);
               this.useThisGroupForActivity(activity.id, groupId);
             }}
           />

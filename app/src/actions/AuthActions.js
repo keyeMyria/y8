@@ -25,9 +25,10 @@ import {
   getMyActivities
 } from './GroupActions';
 
-import {
-  getFriendRequests
-} from './FriendActions';
+// import {
+//   getFriends,
+//   getFriendRequests
+// } from './FriendActions';
 
 import {
   INIT_FETCH_DATA_REQUEST,
@@ -140,7 +141,8 @@ export const doAuthAndLoadInitData = () => (
             await dispatch(getTags());
             await dispatch(getActivities());
             await dispatch(getMyActivities());
-            await dispatch(getFriendRequests());
+            // await dispatch(getFriendRequests());
+            // await dispatch(getFriends());
             await dispatch({
               type: INIT_FETCH_DATA_DONE
             });

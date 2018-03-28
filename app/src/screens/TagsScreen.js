@@ -283,6 +283,23 @@ class TagsScreen extends React.Component {
     });
   }
 
+  onShare = (groupId, activity, tags, sentence) => {
+    console.log(groupId, activity, tags, sentence);
+    this.props.navigator.push({
+      screen: 'app.ShareScreen',
+      title: 'Subscribers',
+      passProps: {
+        activity,
+        isExisted: true,
+        groupId,
+        //selectedTags: this.state.selectedTags,
+        sentence
+      },
+      //backButtonTitle: 'Back',
+      navigatorButtons: {}
+    });
+  }
+
   onRefresh = () => {
     this.props.getTags();
   }
@@ -343,12 +360,13 @@ class TagsScreen extends React.Component {
     this.flatListRef.scrollToOffset({ x: 0, y: 0, animated: true });
   }
 
-  useThisGroupForActivity = (activityId, tagId) => {
+  useThisGroupForActivity = (activityId, groupId) => {
     this.props.navigator.popToRoot({
       animated: true,
       animationType: 'fade',
     });
-    this.props.useThisGroupForActivity(activityId, tagId);
+
+    this.props.useThisGroupForActivity(activityId, groupId);
   }
 
   removeTagFromGroup = (activityId, groupId, tagId) => {
@@ -419,6 +437,7 @@ class TagsScreen extends React.Component {
       removeTagFromGroup={this.removeTagFromGroup}
       removeGroupFromActivity={this.removeGroupFromActivity}
       useThisGroupForActivity={this.useThisGroupForActivity}
+      onShare={this.onShare}
     />
   );
 
@@ -506,11 +525,35 @@ class TagsScreen extends React.Component {
             <TextButton
               containerStyle={{ marginLeft: 10 }}
               title='Share'
-              onPress={() => { console.log(123); }}
+              onPress={() => {
+                this.props.navigator.push({
+                  screen: 'app.ShareScreen',
+                  title: 'Subscribers',
+                  passProps: {
+                    isExisted: false,
+                    activity: this.state.activity,
+                    selectedTags: this.state.selectedTags,
+                    sentence: this.state.sentence
+                  },
+                  //backButtonTitle: 'Back',
+                  navigatorButtons: {}
+                });
+               }}
             />
             <TextButton
-              containerStyle={{ marginRight: 10 }}
-              title='Continue'
+              containerStyle={{
+                borderWidth: 0.3,
+                borderRadius: 3,
+                borderColor: '#38B211',
+                height: 25,
+                marginRight: 10
+              }}
+              titleStyle={{
+                fontSize: 14,
+                color: '#38B211',
+                fontWeight: '600'
+              }}
+              title='START'
               onPress={() => {
                 this.props.navigator.popToRoot({
                   animated: true,

@@ -17,6 +17,9 @@ import { friendRequests } from './FriendRequestsReducer';
 import { friends } from './FriendsReducer';
 import { user } from './UserReducer';
 import { login } from './LoginReducer';
+import { device } from './DeviceReducer';
+import { subscribe } from './SubscriptionReducer';
+import { subscribers } from './SubscribersReducer';
 
 export default {
   app,
@@ -32,8 +35,11 @@ export default {
   user,
   friendRequests,
   friends,
+  device,
+  subscribers,
   // no state for below data
   users,
   friendActions,
-  login
+  login,
+  subscribe
 };

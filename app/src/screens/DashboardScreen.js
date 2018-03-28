@@ -16,6 +16,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Snackbar from 'react-native-snackbar';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ActivityCard from '../components/ActivityCard';
+import PushNotifications from '../pushnotifications';
 
 import {
   startActivity,
@@ -287,6 +288,9 @@ class DashboardScreen extends React.Component {
           textContent={'Loading...'}
           textStyle={{ color: EStyleSheet.value('$textColor') }}
         />
+
+        <PushNotifications />
+
       </View>
     );
   }
@@ -306,13 +310,14 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = (state) => {
   //console.log('DashboardScreen:mapStateToProps:', state);
-  const { myActivities, activities, tags, times, network } = state;
+  const { myActivities, activities, tags, times, network, device } = state;
   return {
     myActivities,
     activities,
     tags,
     times,
     network,
+    device
   };
 };
 export default connect(mapStateToProps, {

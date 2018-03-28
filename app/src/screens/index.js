@@ -12,6 +12,8 @@ import MoreScreen from './MoreScreen';
 import ActivitiesScreen from './ActivitiesScreen';
 import TagsScreen from './TagsScreen';
 
+import ShareScreen from './ShareScreen';
+
 
 // modals
 import ActivityModal from '../modals/ActivityModal';
@@ -44,13 +46,14 @@ export function registerScreens(store, Provider) {
   // Sub screens
   Navigation.registerComponent('app.ActivitiesScreen', () => ActivitiesScreen, store, Provider);
   Navigation.registerComponent('app.TagsScreen', () => TagsScreen, store, Provider);
+  Navigation.registerComponent('app.ShareScreen', () => ShareScreen, store, Provider);
 
   // Modals
   Navigation.registerComponent('app.ActivityModal', () => ActivityModal, store, Provider);
   Navigation.registerComponent('app.TagModal', () => TagModal, store, Provider);
   Navigation.registerComponent('app.FriendModal', () => FriendModal, store, Provider);
   Navigation.registerComponent('app.FriendInfoModal', () => FriendInfoModal, store, Provider);
-  
+
   //TODO: need to remove
   Navigation.registerComponent('app.FirstTabScreen', () => FirstTabScreen, store, Provider);
   Navigation.registerComponent('app.SecondTabScreen', () => SecondTabScreen, store, Provider);

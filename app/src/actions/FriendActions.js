@@ -85,10 +85,10 @@ export const searchUsers = (text) => (
 );
 
 export const getFriendRequests = () => (
-  async (dispatch, getState) => {
+  async (dispatch) => {
     try {
-      const { isConnected } = getState().network;
-      if (isConnected) {
+      //const { isConnected } = getState().network;
+      if (true) {
         await dispatch({
           type: FRIEND_GET_REQUESTS_REQUEST
         });
@@ -131,10 +131,10 @@ export const getFriendRequests = () => (
 
 
 export const getFriends = () => (
-  async (dispatch, getState) => {
+  async (dispatch) => {
     try {
-      const { isConnected } = getState().network;
-      if (isConnected) {
+      //const { isConnected } = getState().network;
+      if (true) {
         dispatch({
           type: FRIENDS_FETCH_REQUEST
         });

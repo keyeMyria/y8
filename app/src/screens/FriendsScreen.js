@@ -56,8 +56,8 @@ class FriendsScreen extends React.Component {
       // if you want to listen on navigator events, set this up
       this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
     }
-
-    //this.props.getFriendRequests();
+    this.props.getFriends();
+    this.props.getFriendRequests();
   }
 
   componentWillUpdate() {
@@ -339,7 +339,7 @@ class FriendsScreen extends React.Component {
             //ref={(ref) => { this.flatListRef = ref; }}
             extraData={this.props.friends.data.rows}
             //ListHeaderComponent={this.renderListHeader}
-            keyExtractor={item => item}
+            keyExtractor={item => item.id}
             data={this.props.friends.data.rows}
             renderItem={this.renderFriendRow}
             ListFooterComponent={this.renderListFooter}

@@ -14,12 +14,17 @@ class ToggleRowItem extends React.PureComponent {
     onValueChange: () => null
   }
 
-  onValueChange = () => {
+  onValueChange = (subscribed) => {
+    if (subscribed) {
+      this.props.onSubscribe(this.props.userId);
+    } else {
+      this.props.onUnsubscribe(this.props.userId);
+    }
     //this.props.onFriendPress(this.props.userObj);
   }
 
   render() {
-    const { title, subtitle } = this.props;
+    const { title, subtitle, subscribed } = this.props;
 
     return (
       <TouchableHighlight
@@ -34,8 +39,9 @@ class ToggleRowItem extends React.PureComponent {
             }
           </View>
           <Switch
-           value={true}
-           onValueChange={()=>{}}
+            disabled={this.props.disabled}
+            value={subscribed}
+            onValueChange={this.onValueChange}
           />
         </View>
       </TouchableHighlight>

@@ -33,6 +33,10 @@ import { OFFLINE_QUEUE } from '../types/OfflineTypes';
 import ApiRequest from '../services/ApiRequest';
 import { fakePromise } from '../services/Common';
 
+import {
+  startActivity
+} from './TimeActions';
+
 // add addTagsGroupToMyActivity action
 export const addTagsGroupToMyActivity = (activity, tags) => (
   async (dispatch, getState) => {
@@ -83,10 +87,12 @@ export const addTagsGroupToMyActivity = (activity, tags) => (
         });
         await fakePromise(300);
       }
-      dispatch({
+      await dispatch({
         type: GROUP_ADD_SUCCESS,
         payload: myactivity
       });
+
+      await dispatch(startActivity(activityId, groupId));
     } catch (error) {
       console.log('addTagsGroupToMyActivity', error);
       if (!_.isUndefined(error.response) && error.response.status === 401) {
@@ -197,6 +203,7 @@ export const useThisGroupForActivity = (activityId, groupId) => (
         type: GROUP_GROUP_ADD_SUCCESS,
         payload: data
       });
+      await dispatch(startActivity(activityId, groupId));
     } catch (error) {
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         dispatch({

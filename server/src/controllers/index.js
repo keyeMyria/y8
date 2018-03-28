@@ -6,6 +6,8 @@ const TagCtrl = require('./TagCtrl');
 const TimeCtrl = require('./TimeCtrl');
 const FriendCtrl = require('./FriendCtrl');
 const GroupCtrl = require('./GroupCtrl');
+const DeviceCtrl = require('./DeviceCtrl');
+const SubscriptionCtrl = require('./SubscriptionCtrl');
 
 module.exports = {
   Sample: SampleCtrl,
@@ -15,5 +17,7 @@ module.exports = {
   Tag: TagCtrl,
   Time: TimeCtrl,
   Friend: FriendCtrl,
-  Group: GroupCtrl
+  Group: GroupCtrl,
+  Device: DeviceCtrl,
+  Subscription: SubscriptionCtrl
 };

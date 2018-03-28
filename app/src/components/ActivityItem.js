@@ -83,6 +83,7 @@ class ActivityItem extends React.PureComponent {
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
+    //alignItems: 'space-between',
     justifyContent: 'center',
     flexDirection: 'row',
     height: 60,

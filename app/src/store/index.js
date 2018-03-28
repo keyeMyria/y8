@@ -35,7 +35,9 @@ const config = {
     'initData',
     'user',
     'friendRequests',
-    'friends'
+    'friends',
+    'device',
+    'subscribers'
   ],
   debounce: 100,
   migrate: (state) => {

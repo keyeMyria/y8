@@ -62,7 +62,7 @@ class LoginCtrl {
           const authToken = jwt.sign(payload, keys.appSecureKey, { expiresIn: keys.secureKeyExpiresIn }); // '30 days'
           res.set('x-app-auth-0', false);
           req.log.info('authToken generated successfully');
-          res.status(200).send({ authToken, userId: data._id });
+          res.status(200).send({ authToken, userId: data._id, subRequests: {}, subscribed: {} });
           next();
         }).catch((error)=>{
           console.log(error,4);

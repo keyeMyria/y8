@@ -25,6 +25,12 @@ import {
   sendFriendRequest
 } from '../actions/FriendActions';
 
+import {
+  doSubscribe,
+  doUnsubscribe,
+  hasSubscribed
+} from '../actions/SubscriptionActions';
+
 const { height, width } = Dimensions.get('window');
 
 class FriendInfoModal extends React.Component {
@@ -54,6 +60,10 @@ class FriendInfoModal extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.props.hasSubscribed(this.props.friend.id);
+  }
+
   componentWillUpdate() {
     LayoutAnimation.easeInEaseOut();
   }
@@ -76,11 +86,6 @@ class FriendInfoModal extends React.Component {
     await this.props.navigator.dismissModal({
       animationType: 'slide-down'// 'none' / 'slide-down'
     });
-  }
-
-  isValid = (name) => {
-    const regex = /^[a-zA-Z0-9_!@#$&*.]{3,35}$/;
-    return regex.test(name);
   }
 
   render() {
@@ -106,12 +111,20 @@ class FriendInfoModal extends React.Component {
             }}
           >{this.props.friend.email}</Text>
         </View>
-        <ToggleRowItem
-          title={'Allow notificaions'}
-          subtitle={
-            'when activity started or stopped, will receive a notification from this friend'
-          }
-        />
+        {
+          <ToggleRowItem
+            disabled={this.props.subscribe.loading}
+            userId={this.props.friend.id}
+            subscribed={this.props.subscribe.subscribed}
+            title={'Allow notificaions'}
+            onSubscribe={this.props.doSubscribe}
+            onUnsubscribe={this.props.doUnsubscribe}
+            subtitle={
+              'when activity started or stopped, will receive a notification from this friend'
+            }
+          />
+        }
+
       </View>
     );
   }
@@ -145,12 +158,15 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = (state) => {
   //console.log('FriendsScreen:mapStateToProps:', state);
-  const { friends } = state;
+  const { subscribe } = state;
   return {
-    friends
+    subscribe
   };
 };
-export default connect(null, {
+export default connect(mapStateToProps, {
   searchUsers,
-  sendFriendRequest
+  sendFriendRequest,
+  doSubscribe,
+  doUnsubscribe,
+  hasSubscribed
 })(FriendInfoModal);

@@ -5,6 +5,11 @@ const services = require('../services');
 const Pagination = require('../services/Pagination');
 const SearchTimes = require('../queries/SearchTimes');
 
+const {
+  getDeviceTokens,
+  sendNotifications
+} = require('../services/Notification');
+
 class TimeCtrl {
 
   create(req, res, next) {
@@ -30,6 +35,22 @@ class TimeCtrl {
 
     Time.create(data).then((result) => {
       if (result) {
+
+        getDeviceTokens(userId).then((tokens)=>{
+          console.log(tokens);
+          let registeredIds = [];
+          _.forEach(tokens, (obj) => {
+            registeredIds.push(obj.token);
+          });
+          console.log(registeredIds);
+          const data = {
+            title: 'Naveen Konduru',
+            body: 'Started driving home',
+          };
+          sendNotifications(registeredIds,data);
+        }).catch((er)=>{
+          console.log(er);
+        });
         console.log("Activity started!");
         res.status(200).send("Activity started!");
       } else {
