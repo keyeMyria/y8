@@ -1,5 +1,6 @@
 #fb_install
 # Logs
+server/logs/
 ilogs
 *.log
 npm-debug.log*
