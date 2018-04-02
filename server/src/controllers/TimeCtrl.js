@@ -15,70 +15,125 @@ class TimeCtrl {
   create(req, res, next) {
     console.log(req.body);
     const {
-      activityId,
+      id,
+      prevTimeId,
       groupId,
-      tags,
       startedAt,
     } = req.body;
 
     const { userId } = req;
     const data = {
+      _id: id,
       userId,
-      activityId,
       groupId,
-      tags,
+      latest: 1,
       startedAt,
-      stoppedAt: ''
+      stoppedAt: null
     };
+    console.log('START ACTIVITY - start');
+    console.log(data);
+    console.log(prevTimeId);
+    console.log('START ACTIVITY - end');
+
+    const Group = mongoose.model('group');
+    Group.findOneAndUpdate({_id: groupId}, { $set: { updatedAt: Date.now()}})
+      .then((result) => {
+
+      });
+
 
     const Time = mongoose.model('time');
+    //Time.update({ _id: prevTimeId, groupId }, { $set: { latest: 0 } })
+    Time.update({  groupId, latest: 1 }, { $set: { latest: 0 } })
+      .then((result) => {
+        if(result){
+          return Time.create(data);
+        }
+        return false;
+      }).then((result) => {
+        if (result) {
 
-    Time.create(data).then((result) => {
-      if (result) {
+          // getDeviceTokens(userId).then((tokens)=>{
+          //   console.log(tokens);
+          //   let registeredIds = [];
+          //   _.forEach(tokens, (obj) => {
+          //     registeredIds.push(obj.token);
+          //   });
+          //   console.log(registeredIds);
+          //   const data = {
+          //     title: 'Naveen Konduru',
+          //     body: 'Started driving home',
+          //   };
+          //   sendNotifications(registeredIds,data);
+          // }).catch((er)=>{
+          //   console.log(er);
+          // });
 
-        getDeviceTokens(userId).then((tokens)=>{
-          console.log(tokens);
-          let registeredIds = [];
-          _.forEach(tokens, (obj) => {
-            registeredIds.push(obj.token);
-          });
-          console.log(registeredIds);
-          const data = {
-            title: 'Naveen Konduru',
-            body: 'Started driving home',
-          };
-          sendNotifications(registeredIds,data);
-        }).catch((er)=>{
-          console.log(er);
-        });
-        console.log("Activity started!");
-        res.status(200).send("Activity started!");
-      } else {
-        console.log("Failed to start activity");
-        res.status(200).send("Failed to start activity");
-      }
-      next();
-    }).catch((timesError) => {
-      console.log(timesError);
-      req.log.error(timesError.message);
-      res.status(400).send('Bad request');
-      next();
-    });
+          console.log("Activity started!");
+          res.status(200).send({id: result._id});
+        } else {
+          console.log("Failed to start activity");
+          res.status(200).send("Failed to start activity");
+        }
+        next();
+      }).catch((timesError) => {
+        console.log(timesError);
+        req.log.error(timesError.message);
+        res.status(400).send('Bad request');
+        next();
+      });
+
+    // Time.create(data).then((result) => {
+    //   if (result) {
+    //
+    //     // getDeviceTokens(userId).then((tokens)=>{
+    //     //   console.log(tokens);
+    //     //   let registeredIds = [];
+    //     //   _.forEach(tokens, (obj) => {
+    //     //     registeredIds.push(obj.token);
+    //     //   });
+    //     //   console.log(registeredIds);
+    //     //   const data = {
+    //     //     title: 'Naveen Konduru',
+    //     //     body: 'Started driving home',
+    //     //   };
+    //     //   sendNotifications(registeredIds,data);
+    //     // }).catch((er)=>{
+    //     //   console.log(er);
+    //     // });
+    //
+    //     console.log("Activity started!");
+    //     console.log(result);
+    //     res.status(200).send({id: result._id});
+    //   } else {
+    //     console.log("Failed to start activity");
+    //     res.status(200).send("Failed to start activity");
+    //   }
+    //   next();
+    // }).catch((timesError) => {
+    //   console.log(timesError);
+    //   req.log.error(timesError.message);
+    //   res.status(400).send('Bad request');
+    //   next();
+    // });
   }
 
   update(req, res, next) {
-    console.log(req.body);
+
     const {
-      activityId,
-      groupId,
+      id,
       stoppedAt,
     } = req.body;
+
+    console.log('STOP ACTIVITY - start');
+    console.log('update',id,stoppedAt);
+    console.log('STOP ACTIVITY - end');
 
     const { userId } = req;
 
     const Time = mongoose.model('time');
     Time.update(
-      { userId, activityId, groupId, stoppedAt: '' },
+      { _id: id, userId, stoppedAt: '' },
       { $set: { stoppedAt } },
       (done)=>{
         console.log(done);
@@ -134,6 +189,35 @@ class TimeCtrl {
         console.log(response);
         res.status(200).send(response);
         next();
+      }).catch((err)=>{
+        req.log.error(err);
+        res.status(400).send('Bad request');
+        next();
+      });
+  }
+
+  getTimeByGroup(req, res, next) {
+    console.log(req.body);
+    const { userId } = req;
+    const { groupId } = req.params;
+
+    // build search criteria
+    const criteria =  {};
+    criteria.userId = { $eq: userId };
+    criteria.groupId = { $eq: groupId };
+    const Time = mongoose.model('time');
+    Time.find({userId, groupId, latest: 1})
+      .sort({ 'stoppedAt': -1})
+      .skip(0)
+      .limit(1)
+      .then((result) => {
+        if(result){
+          res.status(200).send(result[0]);
+          next();
+        } else {
+          res.status(200).send("");
+          next();
+        }
       }).catch((err)=>{
         req.log.error(err);
         res.status(400).send('Bad request');

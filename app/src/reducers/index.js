@@ -18,8 +18,12 @@ import { friends } from './FriendsReducer';
 import { user } from './UserReducer';
 import { login } from './LoginReducer';
 import { device } from './DeviceReducer';
-import { subscribe } from './SubscriptionReducer';
+import { subscribe } from './SubscribeReducer';
 import { subscribers } from './SubscribersReducer';
+import { share } from './ShareReducer';
+import { shares } from './SharesReducer';
+import {
+onlygroups, } from './OnlyGroupsReducer';
 
 export default {
   app,
@@ -37,9 +41,13 @@ export default {
   friends,
   device,
   subscribers,
+  onlygroups,
+
   // no state for below data
   users,
   friendActions,
   login,
-  subscribe
+  subscribe,
+  share,
+  shares,
 };

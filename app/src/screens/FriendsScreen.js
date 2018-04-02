@@ -65,7 +65,7 @@ class FriendsScreen extends React.Component {
   }
 
   async componentDidUpdate(nextProps) {
-    console.log('componentDidUpdate', nextProps.friendActions.sendLoading, this.props.friendActions.sendLoading, this.props.friendActions.error);
+    //console.log('componentDidUpdate', nextProps.friendActions.sendLoading, this.props.friendActions.sendLoading, this.props.friendActions.error);
     if (nextProps.friendActions.sendLoading &&
       !this.props.friendActions.sendLoading &&
       _.isNull(this.props.friendActions.error)) {

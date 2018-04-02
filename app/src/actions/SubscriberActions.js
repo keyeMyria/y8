@@ -20,7 +20,7 @@ import {
 } from '../types/SubscribeTypes';
 
 import { AUTH_ERROR } from '../types/AuthTypes';
-//import { fakePromise } from '../services/Common';
+import { fakePromise } from '../services/Common';
 
 // subscribes userId to other user
 export const doSubscribe = (subUserId) => (
@@ -38,10 +38,11 @@ export const doSubscribe = (subUserId) => (
           apiUrl,
           method: 'post',
         };
-        await ApiRequest(payload);
+        const resp = await ApiRequest(payload);
         dispatch({
           type: SUBSCRIBE_SUCCESS,
           payload: {
+            subscribeId: resp.data.id,
             subUserId,
             subscribed: true
           }
@@ -67,7 +68,7 @@ export const doSubscribe = (subUserId) => (
 );
 
 // subscribes userId to other user
-export const doUnsubscribe = (subUserId) => (
+export const doUnsubscribe = (subscribeId) => (
   async (dispatch, getState) => {
     try {
       const { isConnected } = getState().network;
@@ -78,7 +79,7 @@ export const doUnsubscribe = (subUserId) => (
         const apiUrl = '/api/private/unsubscribe';
         const payload = {
           UID: uuidv4(),
-          data: { subUserId },
+          data: { subscribeId },
           apiUrl,
           method: 'post',
         };
@@ -86,7 +87,7 @@ export const doUnsubscribe = (subUserId) => (
         dispatch({
           type: UNSUBSCRIBE_SUCCESS,
           payload: {
-            subUserId,
+            subUserId: null,
             subscribed: false
           }
         });
@@ -127,11 +128,18 @@ export const hasSubscribed = (subUserId) => (
           method: 'get',
         };
         const resp = await ApiRequest(payload);
+
+        let subscribed = false;
+        if (!_.isNil(resp.data.subUserId) && resp.data.subUserId !== '') {
+          subscribed = true;
+        }
+
         dispatch({
           type: SUBSCRIBE_SUCCESS,
           payload: {
+            subscribeId: resp.data.id,
             subUserId,
-            subscribed: resp.data.status === 1
+            subscribed
           }
         });
       }
@@ -154,7 +162,7 @@ export const hasSubscribed = (subUserId) => (
   }
 );
 
-export const getSubscribers = (subUserId) => (
+export const getSubscribers = () => (
   async (dispatch, getState) => {
     try {
       const { isConnected } = getState().network;

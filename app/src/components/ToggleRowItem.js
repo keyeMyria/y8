@@ -5,27 +5,48 @@ import {
   Switch,
   TouchableHighlight,
 } from 'react-native';
+import _ from 'lodash';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import TextButton from './TextButton';
+import { fakePromise } from '../services/Common';
 
 class ToggleRowItem extends React.PureComponent {
   static defaultProps = {
     onValueChange: () => null
   }
+  state = {
+    subscribed: false
+  }
+  componentDidMount() {
+    this.setState({
+      subscribed: this.props.subscribed
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      subscribed: nextProps.subscribed
+    });
+  }
 
   onValueChange = (subscribed) => {
-    if (subscribed) {
-      this.props.onSubscribe(this.props.userId);
-    } else {
-      this.props.onUnsubscribe(this.props.userId);
-    }
+    console.log(this.props);
+    this.setState({
+      subscribed
+    }, () => {
+      if (subscribed) {
+        this.props.onSubscribe(this.props.userId);
+      } else if (!_.isNil(this.props.subscribeId) &&
+        this.props.subscribeId !== '') {
+        this.props.onUnsubscribe(this.props.subscribeId);
+      }
+    });
     //this.props.onFriendPress(this.props.userObj);
   }
 
   render() {
-    const { title, subtitle, subscribed } = this.props;
-
+    const { title, subtitle } = this.props;
     return (
       <TouchableHighlight
         underlayColor='#F4F4F4'
@@ -40,7 +61,7 @@ class ToggleRowItem extends React.PureComponent {
           </View>
           <Switch
             disabled={this.props.disabled}
-            value={subscribed}
+            value={this.state.subscribed}
             onValueChange={this.onValueChange}
           />
         </View>

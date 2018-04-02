@@ -1,7 +1,8 @@
 const uuid = require('uuid');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const GroupSchema = new Schema({
+
+const CanShareSchema = new Schema({
   _id: {
     type: String,
     default: uuid.v4
@@ -11,13 +12,15 @@ const GroupSchema = new Schema({
     ref: 'users',
     required: true
   },
-  activityId: {
+  groupId: {
     type: String,
+    ref: 'group',
+    required: true
   },
-  tags: [String],
-  latest: {
-    type: Number,
-    default: 0
+  sharedWith: {
+    type: String,
+    ref: 'users',
+    required: true
   },
   createdAt: {
     type: String,
@@ -25,19 +28,28 @@ const GroupSchema = new Schema({
   },
   updatedAt: {
     type: String,
-    required: false
+    required: true
   }
+
 });
+
+CanShareSchema.index(
+  {
+    groupId: 1, sharedWith: 1
+  }, {unique: true}
+);
 // Duplicate the ID field.
-GroupSchema.virtual('id').get(function(){
+CanShareSchema.virtual('id').get(function(){
     return this._id;
 });
 
 //Ensure virtual fields are serialised.
-GroupSchema.set('toJSON', {
+CanShareSchema.set('toJSON', {
   virtuals: true,
   versionKey:false,
   transform: function (doc, ret) {   delete ret._id  }
 });
 
-mongoose.model('group', GroupSchema);
+
+
+mongoose.model('canshare', CanShareSchema);

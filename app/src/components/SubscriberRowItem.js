@@ -10,7 +10,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import TextButton from './TextButton';
 
-class ShareFriendRowItem extends React.PureComponent {
+class SubscriberRowItem extends React.PureComponent {
   static defaultProps = {
     onItemPress: () => null,
     onFriendInfo: () => null,
@@ -37,7 +37,12 @@ class ShareFriendRowItem extends React.PureComponent {
     this.setState({
       showCheck: !this.state.showCheck
     }, () => {
-      this.props.onItemPress(this.state.showCheck, this.props.userId, this.props.id);
+      const sharedWith = {
+        id: this.props.userId,
+        fullName: this.props.fullName,
+        profileId: this.props.profileId
+      };
+      this.props.onItemPress(this.state.showCheck, this.props.userId, this.props.id, sharedWith);
     });
   }
   onFriendInfo = () => {
@@ -178,4 +183,4 @@ const styles = EStyleSheet.create({
   },
 });
 
-export default ShareFriendRowItem;
+export default SubscriberRowItem;

@@ -16,32 +16,16 @@ import {
 
 class UsedTagsItem extends React.PureComponent {
 
-  removeGroupFromActivity = (activityId, groupId) => {
-    Alert.alert(
-      'Confirm',
-      `Delete this group?`,
-      [
-        {
-          style: 'cancel',
-          text: 'Cancel',
-          onPress: () => null
-        },
-        {
-          style: 'destructive',
-          text: 'Delete',
-          onPress: () => {
-            this.setState({
-              isDelete: true
-            }, () => {
-              this.props.removeGroupFromActivity(activityId, groupId);
-            });
-          }
-        },
-      ],
-      { cancelable: false }
-    );
-  }
+  onShare = () => {
+    const { groupId, activity, tagsGroup } = this.props;
+    console.log(this.props);
 
+    //const { tagsGroup } = myActivities.byActivityId[activity.id].byGroupId[groupId];
+
+    const sentence = tagsGroup.map((id) => `${this.props.tags.byId[id].name} `);
+
+    this.props.onShare(groupId, activity, tagsGroup, sentence);
+  }
   removeTagFromGroup = (activityId, groupId, tagId) => {
     Alert.alert(
       'Confirm',
@@ -59,7 +43,7 @@ class UsedTagsItem extends React.PureComponent {
             this.setState({
               isDelete: true
             }, () => {
-              this.props.removeTagFromGroup(activityId, groupId, tagId);
+              this.props.removeTagFromGroup(activityId, groupId, tagId, this.props.onlyPrevGroupId);
             });
           }
         },
@@ -67,17 +51,37 @@ class UsedTagsItem extends React.PureComponent {
       { cancelable: false }
     );
   }
-  onShare = () => {
-    const { groupId, myActivities, activity } = this.props;
 
-    const tags = myActivities.byActivityId[activity.id].byGroupId[groupId];
-
-    const sentence = tags.map((id) => `${this.props.tags.byId[id].name} `);
-
-    this.props.onShare(groupId, activity, tags, sentence);
+  removeGroupFromActivity = () => {
+    const { activity, groupId, onlyPrevGroupId } = this.props;
+    console.log(this.props);
+    Alert.alert(
+      'Confirm',
+      'Delete this group?',
+      [
+        {
+          style: 'cancel',
+          text: 'Cancel',
+          onPress: () => null
+        },
+        {
+          style: 'destructive',
+          text: 'Delete',
+          onPress: () => {
+            this.setState({
+              isDelete: true
+            }, () => {
+              this.props.removeGroupFromActivity(activity.id, groupId, onlyPrevGroupId);
+            });
+          }
+        },
+      ],
+      { cancelable: false }
+    );
   }
-  useThisGroupForActivity = (activityId, groupId) => {
-    this.props.useThisGroupForActivity(activityId, groupId);
+
+  useThisGroupForActivity = (activityId, groupId, prevTimeId, prevGroupId) => {
+    this.props.useThisGroupForActivity(activityId, groupId, prevTimeId, prevGroupId);
   }
 
   renderTagsGroup = (activityId, groupId, tags) => {
@@ -99,10 +103,9 @@ class UsedTagsItem extends React.PureComponent {
     ));
   }
 
-
   render() {
-    const { groupId, myActivities, activity } = this.props;
-    const { byActivityId } = myActivities;
+    const { groupId, activity, tagsGroup } = this.props;
+    //const { byActivityId } = myActivities;
     return (
       <View style={styles.outerContainer}>
         <View
@@ -118,16 +121,16 @@ class UsedTagsItem extends React.PureComponent {
             name='clear'
             size={21}
             color={globalIconColor}
-            onPress={() => { this.removeGroupFromActivity(activity.id, groupId); }}
+            onPress={this.removeGroupFromActivity}
           />
         </View>
         <View style={styles.innerContainer}>
-          {this.renderTagsGroup(activity.id, groupId, byActivityId[activity.id].byGroupId[groupId])}
+          {this.renderTagsGroup(activity.id, groupId, tagsGroup)}
         </View>
         <View style={styles.footer}>
           <TextButton
             containerStyle={{ marginLeft: 10 }}
-            title='Share'
+            title={'Share'}
             onPress={this.onShare}
           />
           <TextButton
@@ -145,7 +148,7 @@ class UsedTagsItem extends React.PureComponent {
             }}
             title='START'
             onPress={() => {
-              this.useThisGroupForActivity(activity.id, groupId);
+              this.useThisGroupForActivity(activity.id, groupId, this.props.prevTimeId, this.props.prevGroupId);
             }}
           />
         </View>

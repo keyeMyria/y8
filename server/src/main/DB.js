@@ -9,7 +9,7 @@ mongoose.Promise = global.Promise;
 const PORT = CONFIG.db.port!=''?':'+CONFIG.db.port:'';
 const CONN_URL = 'mongodb://'+CONFIG.db.host+PORT+'/'+CONFIG.db.name;
 
-mongoose.connect(CONN_URL, { useMongoClient: true });
+mongoose.connect(CONN_URL);
 mongoose.connection
   .once('open', () => {
     console.log('Mongodb connected successfully');

@@ -7,7 +7,8 @@ const TimeCtrl = require('./TimeCtrl');
 const FriendCtrl = require('./FriendCtrl');
 const GroupCtrl = require('./GroupCtrl');
 const DeviceCtrl = require('./DeviceCtrl');
-const SubscriptionCtrl = require('./SubscriptionCtrl');
+const SubscriberCtrl = require('./SubscriberCtrl');
+const SharedCtrl = require('./SharedCtrl');
 
 module.exports = {
   Sample: SampleCtrl,
@@ -19,5 +20,6 @@ module.exports = {
   Friend: FriendCtrl,
   Group: GroupCtrl,
   Device: DeviceCtrl,
-  Subscription: SubscriptionCtrl
+  Subscriber: SubscriberCtrl,
+  Shared: SharedCtrl
 };

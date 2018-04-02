@@ -11,6 +11,11 @@ import {
   GROUP_FETCH_ERROR,
   GROUP_FETCH_RESET,
 
+  ONLYGROUPS_FETCH_REQUEST,
+  ONLYGROUPS_FETCH_SUCCESS,
+  ONLYGROUPS_FETCH_ERROR,
+  ONLYGROUPS_FETCH_RESET,
+
   GROUP_GROUP_ADD_REQUEST,
   GROUP_GROUP_ADD_SUCCESS,
   GROUP_GROUP_ADD_ERROR,
@@ -38,7 +43,7 @@ import {
 } from './TimeActions';
 
 // add addTagsGroupToMyActivity action
-export const addTagsGroupToMyActivity = (activity, tags) => (
+export const addTagsGroupToMyActivity = (activity, tags, prevTimeId, prevGroupId) => (
   async (dispatch, getState) => {
     try {
       dispatch({
@@ -51,7 +56,7 @@ export const addTagsGroupToMyActivity = (activity, tags) => (
         byActivityId: {
           [activityId]: {
             byGroupId: {
-              [groupId]: tags,
+              [groupId]: { tagsGroup: tags },
             },
             allGroupIds: [groupId]
           }
@@ -60,6 +65,7 @@ export const addTagsGroupToMyActivity = (activity, tags) => (
       };
 
       const group = {
+        prevGroupId,
         groupId,
         activityId,
         tags,
@@ -92,7 +98,7 @@ export const addTagsGroupToMyActivity = (activity, tags) => (
         payload: myactivity
       });
 
-      await dispatch(startActivity(activityId, groupId));
+      await dispatch(startActivity(prevTimeId, activityId, groupId));
     } catch (error) {
       console.log('addTagsGroupToMyActivity', error);
       if (!_.isUndefined(error.response) && error.response.status === 401) {
@@ -121,6 +127,8 @@ export const getMyActivities = () => (
       allActivityIds: []
     };
 
+
+
     try {
       const { isConnected } = getState().network;
       if (isConnected) {
@@ -134,17 +142,49 @@ export const getMyActivities = () => (
           method: 'get'
         };
 
-        //if (isConnected) {
+        if (isConnected) {
           const response = await ApiRequest(payload);
           //console.log('responseGetMyActivities:');
           console.log(response);
           const { data } = response;
-          myactivities = data;
-        //}
+          console.log(data);
+          //_.reverse(data.rows);
+          _.forEach(data.rows, (row) => {
+            const { activityId } = row._id;
+            myactivities.allActivityIds.push(activityId);
+            const allGroupIds = [];
+            const byGroupId = {};
+            _.forEach(row.groups, (group) => {
+              allGroupIds.push(group.groupId);
+              byGroupId[group.groupId] = {
+                tagsGroup: group.tagsGroup,
+                sharedWith: group.sharedWith,
+                groupTimes: group.groupTimes
+              };
+            });
+            myactivities.byActivityId[activityId] = { allGroupIds, byGroupId };
+          });
+
+
+          const temp = [];
+          myactivities.allActivityIds.forEach((aId, index) => {
+            const gId = myactivities.byActivityId[aId].allGroupIds[0];
+            const { groupTimes } = myactivities.byActivityId[aId].byGroupId[gId];
+            if (!_.isNil(groupTimes) && !_.isNil(groupTimes[0])) {
+              const { stoppedAt } = groupTimes[0];
+
+              if (_.isNil(stoppedAt) || stoppedAt === '') {
+                myactivities.allActivityIds.splice(index, 1);
+                temp.push(aId);
+              }
+            }
+          });
+          myactivities.allActivityIds = [...temp, ...myactivities.allActivityIds];
+        }
 
         dispatch({
           type: GROUP_FETCH_SUCCESS,
-          payload: data,
+          payload: myactivities,
           isOnline: isConnected
         });
       }
@@ -168,7 +208,7 @@ export const getMyActivities = () => (
   }
 );
 
-export const useThisGroupForActivity = (activityId, groupId) => (
+export const useThisGroupForActivity = (activityId, groupId, prevTimeId, prevGroupId) => (
   async (dispatch, getState) => {
     try {
       dispatch({
@@ -179,7 +219,7 @@ export const useThisGroupForActivity = (activityId, groupId) => (
       const apiUrl = '/api/private/group';
       const payload = {
         UID: uuidv4(),
-        data: { groupId, updatedAt: Date.now() },
+        data: { prevGroupId, groupId, updatedAt: Date.now() },
         apiUrl,
         method: 'put',
       };
@@ -195,7 +235,16 @@ export const useThisGroupForActivity = (activityId, groupId) => (
         await fakePromise(300);
       }
 
+      const onlygroups = getState().onlygroups;
+
+      let tagsGroup = [];
+      //if (!_.isNil(groupId)) {
+        tagsGroup = _.filter(onlygroups.data, { id: groupId });
+      //}
+      console.log(tagsGroup);
+
       const data = {
+        tagsGroup: tagsGroup[0].tags,
         activityId,
         groupId
       };
@@ -203,7 +252,7 @@ export const useThisGroupForActivity = (activityId, groupId) => (
         type: GROUP_GROUP_ADD_SUCCESS,
         payload: data
       });
-      await dispatch(startActivity(activityId, groupId));
+      await dispatch(startActivity(prevTimeId, activityId, groupId));
     } catch (error) {
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         dispatch({
@@ -224,7 +273,7 @@ export const useThisGroupForActivity = (activityId, groupId) => (
 );
 
 
-export const removeTagFromGroup = (activityId, groupId, tagId) => (
+export const removeTagFromGroup = (activityId, groupId, tagId, onlyPrevGroupId) => (
   async (dispatch, getState) => {
     try {
       dispatch({
@@ -232,7 +281,7 @@ export const removeTagFromGroup = (activityId, groupId, tagId) => (
       });
       const { isConnected } = getState().network;
 
-      const apiUrl = `/api/private/group/${groupId}/${tagId}`;
+      const apiUrl = `/api/private/group/${groupId}/${tagId}/${onlyPrevGroupId}/tag`;
       const payload = {
         UID: uuidv4(),
         data: null,
@@ -240,19 +289,32 @@ export const removeTagFromGroup = (activityId, groupId, tagId) => (
         method: 'delete',
       };
 
-      if (isConnected) {
-        await ApiRequest(payload);
-      } else {
-        dispatch({
-          type: OFFLINE_QUEUE,
-          payload
-        });
-        await fakePromise(100);
+      // if (isConnected) {
+        const resp = await ApiRequest(payload);
+      // } else {
+      //   dispatch({
+      //     type: OFFLINE_QUEUE,
+      //     payload
+      //   });
+      //   await fakePromise(100);
+      // }
+
+      const onlygroups = getState().onlygroups;
+      console.log('removeGroupFromActivity', onlygroups, onlyPrevGroupId);
+
+      let tagsGroup = [];
+      if (!_.isNil(onlyPrevGroupId)) {
+        tagsGroup = _.filter(onlygroups.data, { id: onlyPrevGroupId });
+      }
+      if (tagsGroup.length === 1) {
+        tagsGroup = tagsGroup[0].tags;
       }
 
       dispatch({
         type: GROUP_REMOVE_TAG_SUCCESS,
         payload: {
+          tagsGroup,
+          groupTimes: resp.data.nextGroupLatestTime,
           activityId,
           groupId,
           tagId
@@ -265,6 +327,7 @@ export const removeTagFromGroup = (activityId, groupId, tagId) => (
           payload: error.response
         });
       } else {
+        console.log(error.response);
         dispatch({
           type: GROUP_REMOVE_TAG_ERROR,
           payload: error.response
@@ -278,7 +341,7 @@ export const removeTagFromGroup = (activityId, groupId, tagId) => (
 );
 
 //removeGroupFromActivity
-export const removeGroupFromActivity = (activityId, groupId) => (
+export const removeGroupFromActivity = (activityId, groupId, onlyPrevGroupId) => (
   async (dispatch, getState) => {
     try {
       dispatch({
@@ -286,7 +349,7 @@ export const removeGroupFromActivity = (activityId, groupId) => (
       });
       const { isConnected } = getState().network;
 
-      const apiUrl = `/api/private/group/${groupId}`;
+      const apiUrl = `/api/private/group/${groupId}/${onlyPrevGroupId}/group`;
       const payload = {
         UID: uuidv4(),
         data: null,
@@ -294,19 +357,40 @@ export const removeGroupFromActivity = (activityId, groupId) => (
         method: 'delete',
       };
 
-      if (isConnected) {
-        await ApiRequest(payload);
-      } else {
-        dispatch({
-          type: OFFLINE_QUEUE,
-          payload
-        });
-        await fakePromise(100);
+      //if (isConnected) {
+      const resp = await ApiRequest(payload);
+
+
+      const onlygroups = getState().onlygroups;
+      console.log('removeGroupFromActivity', onlygroups, onlyPrevGroupId);
+
+      let tagsGroup = [];
+      if (!_.isNil(onlyPrevGroupId)) {
+        tagsGroup = _.filter(onlygroups.data, { id: onlyPrevGroupId });
       }
+      if (tagsGroup.length === 1) {
+        tagsGroup = tagsGroup[0].tags;
+      }
+      //console.log(tagsGroup);
+      // } else {
+      //   dispatch({
+      //     type: OFFLINE_QUEUE,
+      //     payload
+      //   });
+      //   await fakePromise(100);
+      // }
+      console.log({
+        tagsGroup,
+        groupTimes: resp.data.nextGroupLatestTime,
+        activityId,
+        groupId,
+      });
 
       dispatch({
         type: GROUP_REMOVE_GROUP_SUCCESS,
         payload: {
+          tagsGroup,
+          groupTimes: resp.data.nextGroupLatestTime,
           activityId,
           groupId,
         }
@@ -326,6 +410,57 @@ export const removeGroupFromActivity = (activityId, groupId) => (
     }
     dispatch({
       type: GROUP_REMOVE_GROUP_RESET,
+    });
+  }
+);
+
+
+//getGroupsByActivity
+export const getGroupsByActivity = (activityId) => (
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ONLYGROUPS_FETCH_REQUEST,
+      });
+      //const { isConnected } = getState().network;
+
+      const apiUrl = `/api/private/group/${activityId}`;
+      const payload = {
+        UID: uuidv4(),
+        data: null,
+        apiUrl,
+        method: 'get',
+      };
+
+      //if (isConnected) {
+        const resp = await ApiRequest(payload);
+      // } else {
+      //   dispatch({
+      //     type: OFFLINE_QUEUE,
+      //     payload
+      //   });
+      //   await fakePromise(100);
+      // }
+
+      dispatch({
+        type: ONLYGROUPS_FETCH_SUCCESS,
+        payload: resp.data
+      });
+    } catch (error) {
+      if (!_.isUndefined(error.response) && error.response.status === 401) {
+        dispatch({
+          type: AUTH_ERROR,
+          payload: error.response
+        });
+      } else {
+        dispatch({
+          type: ONLYGROUPS_FETCH_ERROR,
+          payload: error.response
+        });
+      }
+    }
+    dispatch({
+      type: ONLYGROUPS_FETCH_RESET,
     });
   }
 );

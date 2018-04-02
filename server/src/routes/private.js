@@ -10,5 +10,6 @@ require('./TimeRoutes')(router);
 require('./FriendRoutes')(router);
 require('./GroupRoutes')(router);
 require('./DeviceRoutes')(router);
-require('./SubscriptionRoutes')(router);
+require('./SubscriberRoutes')(router);
+require('./SharedRoutes')(router);
 module.exports = router;

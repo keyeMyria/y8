@@ -151,13 +151,11 @@ class DashboardScreen extends React.Component {
     });
   }
 
-  showTags = (activityId, prevTimeId, prevGroupId) => {
+  showTags = (activityId) => {
     this.props.navigator.push({
       screen: 'app.TagsScreen',
       title: 'Tags',
       passProps: {
-        prevGroupId,
-        prevTimeId,
         activity: this.props.activities.byId[activityId]
       }
     });
@@ -172,10 +170,8 @@ class DashboardScreen extends React.Component {
     const { name } = activities.byId[activityId];
 
     const groupId = myActivities.byActivityId[activityId].allGroupIds[0]; // latest groupId
-    const { tagsGroup, sharedWith, groupTimes } = myActivities.byActivityId[activityId].byGroupId[groupId];
-
-    //const tagsGroup = Array.from(tagsGroup);
-    //tagsGroup = Array.from(tagsGroup);
+    let tagsGroup = myActivities.byActivityId[activityId].byGroupId[groupId];
+    tagsGroup = Array.from(tagsGroup);
 
     let individualLoading = false;
     let loading = false;
@@ -186,34 +182,27 @@ class DashboardScreen extends React.Component {
       }
     }
 
-    let timeId = null;
+
     let startedAt = null;
     let stoppedAt = null;
-
-    if (!_.isNil(groupTimes) && groupTimes.length > 0) {
-      if (groupTimes[0]._id !== '') {
-        timeId = groupTimes[0]._id;
-      }
-      if (groupTimes[0].startedAt !== '') {
-        startedAt = groupTimes[0].startedAt;
-      }
-      if (groupTimes[0].stoppedAt !== '') {
-        stoppedAt = groupTimes[0].stoppedAt;
-      }
+    if (!_.isEmpty(times.byActivityId[activityId]) &&
+        !_.isEmpty(times.byActivityId[activityId][groupId]) &&
+        times.byActivityId[activityId][groupId].length > 0) {
+          startedAt = times.byActivityId[activityId][groupId][0].startedAt;
+          stoppedAt = times.byActivityId[activityId][groupId][0].stoppedAt;
     }
-
 
     let startedTag = null;
     let stoppedTag = null;
     let rand = 0;
 
-    if (!_.isNil(startedAt) && _.isNil(stoppedAt)) {
+    if (!_.isNull(startedAt) && _.isNull(stoppedAt)) {
       const currSecs1 = moment.duration(moment().valueOf() - startedAt).asSeconds();
       if (currSecs1 < 1440) {
         rand = moment().valueOf();
       }
       startedTag = `started ${moment(startedAt).fromNow()}`;
-    } else if (!_.isNil(startedAt) && !_.isNil(stoppedAt)) {
+    } else if (!_.isNull(startedAt) && !_.isNull(stoppedAt)) {
       const currSecs2 = moment.duration(moment().valueOf() - stoppedAt).asSeconds();
       if (currSecs2 < 1440) {
         rand = moment().valueOf();
@@ -240,19 +229,16 @@ class DashboardScreen extends React.Component {
 
       stoppedTag = `stopped ${moment(stoppedAt).fromNow()} - ${diff}`;
     }
-    //console.log('TIMEID@#$@#$@#$@#$@#asdf', timeId, startedAt, stoppedAt);
 
     return (
       <ActivityCard
         individualLoading={individualLoading}
         loading={loading}
-        activityId={activityId}
+        id={activityId}
         name={name}
         groupId={groupId}
-        sharedWith={sharedWith}
         tagsGroup={tagsGroup}
         tags={tags}
-        timeId={timeId}
         startedAt={startedAt}
         stoppedAt={stoppedAt}
         startedTag={startedTag}

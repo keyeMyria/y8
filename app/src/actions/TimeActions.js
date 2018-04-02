@@ -29,7 +29,7 @@ export const getTimes = () => (
     }
   });
 
-export const startActivity = (activityId, groupId) => (
+export const startActivity = (prevTimeId, activityId, groupId) => (
   async (dispatch, getState) => {
     try {
       const { isConnected } = getState().network;
@@ -43,23 +43,21 @@ export const startActivity = (activityId, groupId) => (
       });
 
       const { myActivities, times } = getState();
-      const tags = myActivities.byActivityId[activityId].byGroupId[groupId];
       const startedAt = moment().valueOf();
       const data = {
-        activityId,
+        id: uuidv4(),
+        prevTimeId,
         groupId,
-        tags,
         startedAt
       };
 
       let newIndex = 0;
       myActivities.allActivityIds.forEach((aId, index) => {
         const gId = myActivities.byActivityId[aId].allGroupIds[0];
-        if (!_.isUndefined(times.byActivityId[aId]) &&
-          !_.isUndefined(times.byActivityId[aId][gId])) {
-          const { stoppedAt } = times.byActivityId[aId][gId][0];
-          //console.log(stoppedAt);
-          if (_.isNull(stoppedAt)) {
+        const { groupTimes } = myActivities.byActivityId[aId].byGroupId[gId];
+        if (!_.isNil(groupTimes) && !_.isNil(groupTimes[0])) {
+          const { stoppedAt } = groupTimes[0];
+          if (_.isNil(stoppedAt) || stoppedAt === '') {
             newIndex = index;
           }
         }
@@ -76,7 +74,6 @@ export const startActivity = (activityId, groupId) => (
       if (isConnected) {
         //TODO: Make api call if network available, otherwise store in activity queue
         await ApiRequest(payload);
-        //const { data } = response;
       } else {
         dispatch({
           type: OFFLINE_QUEUE,
@@ -87,6 +84,7 @@ export const startActivity = (activityId, groupId) => (
       await dispatch({
         type: TIME_TOGGLE_SUCCESS,
         payload: {
+          id: data.id,
           activityId,
           groupId,
           startedAt,
@@ -112,7 +110,7 @@ export const startActivity = (activityId, groupId) => (
     });
   });
 
-export const stopActivity = (activityId, groupId) => (
+export const stopActivity = (id, activityId, groupId) => (
   async (dispatch, getState) => {
     try {
       const { isConnected } = getState().network;
@@ -127,19 +125,30 @@ export const stopActivity = (activityId, groupId) => (
 
       const stoppedAt = moment().valueOf();
       const data = {
-        activityId,
-        groupId,
+        id,
         stoppedAt
       };
 
       const { myActivities, times } = getState();
+      // let newIndex = 0;
+      // myActivities.allActivityIds.forEach((aId, index) => {
+      //   const gId = myActivities.byActivityId[aId].allGroupIds[0];
+      //   if (!_.isUndefined(times.byActivityId[aId]) &&
+      //     !_.isUndefined(times.byActivityId[aId][gId])) {
+      //     const stoppedTime = times.byActivityId[aId][gId][0].stoppedAt;
+      //     if (_.isNull(stoppedTime)) {
+      //       newIndex = index;
+      //     }
+      //   }
+      // });
+
       let newIndex = 0;
       myActivities.allActivityIds.forEach((aId, index) => {
         const gId = myActivities.byActivityId[aId].allGroupIds[0];
-        if (!_.isUndefined(times.byActivityId[aId]) &&
-          !_.isUndefined(times.byActivityId[aId][gId])) {
-          const stoppedTime = times.byActivityId[aId][gId][0].stoppedAt;
-          if (_.isNull(stoppedTime)) {
+        const { groupTimes } = myActivities.byActivityId[aId].byGroupId[gId];
+        if (!_.isNil(groupTimes) && !_.isNil(groupTimes[0])) {
+          const stoppedTime = groupTimes[0].stoppedAt;
+          if (_.isNil(stoppedTime) || stoppedTime === '') {
             newIndex = index;
           }
         }
@@ -166,6 +175,7 @@ export const stopActivity = (activityId, groupId) => (
       await dispatch({
         type: TIME_TOGGLE_SUCCESS,
         payload: {
+          id,
           activityId,
           groupId,
           stoppedAt,

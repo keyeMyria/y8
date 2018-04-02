@@ -121,7 +121,7 @@ class ActivityCard extends React.PureComponent {
     // }, 500);
   }
 
-  onStartStopPress = (id, groupId, started) => {
+  onStartStopPress = (activityId, groupId, started) => {
     //console.log(this.state.started);
     // this.setState({
     //   started: !this.state.started
@@ -129,17 +129,17 @@ class ActivityCard extends React.PureComponent {
       //console.log(this.state.started);
     const toggle = !started;
     if (toggle) {
-      this.props.startActivity(id, groupId);
+      this.props.startActivity(this.props.timeId, activityId, groupId);
       this.props.scrollToOffset();
     } else {
-      this.props.stopActivity(id, groupId);
+      this.props.stopActivity(this.props.timeId, activityId, groupId);
     }
     //this.props.toggleActivity(id, groupId, this.state.started);
   }
 
   showTags = (started, individualLoading) => {
     if (!started & !individualLoading) {
-      this.props.showTags(this.props.id);
+      this.props.showTags(this.props.activityId, this.props.timeId, this.props.groupId);
     }
   }
   renderTagsSentence = (name, tags) => (
@@ -147,14 +147,14 @@ class ActivityCard extends React.PureComponent {
   );
 
   render() {
-    const { id, name, groupId, tagsGroup, startedTag, stoppedTag, individualLoading } = this.props;
+    const { activityId, name, groupId, tagsGroup, startedTag, stoppedTag, individualLoading } = this.props;
     const { loading } = this.props;
 
     const activityName = name[0].toUpperCase() + name.slice(1).toLowerCase();
 
     let timeDiff = startedTag;
     let textAlign = 'right';
-    if (_.isNull(startedTag) && !_.isNull(stoppedTag)) {
+    if (_.isNil(startedTag) && !_.isNil(stoppedTag)) {
       textAlign = 'left';
       timeDiff = stoppedTag;
     }
@@ -162,9 +162,9 @@ class ActivityCard extends React.PureComponent {
 
     const { startedAt, stoppedAt } = this.props;
     let started = false;
-    if (!_.isNull(startedAt) && _.isNull(stoppedAt)) {
+    if (!_.isNil(startedAt) && _.isNil(stoppedAt)) {
       started = true;
-    } else if (!_.isNull(startedAt) && !_.isNull(stoppedAt)) {
+    } else if (!_.isNil(startedAt) && !_.isNil(stoppedAt)) {
       started = false;
     }
 
@@ -220,7 +220,8 @@ class ActivityCard extends React.PureComponent {
         </CardHeader>
         <CardContent style={styles.cardContent}>
           <TouchableOpacity
-            onPress={() => { this.showTags(started, individualLoading); }}
+            onPress={() => {
+              this.showTags(started, individualLoading); }}
           >
             <View
               style={{
@@ -272,7 +273,7 @@ class ActivityCard extends React.PureComponent {
               borderColor: started ? 'rgba(255, 51, 79,0.8)' : '#38B211',
               height: 25,
             }}
-            onPress={() => { this.onStartStopPress(id, groupId, started); }}
+            onPress={() => { this.onStartStopPress(activityId, groupId, started); }}
           />
         </CardFooter>
       </Card>

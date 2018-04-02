@@ -6,7 +6,7 @@ const timeRoutes = (router) => {
   //router.get('/time', ctrl.get);
   // Search
   router.get('/time/search', ctrl.search);
-
+  router.get('/time/:groupId', ctrl.getTimeByGroup);
   router.get('/time', ctrl.getTimes);
   // Create startedAt time
   router.post('/time', ctrl.create);

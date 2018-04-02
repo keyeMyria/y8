@@ -27,17 +27,12 @@ class ShareFriendRowItem extends React.PureComponent {
       showCheck: this.props.isChecked
     });
   }
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      showCheck: nextProps.isChecked
-    });
-  }
 
   onPress = () => {
     this.setState({
       showCheck: !this.state.showCheck
     }, () => {
-      this.props.onItemPress(this.state.showCheck, this.props.userId, this.props.id);
+      this.props.onItemPress(this.state.showCheck, this.props.id);
     });
   }
   onFriendInfo = () => {
@@ -48,7 +43,7 @@ class ShareFriendRowItem extends React.PureComponent {
     const { fullName, profileId } = this.props;
     const fbApiProfileUrl = `https://graph.facebook.com/v2.12/${profileId}/picture?height=50&width=50&redirect=true`;
 
-    const status = this.props.id;//'show current activity here';
+    const status = 'show current activity here';
 
     return (
       <TouchableHighlight

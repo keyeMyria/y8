@@ -8,6 +8,7 @@ class GroupCtrl {
   create(req, res, next) {
     const { userId } = req;
     const {
+      prevGroupId,
       groupId,
       activityId,
       tags,
@@ -21,12 +22,18 @@ class GroupCtrl {
       userId,
       activityId,
       tags: sortedTags,
+      latest: 1,
       createdAt,
       updatedAt
     };
 
     console.log('data', data);
     const Group = mongoose.model('group');
+
+    Group.findOneAndUpdate({_id: prevGroupId}, { $set: { latest: 0}})
+      .then((result) => {
+
+      });
 
     // Find activity and check if same group is isExist
     // add to array if group not isExists
@@ -64,34 +71,62 @@ class GroupCtrl {
   update(req, res, next) {
     const { userId } = req;
     const {
+      prevGroupId,
       groupId,
       updatedAt
     } = req.body;
 
     const Group = mongoose.model('group');
 
+    Group.findOneAndUpdate({_id: prevGroupId}, { $set: { latest: 0}})
+      .then((result) => {
+        if(result) {
+          const criteria =  {};
+          criteria._id = {$eq: groupId};
+          return Group.findOneAndUpdate(criteria, { $set: { updatedAt, latest: 1 } });
+        }
+        return result;
+
+      }).then((result) => {
+        console.log('result', result);
+        if (!result || result === false) {
+          console.log("Failed to update");
+          res.status(400).send("Failed to update");
+        } else {
+          console.log("Group updated successfully");
+          res.status(200).send("Group updated successfully");
+        }
+        next();
+
+      }).catch((groupError) => {
+        console.log(groupError);
+        req.log.error(groupError.message);
+        res.status(400).send('Bad request');
+        next();
+      });
+
     // Find activity and check if same group is isExist
     // add to array if group not isExists
-    const criteria =  {};
-    criteria._id = {$eq: groupId};
-
-    Group.findOneAndUpdate(criteria, { $set: { updatedAt } }).then((result) => {
-      console.log('result', result);
-      if (!result || result === false) {
-        console.log("Failed to update");
-        res.status(400).send("Failed to update");
-      } else {
-        console.log("Group updated successfully");
-        res.status(200).send("Group updated successfully");
-      }
-      next();
-
-    }).catch((groupError) => {
-      console.log(groupError);
-      req.log.error(groupError.message);
-      res.status(400).send('Bad request');
-      next();
-    });
+    // const criteria =  {};
+    // criteria._id = {$eq: groupId};
+    //
+    // Group.findOneAndUpdate(criteria, { $set: { updatedAt } }).then((result) => {
+    //   console.log('result', result);
+    //   if (!result || result === false) {
+    //     console.log("Failed to update");
+    //     res.status(400).send("Failed to update");
+    //   } else {
+    //     console.log("Group updated successfully");
+    //     res.status(200).send("Group updated successfully");
+    //   }
+    //   next();
+    //
+    // }).catch((groupError) => {
+    //   console.log(groupError);
+    //   req.log.error(groupError.message);
+    //   res.status(400).send('Bad request');
+    //   next();
+    // });
   }
 
   get(req, res, next) {
@@ -124,10 +159,12 @@ class GroupCtrl {
     // build search criteria
     const criteria =  {};
     criteria.userId = {$eq: userId};
+    criteria.latest = {$eq: 1};
 
     getMyActivities(criteria, 'updatedAt', offset,limit).then((results) => {
-      console.log("GETGETGET" ,results);
+      console.log("GETGETGET" ,JSON.stringify(results));
 
+      /*
       let data = {
         byActivityId: {},
         allActivityIds: [],
@@ -140,14 +177,16 @@ class GroupCtrl {
         let allGroupIds = [];
         let byGroupId = {};
         _.forEach(row.tags, (tag)=>{
+          //console.log(tag);
           allGroupIds.push(tag._id);
           byGroupId[tag._id] = tag.tags;
         });
         data.byActivityId[activityId] = { allGroupIds, byGroupId };
       });
+      */
 
-      console.log(data);
-      res.status(200).send(data);
+      //console.log(data);
+      res.status(200).send(results);
       next();
 
 
@@ -180,7 +219,7 @@ class GroupCtrl {
 
   deleteTagFromGroupByActivity(req, res, next) {
     const { userId } = req;
-    const { groupId, tagId } = req.params;
+    const { groupId, tagId, onlyPrevGroupId } = req.params;
 
     console.log(req.params);
 
@@ -188,28 +227,65 @@ class GroupCtrl {
 
     const criteria =  {};
     criteria._id = {$eq: groupId};
+    criteria.userId = {$eq: userId};
 
+    let deleteAll = false;
     Group.findOne(criteria, {
       tags: 1,
     }).then((result) => {
+      if(!result) {
+        return false;
+      }
+
       const index = result.tags.indexOf(tagId);
       if (index !== -1) {
         result.tags.splice(index, 1);
       }
       if (result.tags.length === 0) {
+
+        // Group.findOneAndUpdate({_id: onlyPrevGroupId}, { $set: { latest: 1}});
+        //
+        //   let nextGroupLatestTime = {};
+        //   const Time = mongoose.model('time');
+        //   Time.findOne({userId, groupId: onlyPrevGroupId, latest: 1})
+        //     .then((results) => {
+        //       nextGroupLatestTime = results;
+        //     });
+
+        deleteAll = true;
+
         return result.remove();
       } else {
         return result.save();
       }
+
     }).then((updated) => {
-      if (!updated) {
-        console.log("Failed to delete tag from group");
-        res.status(400).send("Failed to delete tag from group");
-      } else {
-        console.log("Tag deleted successfully from group");
-        res.status(200).send("Deleted");
+
+      if(deleteAll){
+        Group.findOneAndUpdate({_id: onlyPrevGroupId}, { $set: { latest: 1}}).then((result) => {
+
+        });;
+
+          let nextGroupLatestTime = {};
+          const Time = mongoose.model('time');
+          Time.findOne({userId, groupId: onlyPrevGroupId, latest: 1})
+            .then((results) => {
+              nextGroupLatestTime = results;
+              res.status(200).send({nextGroupLatestTime});
+              next();
+            });
+      }else{
+        if (!updated) {
+          console.log("Failed to delete tag from group");
+          res.status(400).send("Failed to delete tag from group");
+        } else {
+          console.log("Tag deleted successfully from group");
+          res.status(200).send("Deleted");
+        }
+        next();
       }
-      next();
+
+
     }).catch((myActivityError) => {
       console.log(myActivityError);
       req.log.error(myActivityError.message);
@@ -221,25 +297,83 @@ class GroupCtrl {
   //deleteGroupFromActivity
   deleteGroupFromActivity(req, res, next) {
     const { userId } = req;
-    const { groupId } = req.params;
+    const { groupId, onlyPrevGroupId } = req.params;
+
+    console.log(req.params);
 
     const Group = mongoose.model('group');
 
-    const criteria =  {};
-    criteria._id = {$eq: groupId};
+    Group.findOneAndUpdate({_id: onlyPrevGroupId}, { $set: { latest: 1}})
+      .then((result) => {
 
-    Group.remove(criteria).then((deleted) => {
-      if (!deleted) {
-        console.log("Failed to delete group");
-        res.status(400).send("Failed to delete group");
-      } else {
-        console.log("Group deleted successfully");
-        res.status(200).send("Deleted");
-      }
+      });
+
+    let nextGroupLatestTime = {};
+    const Time = mongoose.model('time');
+    Time.findOne({userId, groupId: onlyPrevGroupId, latest: 1})
+      .then((result) => {
+        return result;
+      }).then((time) => {
+        nextGroupLatestTime = time;
+        const criteria =  {};
+        criteria._id = {$eq: groupId};
+        criteria.userId = {$eq: userId};
+        return Group.remove(criteria);
+      }).then((deleted) => {
+        if (!deleted) {
+          console.log("Failed to delete group");
+          res.status(400).send("Failed to delete group");
+        } else {
+          console.log("Group deleted successfully");
+          res.status(200).send({nextGroupLatestTime});
+        }
+        next();
+      }).catch((myActivityError) => {
+        console.log(myActivityError);
+        req.log.error(myActivityError.message);
+        res.status(400).send('Bad request');
+        next();
+      });
+
+    // const criteria =  {};
+    // criteria._id = {$eq: groupId};
+    // criteria.userId = {$eq: userId};
+    //
+    // Group.remove(criteria).then((deleted) => {
+    //   if (!deleted) {
+    //     console.log("Failed to delete group");
+    //     res.status(400).send("Failed to delete group");
+    //   } else {
+    //     console.log("Group deleted successfully");
+    //     res.status(200).send("Deleted");
+    //   }
+    //   next();
+    // }).catch((myActivityError) => {
+    //   console.log(myActivityError);
+    //   req.log.error(myActivityError.message);
+    //   res.status(400).send('Bad request');
+    //   next();
+    // });
+  }
+
+  getGroupsByActivity (req, res, next) {
+    const { userId } = req;
+    const { activityId } = req.params;
+    const Group = mongoose.model('group');
+
+    const criteria =  {};
+    criteria.userId = {$eq: userId};
+    criteria.activityId = {$eq: activityId};
+
+    Group.find(criteria,{ tags: 1 })
+    .sort({ 'updatedAt': -1})
+    .then((results) => {
+      console.log(results);
+      res.status(200).send(results);
       next();
-    }).catch((myActivityError) => {
-      console.log(myActivityError);
-      req.log.error(myActivityError.message);
+    }).catch((getGroupByActivityError) => {
+      console.log(getGroupByActivityError);
+      req.log.error(getGroupByActivityError.message);
       res.status(400).send('Bad request');
       next();
     });

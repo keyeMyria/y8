@@ -38,7 +38,7 @@ import {
 // } from '../actions/MyActivityActions';
 
 import {
-
+  getGroupsByActivity,
   addTagsGroupToMyActivity,
   useThisGroupForActivity,
   removeTagFromGroup,
@@ -71,6 +71,7 @@ class TagsScreen extends React.Component {
 
   componentDidMount() {
     const { activity } = this.props;
+    this.props.getGroupsByActivity(activity.id);
     const groups = this.props.myActivities.byActivityId[activity.id];
     let hasTags = false;
     if (!_.isEmpty(groups) && !_.isEmpty(groups.allGroupIds)) {
@@ -118,9 +119,8 @@ class TagsScreen extends React.Component {
       await this.showSnackBar('Tag removed from group');
     } else if (nextProps.myActivities.removingTag &&
       !this.props.myActivities.removingTag &&
-      !_.isNull(this.props.myActivities.error) &&
-      !_.isUndefined(this.props.myActivities.error)) {
-      await this.showSnackBar(this.props.myActivities.error.status);
+      !_.isNil(this.props.myActivities.error)) {
+      await this.showSnackBar(this.props.myActivities.error.data);
     } else if (nextProps.myActivities.removingTag &&
       !this.props.myActivities.removingTag &&
       _.isUndefined(this.props.myActivities.error)) {
@@ -135,7 +135,7 @@ class TagsScreen extends React.Component {
       !this.props.myActivities.removingGroup &&
       !_.isNull(this.props.myActivities.error) &&
       !_.isUndefined(this.props.myActivities.error)) {
-      await this.showSnackBar(this.props.myActivities.error.status);
+      await this.showSnackBar(this.props.myActivities.error.data);
     } else if (nextProps.myActivities.removingGroup &&
       !this.props.myActivities.removingGroup &&
       _.isUndefined(this.props.myActivities.error)) {
@@ -150,7 +150,7 @@ class TagsScreen extends React.Component {
       !this.props.tags.adding &&
       !_.isNull(this.props.tags.addingError) &&
       !_.isUndefined(this.props.tags.addingError)) {
-      await this.showSnackBar(this.props.tags.addingError.status);
+      await this.showSnackBar(this.props.tags.addingError.data);
     } else if (nextProps.tags.adding &&
       !this.props.tags.adding &&
       _.isUndefined(this.props.tags.addingError)) {
@@ -165,7 +165,7 @@ class TagsScreen extends React.Component {
       !this.props.tags.updating &&
       !_.isNull(this.props.tags.updatingError) &&
       !_.isUndefined(this.props.tags.updatingError)) {
-      await this.showSnackBar(this.props.tags.updatingError.status);
+      await this.showSnackBar(this.props.tags.updatingError.data);
     } else if (nextProps.tags.updating &&
       !this.props.tags.updating &&
       _.isUndefined(this.props.tags.updatingError)) {
@@ -180,7 +180,7 @@ class TagsScreen extends React.Component {
       !this.props.tags.deleting &&
       !_.isNull(this.props.tags.deletingError) &&
       !_.isUndefined(this.props.tags.deletingError)) {
-      await this.showSnackBar(this.props.tags.deletingError.status);
+      await this.showSnackBar(this.props.tags.deletingError.data);
     } else if (nextProps.tags.deleting &&
       !this.props.tags.deleting &&
       _.isUndefined(this.props.tags.deletingError)) {
@@ -287,8 +287,10 @@ class TagsScreen extends React.Component {
     console.log(groupId, activity, tags, sentence);
     this.props.navigator.push({
       screen: 'app.ShareScreen',
-      title: 'Subscribers',
+      title: 'Share',
       passProps: {
+        prevGroupId: this.props.prevGroupId,
+        prevTimeId: this.props.prevTimeId,
         activity,
         isExisted: true,
         groupId,
@@ -360,21 +362,36 @@ class TagsScreen extends React.Component {
     this.flatListRef.scrollToOffset({ x: 0, y: 0, animated: true });
   }
 
-  useThisGroupForActivity = (activityId, groupId) => {
+  addTagsGroupToMyActivity = () => {
+    const { activity, selectedTags } = this.state;
+    this.props.navigator.popToRoot({
+      animated: true,
+      animationType: 'fade',
+    });
+    this.props.addTagsGroupToMyActivity(activity, selectedTags, this.props.prevTimeId, this.props.prevGroupId);
+  }
+
+  useThisGroupForActivity = (activityId, groupId, prevTimeId, prevGroupId) => {
     this.props.navigator.popToRoot({
       animated: true,
       animationType: 'fade',
     });
 
-    this.props.useThisGroupForActivity(activityId, groupId);
+    this.props.useThisGroupForActivity(activityId, groupId, prevTimeId, prevGroupId);
   }
 
-  removeTagFromGroup = (activityId, groupId, tagId) => {
-    this.props.removeTagFromGroup(activityId, groupId, tagId);
+  removeTagFromGroup = (activityId, groupId, tagId, onlyPrevGroupId) => {
+    this.props.removeTagFromGroup(activityId, groupId, tagId, onlyPrevGroupId);
   }
-
-  removeGroupFromActivity = (activityId, groupId) => {
-    this.props.removeGroupFromActivity(activityId, groupId);
+  getPrevGroupIdFromOnlygroups = (id) => {
+    const index = _.findIndex(this.props.onlygroups.data, { id });
+    if (index !== -1 && index === 0 && !_.isNil(this.props.onlygroups.data[index + 1])) {
+      return this.props.onlygroups.data[index + 1].id;
+    }
+    return null;
+  }
+  removeGroupFromActivity = (activityId, groupId, onlyPrevGroupId) => {
+    this.props.removeGroupFromActivity(activityId, groupId, onlyPrevGroupId);
   }
   renderListHeader = () => {
     const { activity } = this.state;
@@ -415,6 +432,7 @@ class TagsScreen extends React.Component {
   };
   renderListFooter= () => null;
   renderRow = ({ item }) => {
+    //console.log(item);
     const { id, name } = this.props.tags.byId[item];
     return (
       <TagItem
@@ -428,18 +446,25 @@ class TagsScreen extends React.Component {
     );
   };
 
-  renderRowGroup = ({ item }) => (
-    <UsedTagsItem
-      activity={this.state.activity}
-      groupId={item}
-      tags={this.props.tags}
-      myActivities={this.props.myActivities}
-      removeTagFromGroup={this.removeTagFromGroup}
-      removeGroupFromActivity={this.removeGroupFromActivity}
-      useThisGroupForActivity={this.useThisGroupForActivity}
-      onShare={this.onShare}
-    />
-  );
+  renderRowGroup = ({ item }) => {
+    console.log(item);
+    const onlyPrevGroupId = this.getPrevGroupIdFromOnlygroups(item.id);
+    return (
+      <UsedTagsItem
+        prevGroupId={this.props.prevGroupId}
+        prevTimeId={this.props.prevTimeId}
+        activity={this.state.activity}
+        groupId={item.id}
+        tagsGroup={item.tags}
+        onlyPrevGroupId={onlyPrevGroupId}
+        tags={this.props.tags}
+        removeTagFromGroup={this.removeTagFromGroup}
+        removeGroupFromActivity={this.removeGroupFromActivity}
+        useThisGroupForActivity={this.useThisGroupForActivity}
+        onShare={this.onShare}
+      />
+    );
+  };
 
 
   render() {
@@ -530,6 +555,8 @@ class TagsScreen extends React.Component {
                   screen: 'app.ShareScreen',
                   title: 'Subscribers',
                   passProps: {
+                    prevGroupId: this.props.prevGroupId,
+                    prevTimeId: this.props.prevTimeId,
                     isExisted: false,
                     activity: this.state.activity,
                     selectedTags: this.state.selectedTags,
@@ -554,13 +581,7 @@ class TagsScreen extends React.Component {
                 fontWeight: '600'
               }}
               title='START'
-              onPress={() => {
-                this.props.navigator.popToRoot({
-                  animated: true,
-                  animationType: 'fade',
-                });
-                this.props.addTagsGroupToMyActivity(activity, selectedTags);
-              }}
+              onPress={this.addTagsGroupToMyActivity}
             />
             </View>
           }
@@ -629,12 +650,10 @@ class TagsScreen extends React.Component {
             //removeClippedSubviews={false}
             keyboardShouldPersistTaps='always'
             //ref={(ref) => { this.flatListRef = ref; }}
-            extraData={myActivities}
+            extraData={this.props.onlygroups.data}
             //ListHeaderComponent={this.renderListHeader}
-            keyExtractor={item => item}
-            data={
-              byActivityId[activity.id] ? byActivityId[activity.id].allGroupIds : []
-            }
+            keyExtractor={item => item.id}
+            data={this.props.onlygroups.data}
             renderItem={this.renderRowGroup}
             ListFooterComponent={this.renderListFooter}
           />
@@ -667,13 +686,15 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = (state) => {
   //console.log('TagsScreen:mapStateToProps:', state);
-  const { tags, myActivities } = state;
+  const { tags, myActivities, onlygroups } = state;
   return {
     tags,
     myActivities,
+    onlygroups
   };
 };
 export default connect(mapStateToProps, {
+  getGroupsByActivity,
   getTags,
   addTag,
   updateTag,

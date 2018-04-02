@@ -16,10 +16,12 @@ import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import ShareFriendRowItem from '../components/ShareFriendRowItem';
 import TextButton from '../components/TextButton';
+import Loader from '../components/Loader';
 
 import {
-  getSubscribers
-} from '../actions/SubscriptionActions';
+  getShares,
+  unshare,
+} from '../actions/ShareActions';
 import {
   addTagsGroupToMyActivity,
   useThisGroupForActivity
@@ -40,7 +42,7 @@ class ShareScreen extends React.Component {
 
   componentDidMount() {
     console.log('componentDidMount');
-    this.props.getSubscribers();
+    this.props.getShares(this.props.groupId);
   }
 
   componentWillUpdate() {
@@ -88,8 +90,15 @@ class ShareScreen extends React.Component {
   //   });
   // }
 
+  onItemPress = (checked, userId, id) => {
+    if (!checked && !_.isNil(id)) {
+      this.props.unshare(id, userId);
+    }
+  }
+
+
   onRefresh = () => {
-    this.props.getSubscribers();
+    this.props.getShares(this.props.groupId);
   }
 
   renderActivityHeader = () => {
@@ -130,16 +139,34 @@ class ShareScreen extends React.Component {
     );
   };
 
-  renderListHeader = () => null;
+  renderListHeader = () => {
+    return (
+      <Text>
+        These users will send
+        notifications when this
+        activity starts or ends
+      </Text>
+    );
+  };
   renderListFooter= () => null;
   renderRow = ({ item }) => {
-    const { id, fullName, profileId } = item.subUserId;
+    const { id, fullName, profileId } = item.sharedWith;
+    const userId = id;
+    const shareId = item.id;
     return (
       <ShareFriendRowItem
-        userId={id}
+        id={shareId}
+        userId={userId}
         fullName={fullName}
         profileId={profileId}
+        onItemPress={this.onItemPress}
+        isChecked
       />
+      // <ShareFriendRowItem
+      //   userId={id}
+      //   fullName={fullName}
+      //   profileId={profileId}
+      // />
     );
   };
 
@@ -154,14 +181,36 @@ class ShareScreen extends React.Component {
               backgroundColor: EStyleSheet.value('$backgroundColor'),
               alignItems: 'center',
               flexDirection: 'row',
-              justifyContent: 'flex-end',
+              justifyContent: 'space-between',
               position: 'relative',
               //borderColor: 'gray',
               //borderBottomWidth: 1
               paddingBottom: 10,
             }}
           >
-
+          <TextButton
+            containerStyle={{
+              marginHorizontal: 5
+            }}
+            title='Choose friends'
+            titleStyle={{
+              fontSize: 14,
+              //color: '#38B211',
+              fontWeight: '600'
+            }}
+            onPress={() => {
+              this.props.navigator.showModal({
+                screen: 'app.SubscribersModal',
+                title: 'Subscribers',
+                passProps: {
+                  groupId: this.props.groupId,
+                  selectedFriends: this.props.shares.data.rows
+                },
+                navigatorStyle: {},
+                animationType: 'slide-up'
+              });
+            }}
+          />
           <TextButton
             containerStyle={{
               borderWidth: 0.3,
@@ -187,30 +236,35 @@ class ShareScreen extends React.Component {
                 selectedTags = [...this.props.selectedTags];
               }
               if (!this.props.isExisted) {
-                this.props.addTagsGroupToMyActivity(activity, selectedTags);
+                this.props.addTagsGroupToMyActivity(activity, selectedTags, this.props.prevTimeId, this.props.prevGroupId);
               } else {
-                this.props.useThisGroupForActivity(activity.id, this.props.groupId);
+                this.props.useThisGroupForActivity(activity.id, this.props.groupId, this.props.prevTimeId, this.props.prevGroupId);
               }
             }}
           />
           </View>
         }
+
         <FlatList
           //removeClippedSubviews={false}
           keyboardShouldPersistTaps='always'
           ref={(ref) => { this.flatListRef = ref; }}
-          extraData={this.props.subscribers.data.rows}
-          //ListHeaderComponent={this.renderListHeader}
-          keyExtractor={item => item.subUserId.id}
-          data={this.props.subscribers.data.rows}
+          extraData={this.props.shares.data.rows}
+          ListHeaderComponent={this.renderListHeader}
+          keyExtractor={item => item.id}
+          data={this.props.shares.data.rows}
           renderItem={this.renderRow}
           ListFooterComponent={this.renderListFooter}
           refreshControl={
             <RefreshControl
-              refreshing={this.props.subscribers.loading}
+              refreshing={this.props.shares.loading}
               onRefresh={this.onRefresh}
             />
           }
+        />
+
+        <Loader
+          visible={this.props.share.loading}
         />
 
       </View>
@@ -230,13 +284,15 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = (state) => {
   //console.log('ShareScreen:mapStateToProps:', state);
-  const { subscribers } = state;
+  const { shares, share } = state;
   return {
-    subscribers,
+    shares,
+    share
   };
 };
 export default connect(mapStateToProps, {
-  getSubscribers,
+  unshare,
+  getShares,
   addTagsGroupToMyActivity,
   useThisGroupForActivity
 })(ShareScreen);

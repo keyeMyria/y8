@@ -29,7 +29,7 @@ import {
   doSubscribe,
   doUnsubscribe,
   hasSubscribed
-} from '../actions/SubscriptionActions';
+} from '../actions/SubscriberActions';
 
 const { height, width } = Dimensions.get('window');
 
@@ -91,7 +91,6 @@ class FriendInfoModal extends React.Component {
   render() {
     const imgHeigth = Math.ceil((30 / 100) * height); // use 30% of total height
     const fbApiProfileUrl = `https://graph.facebook.com/v2.12/${this.props.friend.profileId}/picture?height=${imgHeigth}&width=${width}&redirect=true`;
-    console.log(fbApiProfileUrl);
     return (
       <View style={[styles.container]} >
         <Image style={{ height: imgHeigth, width }} source={{ uri: fbApiProfileUrl }} />
@@ -115,6 +114,7 @@ class FriendInfoModal extends React.Component {
           <ToggleRowItem
             disabled={this.props.subscribe.loading}
             userId={this.props.friend.id}
+            subscribeId={this.props.subscribe.subscribeId}
             subscribed={this.props.subscribe.subscribed}
             title={'Allow notificaions'}
             onSubscribe={this.props.doSubscribe}
@@ -159,6 +159,7 @@ const styles = EStyleSheet.create({
 const mapStateToProps = (state) => {
   //console.log('FriendsScreen:mapStateToProps:', state);
   const { subscribe } = state;
+  console.log(subscribe);
   return {
     subscribe
   };

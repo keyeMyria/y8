@@ -22,7 +22,8 @@ import {
 } from '../types/TagTypes.js';
 
 const getTags = (state, action) => {
-  if (action.payload.allIds.length > 0) {
+  // TODO: need to fix this
+  //if (action.payload.allIds.length > 0) {
     return Object.assign({}, state, {
       error: null,
       loading: false,
@@ -35,19 +36,19 @@ const getTags = (state, action) => {
       deleting: null,
       deletingError: null
     });
-  }
-  return Object.assign({}, state, {
-    error: null,
-    loading: false,
-    byId: { ...state.byId },
-    allIds: [...state.allIds],
-    adding: null,
-    addingError: null,
-    updating: null,
-    updatingError: null,
-    deleting: null,
-    deletingError: null
-  });
+  //}
+  // return Object.assign({}, state, {
+  //   error: null,
+  //   loading: false,
+  //   byId: { ...state.byId },
+  //   allIds: [...state.allIds],
+  //   adding: null,
+  //   addingError: null,
+  //   updating: null,
+  //   updatingError: null,
+  //   deleting: null,
+  //   deletingError: null
+  // });
 };
 
 const updateTag = (state, action) => {

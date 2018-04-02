@@ -64,68 +64,49 @@ const deleteActivityFromMyActivity = (state, action) => {
 
 const addTagsGroupToMyActivity = (state, action) => {
   const newState = Object.assign({}, state);
-
-  // const myactivity = {
-  //   byActivityId: {
-  //     [activityId]: {
-  //       byGroupId: {
-  //         [groupId]: { tagsGroup: tags },
-  //       },
-  //       allGroupIds: [groupId]
-  //     }
-  //   },
-  //   allActivityIds: [activityId]
-  // };
-
   const { payload } = action;
+  console.log('addTagsGroupToMyActivity', payload);
   const activityId = Object.keys(payload.byActivityId)[0];
   const groupId = Object.keys(payload.byActivityId[activityId].byGroupId)[0];
-  const { tagsGroup } = payload.byActivityId[activityId].byGroupId[groupId];
-  const sortedTags = tagsGroup.sort();
+  const tags = payload.byActivityId[activityId].byGroupId[groupId];
+  const sortedTags = tags.sort();
 
-
-  // const { payload } = action;
-  // const activityId = Object.keys(payload.byActivityId)[0];
-  // const groupId = Object.keys(payload.byActivityId[activityId].byGroupId)[0];
-  // const { tagsGroup } = payload.byActivityId[activityId].byGroupId[groupId];
-  //const sortedTags = tagsGroup.sort();
-
-  // let isExists = false;
-  // let prevGroupId = '';
-  // if (!_.isEmpty(newState.byActivityId[activityId])) {
-  //   const groups = newState.byActivityId[activityId].byGroupId;
-  //   _.forEach(groups, (value, key) => {
-  //       const oldSortedTags = value.tagsGroup.sort();
-  //       if (_.isEqual(oldSortedTags, sortedTags)) {
-  //         isExists = true;
-  //         prevGroupId = key;
-  //       }
-  //   });
-  // }
-
-  // let prevGroupsObjects = {};
-  // let prevGroupsArray = [];
-  // const newObject = {};
-  //
-  // if (!_.isEmpty(newState.byActivityId[activityId])) {
-  //   prevGroupsObjects = newState.byActivityId[activityId].byGroupId;
-  //   prevGroupsArray = newState.byActivityId[activityId].allGroupIds;
-  // }
+  let isExists = false;
+  let prevGroupId = '';
+  if (!_.isEmpty(newState.byActivityId[activityId])) {
+    const groups = newState.byActivityId[activityId].byGroupId;
+    _.forEach(groups, (value, key) => {
+        const oldSortedTags = value.sort();
+        if (_.isEqual(oldSortedTags, sortedTags)) {
+          isExists = true;
+          prevGroupId = key;
+        }
+    });
+  }
+  let prevGroupsObjects = {};
+  let prevGroupsArray = [];
   const newObject = {};
-  //if (!isExists) {
+
+  if (!_.isEmpty(newState.byActivityId[activityId])) {
+    prevGroupsObjects = newState.byActivityId[activityId].byGroupId;
+    prevGroupsArray = newState.byActivityId[activityId].allGroupIds;
+  }
+
+  if (!isExists) {
     newObject.byActivityId = {
       [activityId]: {
         byGroupId: {
+          ...prevGroupsObjects,
           ...payload.byActivityId[activityId].byGroupId
         },
-        allGroupIds: [...payload.byActivityId[activityId].allGroupIds]
+        allGroupIds: [...payload.byActivityId[activityId].allGroupIds, ...prevGroupsArray]
       }
     };
-  // } else if (isExists && prevGroupId !== '') {
-  //   const groupIdIndex = prevGroupsArray.indexOf(prevGroupId);
-  //   prevGroupsArray.splice(groupIdIndex, 1);
-  //   prevGroupsArray.unshift(prevGroupId);
-  // }
+  } else if (isExists && prevGroupId !== '') {
+    const groupIdIndex = prevGroupsArray.indexOf(prevGroupId);
+    prevGroupsArray.splice(groupIdIndex, 1);
+    prevGroupsArray.unshift(prevGroupId);
+  }
 
   newState.byActivityId = {
     ...newState.byActivityId,
@@ -175,34 +156,17 @@ const deleteTagFromGroup = (state, action) => {
 const removeTagFromGroup = (state, action) => {
   const { activityId, groupId, tagId } = action.payload;
   const newState = Object.assign({}, state);
-
-  if (_.isNil(newState.byActivityId[activityId].byGroupId[groupId])) {
-    return newState;
-  }
-
-  const { tagsGroup } = newState.byActivityId[activityId].byGroupId[groupId];
-  const index = tagsGroup.indexOf(tagId);
+  const index = newState.byActivityId[activityId].byGroupId[groupId].indexOf(tagId);
   if (index !== -1) {
     // delete tag from group
-    newState.byActivityId[activityId].byGroupId[groupId].tagsGroup.splice(index, 1);
+    newState.byActivityId[activityId].byGroupId[groupId].splice(index, 1);
     // if group tags length is zero then delete group & groupId from array
-    if (newState.byActivityId[activityId].byGroupId[groupId].tagsGroup.length === 0) {
+    if (newState.byActivityId[activityId].byGroupId[groupId].length === 0) {
       delete newState.byActivityId[activityId].byGroupId[groupId];
       const groupIndex = newState.byActivityId[activityId].allGroupIds.indexOf(groupId);
       if (groupIndex !== -1) {
         newState.byActivityId[activityId].allGroupIds.splice(groupIndex, 1);
       }
-
-      if (!_.isNil(action.payload.groupTimes)) {
-        const gId = action.payload.groupTimes.groupId;
-        newState.byActivityId[activityId].allGroupIds[0] = gId;
-        if (_.isNil(newState.byActivityId[activityId].byGroupId[gId])) {
-          newState.byActivityId[activityId].byGroupId[gId] = {};
-        }
-        newState.byActivityId[activityId].byGroupId[gId].tagsGroup = action.payload.tagsGroup;
-        newState.byActivityId[activityId].byGroupId[gId].groupTimes = [action.payload.groupTimes];
-      }
-
       // if activities length is zero, then remove activity
       if (newState.byActivityId[activityId].allGroupIds.length === 0) {
         delete newState.byActivityId[activityId];
@@ -220,26 +184,12 @@ const removeTagFromGroup = (state, action) => {
 const removeGroupFromActivity = (state, action) => {
   const { activityId, groupId } = action.payload;
   const newState = Object.assign({}, state);
-  //console.log('removeGroupFromActivity');
-  //console.log(newState.byActivityId[activityId].byGroupId[groupId]);
-  //console.log(action.payload.tagsGroup);
   delete newState.byActivityId[activityId].byGroupId[groupId];
 
   const groupIndex = newState.byActivityId[activityId].allGroupIds.indexOf(groupId);
   if (groupIndex !== -1) {
     newState.byActivityId[activityId].allGroupIds.splice(groupIndex, 1);
   }
-
-  if (!_.isNil(action.payload.groupTimes)) {
-    const gId = action.payload.groupTimes.groupId;
-    newState.byActivityId[activityId].allGroupIds[0] = gId;
-    if (_.isNil(newState.byActivityId[activityId].byGroupId[gId])) {
-      newState.byActivityId[activityId].byGroupId[gId] = {};
-    }
-    newState.byActivityId[activityId].byGroupId[gId].tagsGroup = action.payload.tagsGroup;
-    newState.byActivityId[activityId].byGroupId[gId].groupTimes = [action.payload.groupTimes];
-  }
-
   // if activities length is zero, then remove activity
   if (newState.byActivityId[activityId].allGroupIds.length === 0) {
     delete newState.byActivityId[activityId];
@@ -253,22 +203,12 @@ const removeGroupFromActivity = (state, action) => {
 };
 
 const addGroupToMyActivity = (state, action) => {
-  const { activityId, groupId, tagsGroup } = action.payload;
+  const { activityId, groupId } = action.payload;
   const newState = Object.assign({}, state);
-
-  // const groupIndex = newState.byActivityId[activityId].allGroupIds.indexOf(groupId);
-  // if (groupIndex !== -1) {
-  //   newState.byActivityId[activityId].allGroupIds.splice(groupIndex, 1);
-  //   newState.byActivityId[activityId].allGroupIds.unshift(groupId);
-  // }
-
-  if (!_.isNil(tagsGroup)) {
-    newState.byActivityId[activityId].allGroupIds[0] = groupId;
-    if (_.isNil(newState.byActivityId[activityId].byGroupId[groupId])) {
-      newState.byActivityId[activityId].byGroupId[groupId] = {};
-    }
-    newState.byActivityId[activityId].byGroupId[groupId].tagsGroup = tagsGroup;
-    //newState.byActivityId[activityId].byGroupId[gId].groupTimes = [action.payload.groupTimes];
+  const groupIndex = newState.byActivityId[activityId].allGroupIds.indexOf(groupId);
+  if (groupIndex !== -1) {
+    newState.byActivityId[activityId].allGroupIds.splice(groupIndex, 1);
+    newState.byActivityId[activityId].allGroupIds.unshift(groupId);
   }
 
   const activityIndex = newState.allActivityIds.indexOf(activityId);
@@ -296,48 +236,16 @@ const moveActivity = (state, action) => {
   return Object.assign({}, newState);
 };
 
-const updateTimeForActivity = (state, action) => {
+const updateTimeForActivity (state, action) => {
   const newState = Object.assign({}, state);
-  const { id, activityId, groupId, startedAt, stoppedAt, isStart, newIndex } = action.payload;
+  const { activityId, groupId, started } = action.payload;
 
-  const activityIndex = newState.allActivityIds.indexOf(activityId);
-  if (activityIndex !== -1) {
-    newState.allActivityIds.splice(activityIndex, 1);
-  }
-  if (isStart) {
-    newState.allActivityIds.unshift(activityId);
-  } else {
-    newState.allActivityIds.splice(newIndex, 0, activityId);
-  }
 
-  if (_.isNil(newState.byActivityId[activityId].byGroupId[groupId])) {
-    newState.byActivityId[activityId].byGroupId[groupId] = {};
-  }
 
-  if (_.isNil(newState.byActivityId[activityId].byGroupId[groupId].groupTimes)) {
-    newState.byActivityId[activityId].byGroupId[groupId].groupTimes = [];
-  }
+  //newState.byActivityId[activityId].byGroupId[groupId].groupTimes[0] =
 
-  if (_.isNil(newState.byActivityId[activityId].byGroupId[groupId].groupTimes[0])) {
-    newState.byActivityId[activityId].byGroupId[groupId].groupTimes[0] = { _id: id };
-  } else {
-    newState.byActivityId[activityId].byGroupId[groupId].groupTimes[0]._id = id;
-  }
-
-  if (!_.isNil(startedAt) && isStart) {
-    newState.byActivityId[activityId].byGroupId[groupId].groupTimes[0].startedAt = startedAt;
-  }
-
-  if (!_.isNil(stoppedAt) && !isStart) {
-    newState.byActivityId[activityId].byGroupId[groupId].groupTimes[0].stoppedAt = stoppedAt;
-  } else {
-    newState.byActivityId[activityId].byGroupId[groupId].groupTimes[0].stoppedAt = null;
-  }
-  newState.addingGroup = false;
-  //console.log(newState);
   return Object.assign({}, newState);
-};
-
+}
 
 const getMyActivitiesError = (state, action) => {
   console.log(action);
@@ -465,8 +373,7 @@ export const myActivities = (state = INITIAL_GROUP_STATE, action) => {
         error: null
       });
     case TIME_TOGGLE_SUCCESS:
-      return updateTimeForActivity(state, action);
-      //return moveActivity(state, action);
+      return moveActivity(state, action);
     default:
       return state;
   }

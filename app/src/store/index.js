@@ -37,7 +37,8 @@ const config = {
     'friendRequests',
     'friends',
     'device',
-    'subscribers'
+    'subscribers',
+    'onlygroups'
   ],
   debounce: 100,
   migrate: (state) => {
@@ -73,6 +74,8 @@ const config = {
     const newMyActivitiesState = Object.assign({}, state.myActivities, {
       error: null,
       loading: false,
+      byActivityId: {},
+      allActivityIds: [],
       addingMyActivity: false,
       addingGroup: false,
       removingGroup: false,

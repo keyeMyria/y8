@@ -12,12 +12,14 @@ class Auth {
     let isValidRequest = true;
     let auth_header = null;
 
+    //console.log(req.body);
     if( _.isNull(req.headers.authorization) || _.isEmpty(req.headers.authorization)) {
       isValidRequest = false;
     }
 
     if(isValidRequest) {
       const bearer = req.headers.authorization;
+      console.log(bearer);
       auth_header = bearer.split(' ');
       if(auth_header.length!==2 || auth_header[0] !== 'Bearer'){
         isValidRequest = false;

@@ -2,7 +2,7 @@ const uuid = require('uuid');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const SubscriptionsSchema = new Schema({
+const SubscriberSchema = new Schema({
   _id: {
     type: String,
     default: uuid.v4
@@ -17,12 +17,6 @@ const SubscriptionsSchema = new Schema({
     ref: 'users',
     required: true
   },
-  status: {
-    // 0 - not Subscribed
-    // 1 - Subscribed
-    type: Number,
-    default: 0
-  },
   createdAt: {
     type: String,
     required: true
@@ -34,12 +28,12 @@ const SubscriptionsSchema = new Schema({
 
 });
 // Duplicate the ID field.
-SubscriptionsSchema.virtual('id').get(function(){
+SubscriberSchema.virtual('id').get(function(){
     return this._id;
 });
 
 //Ensure virtual fields are serialised.
-SubscriptionsSchema.set('toJSON', {
+SubscriberSchema.set('toJSON', {
   virtuals: true,
   versionKey:false,
   transform: function (doc, ret) {   delete ret._id  }
@@ -47,4 +41,4 @@ SubscriptionsSchema.set('toJSON', {
 
 
 
-mongoose.model('subscriptions', SubscriptionsSchema);
+mongoose.model('subscriber', SubscriberSchema);

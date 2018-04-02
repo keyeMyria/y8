@@ -11,19 +11,20 @@ const TimeSchema = new Schema({
     ref: 'users',
     required: true
   },
-  activityId: {
-    type: String,
-  },
   groupId: {
     type: String,
+    ref: 'group'
   },
-  tags: [String],
+  latest: {
+    type: Number,
+    default: 0
+  },
   startedAt: {
-    type: String,
+    type: Number,
     required: true
   },
   stoppedAt: {
-    type: String,
+    type: Number,
     required: false
   }
 });

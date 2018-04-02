@@ -40,6 +40,7 @@ class CustomTextInput extends React.PureComponent {
       <View style={[styles.container, containerStyle]}>
         <Text style={[styles.label, labelStyle]}>{this.props.label}</Text>
         <TextInput
+          autoCapitalize={'none'}
           autoCorrect={false}
           ref={this.props.textInputRef}
           underlineColorAndroid='rgba(0,0,0,0)'

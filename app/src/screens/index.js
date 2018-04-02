@@ -20,6 +20,7 @@ import ActivityModal from '../modals/ActivityModal';
 import TagModal from '../modals/TagModal';
 import FriendModal from '../modals/FriendModal';
 import FriendInfoModal from '../modals/FriendInfoModal';
+import SubscribersModal from '../modals/SubscribersModal';
 
 
 // HOC
@@ -53,6 +54,7 @@ export function registerScreens(store, Provider) {
   Navigation.registerComponent('app.TagModal', () => TagModal, store, Provider);
   Navigation.registerComponent('app.FriendModal', () => FriendModal, store, Provider);
   Navigation.registerComponent('app.FriendInfoModal', () => FriendInfoModal, store, Provider);
+  Navigation.registerComponent('app.SubscribersModal', () => SubscribersModal, store, Provider);
 
   //TODO: need to remove
   Navigation.registerComponent('app.FirstTabScreen', () => FirstTabScreen, store, Provider);

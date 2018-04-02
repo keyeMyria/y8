@@ -1,0 +1,9 @@
+{"name":"myapp","hostname":"HOME.local","pid":22044,"level":30,"msg":"Mongodb connected successfully","time":"2018-04-02T03:58:42.174Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":22044,"level":30,"msg":"Api Server listening at 3000","time":"2018-04-02T03:58:42.745Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":22054,"level":30,"msg":"Mongodb connected successfully","time":"2018-04-02T03:58:43.571Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":22059,"level":30,"msg":"Mongodb connected successfully","time":"2018-04-02T03:58:43.944Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":22059,"level":30,"msg":"Api Server listening at 3000","time":"2018-04-02T03:58:44.260Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":22080,"level":30,"msg":"Mongodb connected successfully","time":"2018-04-02T03:59:02.144Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":22080,"level":30,"msg":"Api Server listening at 3000","time":"2018-04-02T03:59:02.453Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":22093,"level":30,"msg":"Mongodb connected successfully","time":"2018-04-02T03:59:36.480Z","v":0}
+{"name":"myapp","hostname":"HOME.local","pid":22093,"level":30,"msg":"Api Server listening at 3000","time":"2018-04-02T03:59:36.794Z","v":0}

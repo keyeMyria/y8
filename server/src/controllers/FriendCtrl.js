@@ -130,6 +130,7 @@ class FriendCtrl {
         }
       ] // and
     };
+    console.log(userId);
 
     SearchFriends(criteria, 'updatedAt', offset,limit)
       .then((friendRequests)=>{

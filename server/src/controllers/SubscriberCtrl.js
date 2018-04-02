@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Pagination = require('../services/Pagination');
 const GetSubscribers = require('../queries/GetSubscribers');
 
-class SubscriptionCtrl {
+class SubscriberCtrl {
 
   getSubscribers(req, res, next) {
     try {
@@ -26,7 +26,7 @@ class SubscriptionCtrl {
         next();
       });
     } catch (error) {
-      console.log('SubscriptionCtrl: ' + error);
+      console.log('SubscriberCtrl: ' + error);
       req.log.error(error.message);
       res.status(400).send('Bad request');
       next();
@@ -45,27 +45,25 @@ class SubscriptionCtrl {
       const data = {
         userId: subUserId,
         subUserId: userId,
-        status: 1,
         createdAt: Date.now(),
         updatedAt: Date.now()
       };
-      const Subscription = mongoose.model('subscriptions');
+      const Subscriber = mongoose.model('subscriber');
       const criteria =  {};
       criteria.userId = {$eq: subUserId};
       criteria.subUserId = {$eq: userId};
 
-      Subscription.findOne(criteria).then((result)=>{
+      Subscriber.findOne(criteria).then((result)=>{
         if (!result) {
-          return Subscription.create(data)
+          return Subscriber.create(data)
         }else{
-          result.status = 1;
           result.updatedAt = Date.now();
-
           return result.save();
         }
       }).then((result)=>{
+        console.log(result);
         console.log('subscribed!');
-        res.status(200).send('subscribed');
+        res.status(200).send({id: result._id});
         next();
 
       }).catch((subscribeError)=>{
@@ -77,7 +75,7 @@ class SubscriptionCtrl {
       });
 
     } catch (error) {
-      console.log('SubscriptionCtrl: ' + error);
+      console.log('SubscriberCtrl: ' + error);
       req.log.error(error.message);
       res.status(400).send('Bad request');
       next();
@@ -87,20 +85,18 @@ class SubscriptionCtrl {
   unsubscribe(req, res, next) {
     try {
       const {
-        subUserId
+        subscribeId
       } = req.body;
 
       //TODO: do validation here
       const { userId } = req;
-      const data = {
-        status: 0, updatedAt: Date.now()
-      };
-      const Subscription = mongoose.model('subscriptions');
+
+      const Subscriber = mongoose.model('subscriber');
       const criteria =  {};
-      criteria.userId = {$eq: subUserId};
+      criteria._id = {$eq: subscribeId};
       criteria.subUserId = {$eq: userId};
 
-      Subscription.update(criteria, { $set: { ...data } })
+      Subscriber.deleteOne(criteria)
       .then((result)=>{
         console.log('unsubscribed!');
         res.status(200).send('unsubscribed');
@@ -115,7 +111,7 @@ class SubscriptionCtrl {
       });
 
     } catch (error) {
-      console.log('SubscriptionCtrl: ' + error);
+      console.log('SubscriberCtrl: ' + error);
       req.log.error(error.message);
       res.status(400).send('Bad request');
       next();
@@ -130,12 +126,12 @@ class SubscriptionCtrl {
 
       //TODO: do validation here
       const { userId } = req;
-      const Subscription = mongoose.model('subscriptions');
+      const Subscriber = mongoose.model('subscriber');
       const criteria =  {};
       criteria.userId = {$eq: subUserId};
       criteria.subUserId = {$eq: userId};
 
-      Subscription.findOne(criteria,{ _id: 0, userId: 1, subUserId: 1, status: 1 })
+      Subscriber.findOne(criteria,{ userId: 1, subUserId: 1 })
       .then((result)=>{
         console.log(result);
         res.status(200).send(result);
@@ -150,7 +146,7 @@ class SubscriptionCtrl {
       });
 
     } catch (error) {
-      console.log('SubscriptionCtrl: ' + error);
+      console.log('SubscriberCtrl: ' + error);
       req.log.error(error.message);
       res.status(400).send('Bad request');
       next();
@@ -159,4 +155,4 @@ class SubscriptionCtrl {
 
 }
 
-module.exports = SubscriptionCtrl;
+module.exports = SubscriberCtrl;
