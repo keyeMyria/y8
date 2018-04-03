@@ -36,6 +36,10 @@ const SendStartActivityNotification = async (userId, groupId) => {
     const sharedWithUserIds =
       await Share.find({userId, groupId}, {_id: 0, sharedWith: 1});
 
+    if(sharedWithUserIds.length === 0){
+      return false;
+    }
+
     let userIdsArray = [];
     _.forEach(sharedWithUserIds, (sharedWith)=>{
       userIdsArray.push(sharedWith.sharedWith);
@@ -99,6 +103,10 @@ const SendStopActivityNotification = async (userId, timeId) => {
     const sharedWithUserIds =
       await Share.find({userId, groupId}, {_id: 0, sharedWith: 1});
 
+    if(sharedWithUserIds.length === 0){
+      return false;
+    }
+    
     let userIdsArray = [];
     _.forEach(sharedWithUserIds, (sharedWith)=>{
       userIdsArray.push(sharedWith.sharedWith);
