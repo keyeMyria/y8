@@ -34,7 +34,7 @@ config.db.console_logging = false;
 
 // log settings
 // Please refer here https://www.npmjs.com/package/bunyan
-config.log.enable = true;
+config.log.enable = false;
 config.log.filename = 'app.log';
 config.log.path = process.cwd()+'/logs';
 config.log.level = 'debug';
