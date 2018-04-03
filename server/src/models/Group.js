@@ -13,6 +13,8 @@ const GroupSchema = new Schema({
   },
   activityId: {
     type: String,
+    ref: 'activities',
+    required: true
   },
   tags: [String],
   latest: {

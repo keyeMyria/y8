@@ -58,6 +58,7 @@ class DashboardScreen extends React.Component {
   };
   constructor(props) {
     super(props);
+    console.log('screenInstanceID', props.navigator.screenInstanceID);
     this.state = {
       //refreshing: false,
       rand: 0,
@@ -303,7 +304,7 @@ class DashboardScreen extends React.Component {
           textStyle={{ color: EStyleSheet.value('$textColor') }}
         />
 
-        <PushNotifications />
+        <PushNotifications navigator={this.props.navigator} />
 
       </View>
     );

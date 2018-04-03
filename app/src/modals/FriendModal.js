@@ -247,11 +247,10 @@ const styles = EStyleSheet.create({
 
 const mapStateToProps = (state) => {
   //console.log('FriendsScreen:mapStateToProps:', state);
-  const { user, users, friendRequest } = state;
+  const { user, users } = state;
   return {
     user,
-    users,
-    friendRequest
+    users
   };
 };
 export default connect(mapStateToProps, {

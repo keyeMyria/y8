@@ -12,7 +12,6 @@ class SubscriberCtrl {
       const { userId } = req;
       const criteria =  {};
       criteria.userId = {$eq: userId};
-      criteria.status = {$eq: 1};
 
       GetSubscribers(criteria, 'updatedAt', offset,limit)
       .then((result)=>{

@@ -7,6 +7,7 @@ import {
   USERS_FETCH_REQUEST,
   USERS_FETCH_SUCCESS,
   USERS_FETCH_ERROR,
+  USERS_FETCH_RESET_DATA,
 
   FRIENDS_FETCH_RESET,
   FRIENDS_FETCH_REQUEST,
@@ -201,6 +202,7 @@ export const sendFriendRequest = (userId) => (
             id: resp.data.id
           }
         });
+        dispatch({ type: USERS_FETCH_RESET_DATA });
       }
     } catch (error) {
       //console.log(error);

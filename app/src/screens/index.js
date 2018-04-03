@@ -22,6 +22,9 @@ import FriendModal from '../modals/FriendModal';
 import FriendInfoModal from '../modals/FriendInfoModal';
 import SubscribersModal from '../modals/SubscribersModal';
 
+// PushNotifications
+import InAppNotification from  '../pushnotifications/InAppNotification';
+
 
 // HOC
 import NetworkChange from '../hoc/NetworkChange';
@@ -56,6 +59,9 @@ export function registerScreens(store, Provider) {
   Navigation.registerComponent('app.FriendInfoModal', () => FriendInfoModal, store, Provider);
   Navigation.registerComponent('app.SubscribersModal', () => SubscribersModal, store, Provider);
 
+  // pushnotifications
+  Navigation.registerComponent('app.InAppNotification', () => InAppNotification, store, Provider);
+  
   //TODO: need to remove
   Navigation.registerComponent('app.FirstTabScreen', () => FirstTabScreen, store, Provider);
   Navigation.registerComponent('app.SecondTabScreen', () => SecondTabScreen, store, Provider);

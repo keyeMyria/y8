@@ -4,6 +4,9 @@ const FindFriendship = require('../queries/FindFriendship');
 const Pagination = require('../services/Pagination');
 const SearchUsers = require('../queries/SearchUsers');
 const SearchFriends = require('../queries/SearchFriends');
+
+const SendFriendRequestNotification = require('../notifications/SendFriendRequestNotification');
+
 class FriendCtrl {
 
   sendRequest(req, res, next) {
@@ -59,6 +62,12 @@ class FriendCtrl {
       }
       // send the final response
       //const data  = {id: result._id};
+
+      //TODO: call notification api
+      // send friend request notification
+      SendFriendRequestNotification(fromUser, toUser);
+
+
 
       console.log("Friend request sent successfully");
       req.log.info("Friend request sent successfully");

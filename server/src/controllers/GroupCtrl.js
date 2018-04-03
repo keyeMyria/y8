@@ -162,7 +162,7 @@ class GroupCtrl {
     criteria.latest = {$eq: 1};
 
     getMyActivities(criteria, 'updatedAt', offset,limit).then((results) => {
-      console.log("GETGETGET" ,JSON.stringify(results));
+      //console.log("GETGETGET" ,JSON.stringify(results));
 
       /*
       let data = {
@@ -221,7 +221,7 @@ class GroupCtrl {
     const { userId } = req;
     const { groupId, tagId, onlyPrevGroupId } = req.params;
 
-    console.log(req.params);
+    //console.log(req.params);
 
     const Group = mongoose.model('group');
 
@@ -299,7 +299,7 @@ class GroupCtrl {
     const { userId } = req;
     const { groupId, onlyPrevGroupId } = req.params;
 
-    console.log(req.params);
+    //console.log(req.params);
 
     const Group = mongoose.model('group');
 
@@ -368,7 +368,7 @@ class GroupCtrl {
     Group.find(criteria,{ tags: 1 })
     .sort({ 'updatedAt': -1})
     .then((results) => {
-      console.log(results);
+      //console.log(results);
       res.status(200).send(results);
       next();
     }).catch((getGroupByActivityError) => {

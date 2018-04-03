@@ -5,12 +5,13 @@ const Schema = mongoose.Schema;
 const ActivitySchema = new Schema({
   _id: {
     type: String,
-    default: uuid.v4
+    default: uuid.v4,
+    required: true
   },
   userId: {
     type: String,
     ref: 'users',
-    required: true
+    //required: true
   },
   name: {
     type: String,
@@ -18,11 +19,11 @@ const ActivitySchema = new Schema({
   },
   createdAt: {
     type: String,
-    required: true
+    //required: true
   },
   updatedAt: {
     type: String,
-    required: true
+    //required: true
   }
 
 });

@@ -1,7 +1,7 @@
 const CONFIG = require('../config');
 const LOGGER = require('../logger');
 const mongoose = require('mongoose');
-
+const activities = require('../data/activities');
 
 mongoose.Promise = global.Promise;
 
@@ -31,6 +31,18 @@ mongoose.connection
     require('./Listener');
 
     /********************* TEMP CODE *************************/
+
+
+    const Activity = mongoose.model('activities');
+
+    Activity.find({userId: null}).count().then( count => {
+      if(count==0){
+        Activity.insertMany(activities).then(()=>{
+          console.log('Temp Users Created');
+        });
+      }
+    });
+
     //mongoose.connection.collections.friends.drop(()=>{});
     /*mongoose.connection.collections.users.drop(()=>{
       // Ready to run the next test!

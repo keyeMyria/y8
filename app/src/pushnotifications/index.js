@@ -5,15 +5,22 @@ import {
 import { connect } from 'react-redux';
 
 import PushNotification from 'react-native-push-notification';
+import { Navigation } from 'react-native-navigation';
 
 import {
   registerDevice
 } from '../actions/DeviceActions';
 
 class PushNotifications extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      screens: {
+        screenInstanceID6: 'app.DashboardScreen',
+        screenInstanceID8: 'app.FriendsScreen'
+      }
+    };
+  }
 
   componentDidMount() {
     PushNotification.configure({
@@ -25,9 +32,34 @@ class PushNotifications extends React.Component {
       },
 
       // (required) Called when a remote or local notification is opened or received
-      onNotification: (notification) => {
-          alert(notification);
-          console.log( 'NOTIFICATION:', notification );
+      onNotification: async (notification) => {
+          const { userInteraction } = notification;
+          const { title, body } = notification.message;
+          const { payload } = notification.data;
+          const { screen, data } = payload;
+          console.log(this.props);
+          console.log( 'NOTIFICATION:', notification);
+          const visibleScreenInstanceId = await Navigation.getCurrentlyVisibleScreenId();
+          console.log('visibleScreenInstanceId', visibleScreenInstanceId);
+          if (userInteraction && screen === 'app.FriendsScreen') {
+            this.props.navigator.switchToTab({
+              tabIndex: 2 // (optional) if missing, this screen's tab will become selected
+            });
+          } else if (!userInteraction) {
+            this.props.navigator.showInAppNotification({
+              screen: 'app.InAppNotification', // unique ID registered with Navigation.registerScreen
+              passProps: {
+                title,
+                body,
+                payload
+              }, // simple serializable object that will pass as props to the in-app notification (optional)
+              autoDismissTimerSec: 5 // auto dismiss notification in seconds
+            });
+          }
+          // this.props.navigator.switchToTab({
+          //   tabIndex: 2 // (optional) if missing, this screen's tab will become selected
+          // });
+
 
           // process the notification
 
@@ -56,6 +88,35 @@ class PushNotifications extends React.Component {
         */
       requestPermissions: true,
     });
+  }
+
+
+  handleNotification = (notification) => {
+    const { userInteraction } = notification;
+    const { title, body } = notification.message;
+    const { payload } = notification.data;
+    const { screen } = payload;
+
+    switch (screen) {
+      case 'app.FriendsScreen':
+        if (userInteraction) {
+          this.props.navigator.switchToTab({
+            tabIndex: 2 // (optional) if missing, this screen's tab will become selected
+          });
+        } else {
+          this.props.navigator.showInAppNotification({
+            screen: 'app.InAppNotification', // unique ID registered with Navigation.registerScreen
+            passProps: {
+              title,
+              body,
+              payload
+            },
+            autoDismissTimerSec: 10 // auto dismiss notification in seconds
+          });
+        }
+        break;
+      default:
+    }
   }
 
   render() {

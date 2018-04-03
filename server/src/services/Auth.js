@@ -19,7 +19,7 @@ class Auth {
 
     if(isValidRequest) {
       const bearer = req.headers.authorization;
-      console.log(bearer);
+      //console.log(bearer);
       auth_header = bearer.split(' ');
       if(auth_header.length!==2 || auth_header[0] !== 'Bearer'){
         isValidRequest = false;
@@ -49,7 +49,7 @@ class Auth {
           secs = duration.seconds();
         }
 
-        console.log(days+'-'+hrs+'-'+mins+'-'+secs);
+        //console.log(days+'-'+hrs+'-'+mins+'-'+secs);
         // do some database checks if necessary
         // handle facebook and google here itself
         if (mins <= 55 &&
@@ -69,9 +69,9 @@ class Auth {
           const authToken = jwt.sign(payload, keys.appSecureKey, { expiresIn: keys.secureKeyExpiresIn }); // '30 days'
           res.set('x-app-auth-token', authToken);
           res.set('x-app-auth-0', true);
-          console.log('NewToken');
+          //console.log('NewToken');
         }else{
-          console.log('OldToken');
+          //console.log('OldToken');
           res.set('x-app-auth-0', false);
         }
         req.userId = userId;

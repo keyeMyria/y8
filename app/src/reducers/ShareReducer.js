@@ -64,6 +64,7 @@ export const share = (state = INITIAL_SHARE_STATE, action) => {
     case SHARE_REMOVE_RESET:
     case SHARE_ADD_RESET:
       return Object.assign({}, state, {
+        shareId: null,
         loading: false,
         error: null,
       });

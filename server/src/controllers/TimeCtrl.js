@@ -4,6 +4,10 @@ const _ = require('lodash');
 const services = require('../services');
 const Pagination = require('../services/Pagination');
 const SearchTimes = require('../queries/SearchTimes');
+const {
+  SendStartActivityNotification,
+  SendStopActivityNotification
+} = require('../notifications/SendActivityNotification');
 
 const {
   getDeviceTokens,
@@ -11,9 +15,9 @@ const {
 } = require('../services/Notification');
 
 class TimeCtrl {
-
+  //TODO: remove prevTimeId here and in app
   create(req, res, next) {
-    console.log(req.body);
+    //console.log(req.body);
     const {
       id,
       prevTimeId,
@@ -30,10 +34,10 @@ class TimeCtrl {
       startedAt,
       stoppedAt: null
     };
-    console.log('START ACTIVITY - start');
-    console.log(data);
-    console.log(prevTimeId);
-    console.log('START ACTIVITY - end');
+    // console.log('START ACTIVITY - start');
+    // console.log(data);
+    // console.log(prevTimeId);
+    // console.log('START ACTIVITY - end');
 
     const Group = mongoose.model('group');
     Group.findOneAndUpdate({_id: groupId}, { $set: { updatedAt: Date.now()}})
@@ -52,7 +56,7 @@ class TimeCtrl {
         return false;
       }).then((result) => {
         if (result) {
-
+          SendStartActivityNotification(userId, groupId);
           // getDeviceTokens(userId).then((tokens)=>{
           //   console.log(tokens);
           //   let registeredIds = [];
@@ -125,9 +129,9 @@ class TimeCtrl {
       stoppedAt,
     } = req.body;
 
-    console.log('STOP ACTIVITY - start');
-    console.log('update',id,stoppedAt);
-    console.log('STOP ACTIVITY - end');
+    // console.log('STOP ACTIVITY - start');
+    // console.log('update',id,stoppedAt);
+    // console.log('STOP ACTIVITY - end');
 
     const { userId } = req;
 
@@ -140,6 +144,8 @@ class TimeCtrl {
         if(!done) {
           //throw new Error('Failed to update');
         }
+
+        SendStopActivityNotification(userId, id); // id is timeId
         res.status(200).send("Activity stopped!");
         next();
       });

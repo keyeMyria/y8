@@ -72,7 +72,7 @@ const sendNotifications = (registeredIds, data) => {
 
   push.send(registeredIds, data)
     .then((results) => {
-      console.log(results);
+      //console.log(results);
     })
     .catch((err) => {
       console.log(results);

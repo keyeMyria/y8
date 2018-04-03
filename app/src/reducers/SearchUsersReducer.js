@@ -4,7 +4,8 @@ import {
   USERS_FETCH_REQUEST,
   USERS_FETCH_SUCCESS,
   USERS_FETCH_ERROR,
-  USERS_FETCH_RESET
+  USERS_FETCH_RESET,
+  USERS_FETCH_RESET_DATA
 } from '../types/FriendTypes';
 
 const INITIAL_SEARCH_USER_STATE = {
@@ -34,6 +35,12 @@ export const users = (state = INITIAL_SEARCH_USER_STATE, action) => {
       return Object.assign({}, state, {
         error: null,
         loading: false,
+      });
+    case USERS_FETCH_RESET_DATA:
+      return Object.assign({}, state, {
+        error: null,
+        loading: false,
+        data: []
       });
     default:
       return state;

@@ -22,8 +22,7 @@ import { subscribe } from './SubscribeReducer';
 import { subscribers } from './SubscribersReducer';
 import { share } from './ShareReducer';
 import { shares } from './SharesReducer';
-import {
-onlygroups, } from './OnlyGroupsReducer';
+import { onlygroups } from './OnlyGroupsReducer';
 
 export default {
   app,
