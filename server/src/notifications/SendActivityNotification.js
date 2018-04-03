@@ -17,6 +17,9 @@ const SendStartActivityNotification = async (userId, groupId) => {
       .populate({path: 'userId', select: ['fullName']})
       .populate({path: 'activityId', select: ['name']});
 
+    if(!group){
+      return false;
+    }
     const tags  =
       await Tag.find({ _id: { $in: group.tags }}, { _id: 0, name: 1});
 
@@ -75,6 +78,10 @@ const SendStopActivityNotification = async (userId, timeId) => {
       await Group.findOne({_id: groupId})
       .populate({path: 'userId', select: ['fullName']})
       .populate({path: 'activityId', select: ['name']});
+
+    if(!group){
+      return false;
+    }
 
     // const tags  =
     //   await Tag.find({ _id: { $in: group.tags }}, { _id: 0, name: 1});
