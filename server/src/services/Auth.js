@@ -49,10 +49,10 @@ class Auth {
           secs = duration.seconds();
         }
 
-        //console.log(days+'-'+hrs+'-'+mins+'-'+secs);
+        console.log(days+'-'+hrs+'-'+mins+'-'+secs);
         // do some database checks if necessary
         // handle facebook and google here itself
-        if (days <= 3 &&
+        if (mins <= 55 &&
           (
             (appId === keys.facebookAppID && loginType === 'facebook')
             ||

@@ -320,7 +320,7 @@ const styles = EStyleSheet.create({
     paddingHorizontal: 15,
   },
   cardFooter: {
-    backgroundColor: '#f7f8f9',
+    //backgroundColor: '#f7f8f9',
     alignItems: 'center',
     justifyContent: 'space-between',
 

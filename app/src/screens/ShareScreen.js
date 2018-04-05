@@ -117,7 +117,7 @@ class ShareScreen extends React.Component {
           backgroundColor: EStyleSheet.value('$backgroundColor'),
           justifyContent: 'center',
           paddingBottom: 15,
-          paddingTop: 5,
+          paddingTop: 15,
           paddingHorizontal: 10
 
         }}

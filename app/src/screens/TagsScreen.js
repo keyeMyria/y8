@@ -295,7 +295,8 @@ class TagsScreen extends React.Component {
         isExisted: true,
         groupId,
         //selectedTags: this.state.selectedTags,
-        sentence
+        sentence,
+        started: false
       },
       //backButtonTitle: 'Back',
       navigatorButtons: {}

@@ -233,16 +233,20 @@ export const useThisGroupForActivity = (activityId, groupId, prevTimeId, prevGro
         await fakePromise(300);
       }
 
-      const onlygroups = getState().onlygroups;
+      // const onlygroups = getState().onlygroups;
+      //
+      // let tagsGroup = [];
+      // //if (!_.isNil(groupId)) {
+      //   tagsGroup = _.filter(onlygroups.data, { id: groupId });
+      // //}
+      // console.log(tagsGroup);
+      const myActivities = getState().myActivities;
 
-      let tagsGroup = [];
-      //if (!_.isNil(groupId)) {
-        tagsGroup = _.filter(onlygroups.data, { id: groupId });
-      //}
-      console.log(tagsGroup);
+
+      const { tagsGroup } = myActivities.byActivityId[activityId].byGroupId[groupId];
 
       const data = {
-        tagsGroup: tagsGroup[0].tags,
+        tagsGroup,
         activityId,
         groupId
       };
