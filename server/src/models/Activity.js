@@ -41,7 +41,7 @@ ActivitySchema.virtual('id').get(function(){
 //Ensure virtual fields are serialised.
 ActivitySchema.set('toJSON', {
   virtuals: true,
-  versionKey:false,
+  versionKey: false,
   transform: function (doc, ret) {   delete ret._id  }
 });
 

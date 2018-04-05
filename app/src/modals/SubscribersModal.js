@@ -57,7 +57,7 @@ class SubscribersModal extends React.Component {
        selectedFriends.push({ id: obj.id, sharedWith: obj.sharedWith.id });
     });
 
-    console.log('componentDidMount', selectedFriends);
+    //console.log('componentDidMount', selectedFriends);
     this.setState({
       selectedFriends
     }, () => {
@@ -151,7 +151,7 @@ class SubscribersModal extends React.Component {
   }
 
   deleteFriendFromSelectedFriends = (userId) => {
-    console.log(this.state.selectedFriends, userId);
+    //console.log(this.state.selectedFriends, userId);
     const selectedFriends = Object.assign([], this.state.selectedFriends);
     _.pullAllBy(selectedFriends, [{ sharedWith: userId }], 'sharedWith');
     this.setState({

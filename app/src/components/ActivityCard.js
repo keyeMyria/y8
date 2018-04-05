@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
@@ -9,15 +8,13 @@ import {
   LayoutAnimation,
 } from 'react-native';
 import moment from 'moment';
+import EStyleSheet from 'react-native-extended-stylesheet';
 import Card from './Card';
 import CardHeader from './CardHeader';
 import CardContent from './CardContent';
 import CardFooter from './CardFooter';
 import TextButton from './TextButton';
-import {
-  globalTextColor,
-  globalSubTextColor
-} from '../styles/Global';
+import ShareIconButton from './ShareIconButton';
 
 class ActivityCard extends React.PureComponent {
 
@@ -150,6 +147,11 @@ class ActivityCard extends React.PureComponent {
     const { activityId, name, groupId, tagsGroup, startedTag, stoppedTag, individualLoading } = this.props;
     const { loading } = this.props;
 
+    const activity = {
+      id: activityId,
+      name,
+    };
+
     const activityName = name[0].toUpperCase() + name.slice(1).toLowerCase();
 
     let timeDiff = startedTag;
@@ -210,6 +212,7 @@ class ActivityCard extends React.PureComponent {
     //{tagsGroup && activityName}
     //{' '}
     */
+    const sentence = this.renderTagsSentence(name, tagsGroup);
     return (
 
       <Card>
@@ -221,7 +224,8 @@ class ActivityCard extends React.PureComponent {
         <CardContent style={styles.cardContent}>
           <TouchableOpacity
             onPress={() => {
-              this.showTags(started, individualLoading); }}
+              this.showTags(started, individualLoading);
+            }}
           >
             <View
               style={{
@@ -235,13 +239,13 @@ class ActivityCard extends React.PureComponent {
               <Text
                 style={{
                   fontSize: 18,
-                  color: globalTextColor,
+                  color: EStyleSheet.value('$textColor'),
                   letterSpacing: 0.8,
                   //fontWeight: '400'
                 }}
               >
 
-              {tagsGroup && this.renderTagsSentence(name, tagsGroup)}
+              {tagsGroup && sentence}
               </Text>
             </View>
           </TouchableOpacity>
@@ -250,7 +254,7 @@ class ActivityCard extends React.PureComponent {
               style={{
                 paddingTop: 10,
                 //backgroundColor: 'red',
-                color: globalSubTextColor,
+                color: EStyleSheet.value('$subTextColor'),
                 textAlign,
               }}
             >{timeDiff}</Text>
@@ -259,6 +263,19 @@ class ActivityCard extends React.PureComponent {
 
         </CardContent>
         <CardFooter style={styles.cardFooter}>
+          <ShareIconButton
+            type={'feather'}
+            name={'share-2'}
+            size={25}
+            color={EStyleSheet.value('$iconColor')}
+            groupId={groupId}
+            activity={activity}
+            sentence={sentence}
+            started={started}
+            sharedWith={this.props.sharedWith}
+            onSharePress={this.props.onSharePress}
+          />
+
           <TextButton
             disabled={loading}
             title={btnTitle}
@@ -282,7 +299,7 @@ class ActivityCard extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   cardHeaderRow: {
     paddingHorizontal: 5,
     paddingTop: 5,
@@ -294,7 +311,7 @@ const styles = StyleSheet.create({
   cardHeaderName: {
     fontSize: 21,
     fontWeight: '600',
-    color: globalTextColor
+    color: '$textColor'
   },
   cardContent: {
     backgroundColor: '#ffffff',
@@ -303,7 +320,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   cardFooter: {
-    //backgroundColor: '#f7f8f9'
+    backgroundColor: '#f7f8f9',
+    alignItems: 'center',
+    justifyContent: 'space-between',
 
   }
 });

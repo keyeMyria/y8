@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { NetInfo, AppState, Text, View, Platform, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { LoginManager } from 'react-native-fbsdk';
+
 //import Spinner from 'react-native-loading-spinner-overlay';
 import { ClearLoginToken } from '../services/AuthService';
 //import { fakePromise } from '../services/Common';
@@ -22,6 +23,10 @@ import {
 import {
   doAuthAndLoadInitData
 } from '../actions/AuthActions';
+
+import {
+  getFeed,
+} from '../actions/FeedActions';
 
 export default (ComposedComponent) => {
   class NetworkChange extends Component {
@@ -134,7 +139,8 @@ export default (ComposedComponent) => {
       //if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
       if (nextAppState === 'active') {
         //console.log('App has come to the foreground!');
-        this.props.offlineRequest();
+        //this.props.offlineRequest();
+        this.props.getFeed();
       }
     };
 
@@ -186,6 +192,7 @@ export default (ComposedComponent) => {
 
   const mapStateToProps = (state) => state;
   return connect(mapStateToProps, {
+    getFeed,
     setConnectionStatus,
     offlineRequest,
     changeAppRoot,

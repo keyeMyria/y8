@@ -38,7 +38,8 @@ const config = {
     'friends',
     'device',
     'subscribers',
-    'onlygroups'
+    'onlygroups',
+    'feed'
   ],
   debounce: 100,
   migrate: (state) => {

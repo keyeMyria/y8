@@ -24,7 +24,7 @@ class UsedTagsItem extends React.PureComponent {
 
     const sentence = tagsGroup.map((id) => `${this.props.tags.byId[id].name} `);
 
-    this.props.onShare(groupId, activity, tagsGroup, sentence);
+    this.props.onShare(groupId, activity, sentence);
   }
   removeTagFromGroup = (activityId, groupId, tagId) => {
     Alert.alert(

@@ -56,7 +56,7 @@ class TimeCtrl {
         return false;
       }).then((result) => {
         if (result) {
-          SendStartActivityNotification(userId, groupId);
+          SendStartActivityNotification(userId, groupId, startedAt);
           // getDeviceTokens(userId).then((tokens)=>{
           //   console.log(tokens);
           //   let registeredIds = [];

@@ -28,24 +28,35 @@ export default class InAppNotification extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          {this.props.title}
-        </Text>
-        <Text style={styles.instructions}>
-          {this.props.body}
-        </Text>
+        <View style={styles.innerContainer}>
+          <Text style={styles.welcome}>
+            {this.props.title}
+          </Text>
+          <Text style={styles.instructions}>
+            {this.props.body}
+          </Text>
+        </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  innerContainer: {
+    padding: 10,
+    backgroundColor: 'rgba(221,93,89,0.6)',
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0.2, height: 0.4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
   container: {
     flex: 1,
-    padding: 10,
     justifyContent: 'center',
     //alignItems: '',
-    backgroundColor: '#EDECE8',
+    backgroundColor: '#ffffff',
     borderRadius: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0.2, height: 0.4 },

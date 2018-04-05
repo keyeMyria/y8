@@ -54,8 +54,8 @@ class TagCtrl {
       //.skip(offset)
       //.limit(limit);
       .then((tags)=>{
-        console.log(tags._id);
-        console.log(tags);
+        //console.log(tags._id);
+        //console.log(tags);
         res.status(200).send(tags);
         next();
       })

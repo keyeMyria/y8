@@ -283,8 +283,8 @@ class TagsScreen extends React.Component {
     });
   }
 
-  onShare = (groupId, activity, tags, sentence) => {
-    console.log(groupId, activity, tags, sentence);
+  onShare = (groupId, activity, sentence) => {
+    //console.log(groupId, activity, sentence);
     this.props.navigator.push({
       screen: 'app.ShareScreen',
       title: 'Share',
@@ -447,7 +447,6 @@ class TagsScreen extends React.Component {
   };
 
   renderRowGroup = ({ item }) => {
-    console.log(item);
     const onlyPrevGroupId = this.getPrevGroupIdFromOnlygroups(item.id);
     return (
       <UsedTagsItem
@@ -540,33 +539,35 @@ class TagsScreen extends React.Component {
                 backgroundColor: EStyleSheet.value('$backgroundColor'),
                 alignItems: 'center',
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+                justifyContent: 'flex-end',
                 position: 'relative',
                 //borderColor: 'gray',
                 //borderBottomWidth: 1
                 paddingBottom: 10,
               }}
             >
-            <TextButton
-              containerStyle={{ marginLeft: 10 }}
-              title='Share'
-              onPress={() => {
-                this.props.navigator.push({
-                  screen: 'app.ShareScreen',
-                  title: 'Subscribers',
-                  passProps: {
-                    prevGroupId: this.props.prevGroupId,
-                    prevTimeId: this.props.prevTimeId,
-                    isExisted: false,
-                    activity: this.state.activity,
-                    selectedTags: this.state.selectedTags,
-                    sentence: this.state.sentence
-                  },
-                  //backButtonTitle: 'Back',
-                  navigatorButtons: {}
-                });
-               }}
-            />
+            {
+              // <TextButton
+              //   containerStyle={{ marginLeft: 10 }}
+              //   title='Share'
+              //   onPress={() => {
+              //     this.props.navigator.push({
+              //       screen: 'app.ShareScreen',
+              //       title: 'Subscribers',
+              //       passProps: {
+              //         prevGroupId: this.props.prevGroupId,
+              //         prevTimeId: this.props.prevTimeId,
+              //         isExisted: false,
+              //         activity: this.state.activity,
+              //         selectedTags: this.state.selectedTags,
+              //         sentence: this.state.sentence
+              //       },
+              //       //backButtonTitle: 'Back',
+              //       navigatorButtons: {}
+              //     });
+              //    }}
+              // />
+            }
             <TextButton
               containerStyle={{
                 borderWidth: 0.3,

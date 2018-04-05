@@ -44,11 +44,11 @@ const getMyActivities = (state, action) => {
   const { payload, isOnline } = action;
   const newState = Object.assign({}, state);
 
-  if (isOnline) {
+  //if (isOnline) {
     newState.allActivityIds = payload.allActivityIds;
     newState.byActivityId = payload.byActivityId;
     newState.loading = false;
-  }
+  //}
   return Object.assign({}, newState);
 };
 

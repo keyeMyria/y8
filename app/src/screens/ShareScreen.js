@@ -141,11 +141,13 @@ class ShareScreen extends React.Component {
 
   renderListHeader = () => {
     return (
-      <Text>
-        These users will send
-        notifications when this
-        activity starts or ends
-      </Text>
+      <View style={{ padding: 10 }}>
+        <Text>
+          These users will send
+          notifications when this
+          activity starts or ends
+        </Text>
+      </View>
     );
   };
   renderListFooter= () => null;
@@ -211,37 +213,41 @@ class ShareScreen extends React.Component {
               });
             }}
           />
-          <TextButton
-            containerStyle={{
-              borderWidth: 0.3,
-              borderRadius: 3,
-              borderColor: '#38B211',
-              height: 25,
-              marginRight: 10
-            }}
-            title='START'
-            titleStyle={{
-              fontSize: 14,
-              color: '#38B211',
-              fontWeight: '600'
-            }}
-            onPress={() => {
-              this.props.navigator.popToRoot({
-                animated: true,
-                animationType: 'fade',
-              });
-              const activity = Object.assign({}, this.props.activity);
-              let selectedTags = [];
-              if (this.props.selectedTags) {
-                selectedTags = [...this.props.selectedTags];
-              }
-              if (!this.props.isExisted) {
-                this.props.addTagsGroupToMyActivity(activity, selectedTags, this.props.prevTimeId, this.props.prevGroupId);
-              } else {
-                this.props.useThisGroupForActivity(activity.id, this.props.groupId, this.props.prevTimeId, this.props.prevGroupId);
-              }
-            }}
-          />
+          {
+            this.props.started === false &&
+            <TextButton
+              containerStyle={{
+                borderWidth: 0.3,
+                borderRadius: 3,
+                borderColor: '#38B211',
+                height: 25,
+                marginRight: 10
+              }}
+              title='START'
+              titleStyle={{
+                fontSize: 14,
+                color: '#38B211',
+                fontWeight: '600'
+              }}
+              onPress={() => {
+                this.props.navigator.popToRoot({
+                  animated: true,
+                  animationType: 'fade',
+                });
+                const activity = Object.assign({}, this.props.activity);
+                let selectedTags = [];
+                if (this.props.selectedTags) {
+                  selectedTags = [...this.props.selectedTags];
+                }
+                if (!this.props.isExisted) {
+                  this.props.addTagsGroupToMyActivity(activity, selectedTags, this.props.prevTimeId, this.props.prevGroupId);
+                } else {
+                  this.props.useThisGroupForActivity(activity.id, this.props.groupId, this.props.prevTimeId, this.props.prevGroupId);
+                }
+              }}
+            />
+          }
+
           </View>
         }
 

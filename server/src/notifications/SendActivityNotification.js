@@ -10,7 +10,7 @@ const {
   sendNotifications
 } = require('../services/Notification');
 
-const SendStartActivityNotification = async (userId, groupId) => {
+const SendStartActivityNotification = async (userId, groupId, startedAt) => {
   try {
     const group =
       await Group.findOne({_id: groupId})
@@ -30,7 +30,8 @@ const SendStartActivityNotification = async (userId, groupId) => {
     sentence = sentence.trim();
 
     const title = group.userId.fullName;
-    const body = `Started ${group.activityId.name} ${sentence}`;
+    const body = `${group.activityId.name} ${sentence} ▶︎`;
+    // ▷ ►
 
     // get can share user ids from canshares model
     const sharedWithUserIds =
@@ -57,11 +58,14 @@ const SendStartActivityNotification = async (userId, groupId) => {
     const data = {
       title,
       body,
+      badge: 0,
       custom: {
         payload: {
           sender: 'yactivity',
           screen: 'app.FeedScreen',
-          data: ''
+          data: {
+            startedAt
+          }
         },
       },
     }
@@ -87,17 +91,17 @@ const SendStopActivityNotification = async (userId, timeId) => {
       return false;
     }
 
-    // const tags  =
-    //   await Tag.find({ _id: { $in: group.tags }}, { _id: 0, name: 1});
-    //
-    // let sentence = '';
-    // _.forEach(tags, (tag)=>{
-    //   sentence = tag.name+' '+sentence;
-    // });
-    // sentence = sentence.trim();
+    const tags  =
+      await Tag.find({ _id: { $in: group.tags }}, { _id: 0, name: 1});
+
+    let sentence = '';
+    _.forEach(tags, (tag)=>{
+      sentence = tag.name+' '+sentence;
+    });
+    sentence = sentence.trim();
 
     const title = group.userId.fullName;
-    const body = `Stopped ${group.activityId.name}`;
+    const body = `${group.activityId.name} ${sentence} ✔︎`;
 
     // get can share user ids from canshares model
     const sharedWithUserIds =
@@ -106,7 +110,7 @@ const SendStopActivityNotification = async (userId, timeId) => {
     if(sharedWithUserIds.length === 0){
       return false;
     }
-    
+
     let userIdsArray = [];
     _.forEach(sharedWithUserIds, (sharedWith)=>{
       userIdsArray.push(sharedWith.sharedWith);
@@ -128,7 +132,10 @@ const SendStopActivityNotification = async (userId, timeId) => {
         payload: {
           sender: 'yactivity',
           screen: 'app.FeedScreen',
-          data: ''
+          data: {
+            startedAt: time.startedAt,
+            stoppedAt: time.stoppedAt
+          }
         },
       },
     }

@@ -75,17 +75,18 @@ class GroupCtrl {
       groupId,
       updatedAt
     } = req.body;
+    console.log(req.body);
 
     const Group = mongoose.model('group');
 
     Group.findOneAndUpdate({_id: prevGroupId}, { $set: { latest: 0}})
       .then((result) => {
-        if(result) {
+        //if(result) {
           const criteria =  {};
           criteria._id = {$eq: groupId};
           return Group.findOneAndUpdate(criteria, { $set: { updatedAt, latest: 1 } });
-        }
-        return result;
+        //}
+        //return result;
 
       }).then((result) => {
         console.log('result', result);

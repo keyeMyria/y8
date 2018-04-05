@@ -52,7 +52,7 @@ class Auth {
         //console.log(days+'-'+hrs+'-'+mins+'-'+secs);
         // do some database checks if necessary
         // handle facebook and google here itself
-        if (mins <= 55 &&
+        if (days <= 3 &&
           (
             (appId === keys.facebookAppID && loginType === 'facebook')
             ||

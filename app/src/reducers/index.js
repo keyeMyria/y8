@@ -23,6 +23,7 @@ import { subscribers } from './SubscribersReducer';
 import { share } from './ShareReducer';
 import { shares } from './SharesReducer';
 import { onlygroups } from './OnlyGroupsReducer';
+import { feed } from './FeedReducer';
 
 export default {
   app,
@@ -41,6 +42,7 @@ export default {
   device,
   subscribers,
   onlygroups,
+  feed,
 
   // no state for below data
   users,

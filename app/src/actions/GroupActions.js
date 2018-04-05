@@ -122,16 +122,14 @@ export const addTagsGroupToMyActivity = (activity, tags, prevTimeId, prevGroupId
 
 export const getMyActivities = () => (
   async (dispatch, getState) => {
-    let myactivities = {
+    const myactivities = {
       byActivityId: {},
       allActivityIds: []
     };
 
-
-
     try {
       const { isConnected } = getState().network;
-      if (isConnected) {
+      //if (isConnected) {
         dispatch({
           type: GROUP_FETCH_REQUEST
         });
@@ -142,7 +140,7 @@ export const getMyActivities = () => (
           method: 'get'
         };
 
-        if (isConnected) {
+        //if (isConnected) {
           const response = await ApiRequest(payload);
           //console.log('responseGetMyActivities:');
           console.log(response);
@@ -180,14 +178,14 @@ export const getMyActivities = () => (
             }
           });
           myactivities.allActivityIds = [...temp, ...myactivities.allActivityIds];
-        }
+        //}
 
-        dispatch({
+        await dispatch({
           type: GROUP_FETCH_SUCCESS,
           payload: myactivities,
           isOnline: isConnected
         });
-      }
+      //}
     } catch (error) {
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         dispatch({

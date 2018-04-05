@@ -88,6 +88,8 @@ class DashboardScreen extends React.Component {
     console.log('componentDidMount Dashboard');
     //TODO
     //await this.props.getTimes();
+    this.props.getMyActivities();
+    this.props.getTags();
   }
 
   async componentDidUpdate(nextProps) {
@@ -143,6 +145,26 @@ class DashboardScreen extends React.Component {
 
   onRefresh = () => {
     this.props.getMyActivities();
+  }
+
+  onSharePress = (groupId, activity, sentence, started) => {
+    console.log(groupId, activity, sentence);
+    this.props.navigator.push({
+      screen: 'app.ShareScreen',
+      title: 'Share',
+      passProps: {
+        prevGroupId: null, //this.props.prevGroupId,
+        prevTimeId: null, // remove this
+        activity,
+        isExisted: true,
+        groupId,
+        //selectedTags: this.state.selectedTags,
+        sentence,
+        started
+      },
+      //backButtonTitle: 'Back',
+      navigatorButtons: {}
+    });
   }
 
   showSnackBar = (msg) => {
@@ -263,6 +285,7 @@ class DashboardScreen extends React.Component {
         stopActivity={this.props.stopActivity}
         toggleActivity={this.props.toggleActivity}
         scrollToOffset={this.scrollToOffset}
+        onSharePress={this.onSharePress}
         rand={rand}
         //rand={this.state.refreshing}
       />

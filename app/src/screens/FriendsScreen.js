@@ -57,12 +57,12 @@ class FriendsScreen extends React.Component {
       // if you want to listen on navigator events, set this up
       this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
       // set tab badge
-      this.props.navigator.setTabBadge({
-        tabIndex: 2, // (optional) if missing, the badge will be added to this screen's tab
-        badge: 12, // badge value, null to remove badge
-        badgeColor: 'rgba(221,93,89,1)',
-        // (optional) if missing, the badge will use the default color
-      });
+      // this.props.navigator.setTabBadge({
+      //   tabIndex: 2, // (optional) if missing, the badge will be added to this screen's tab
+      //   badge: 12, // badge value, null to remove badge
+      //   badgeColor: 'rgba(221,93,89,1)',
+      //   // (optional) if missing, the badge will use the default color
+      // });
     }
     this.props.getFriends();
     this.props.getFriendRequests();

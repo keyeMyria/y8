@@ -1,21 +1,22 @@
 import React from 'react';
 import {
-  StyleSheet,
+  Text,
   View,
   TouchableOpacity
 } from 'react-native';
-
+import EStyleSheet from 'react-native-extended-stylesheet';
 import Icon from 'react-native-vector-icons/Feather';
 
-class IconButton extends React.PureComponent {
+class ShareIconButton extends React.PureComponent {
+
+  onSharePress = () => {
+    const { groupId, activity, sentence, started } = this.props;
+    this.props.onSharePress(groupId, activity, sentence, started);
+  }
   render() {
     return (
       <TouchableOpacity
-        onPress={() => {
-          if (this.props.onPress) {
-            this.props.onPress();
-          }
-        }}
+        onPress={this.onSharePress}
       >
         <View style={[styles.container, this.props.style]}>
           <Icon
@@ -24,13 +25,18 @@ class IconButton extends React.PureComponent {
             size={this.props.size}
             color={this.props.color}
           />
+          <Text
+            style={{ color: EStyleSheet.value('$textColor'), padding: 3 }}
+          >
+            {this.props.sharedWith}
+          </Text>
         </View>
       </TouchableOpacity>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   container: {
     //flex: 1,
     padding: 5,
@@ -38,8 +44,9 @@ const styles = StyleSheet.create({
     width: 35,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'black'
+    flexDirection: 'row'
+    //backgroundColor: 'red'
   }
 });
 
-export default IconButton;
+export default ShareIconButton;
