@@ -174,13 +174,13 @@ class DashboardScreen extends React.Component {
     });
   }
 
-  showTags = (activityId, prevTimeId, prevGroupId) => {
+  showTags = (activityId, prevGroupId) => {
     this.props.navigator.push({
       screen: 'app.TagsScreen',
       title: 'Tags',
       passProps: {
         prevGroupId,
-        prevTimeId,
+        //prevTimeId,
         activity: this.props.activities.byId[activityId]
       }
     });

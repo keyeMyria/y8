@@ -20,7 +20,7 @@ class TimeCtrl {
     //console.log(req.body);
     const {
       id,
-      prevTimeId,
+      //prevTimeId,
       groupId,
       startedAt,
     } = req.body;

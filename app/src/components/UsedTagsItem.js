@@ -80,8 +80,8 @@ class UsedTagsItem extends React.PureComponent {
     );
   }
 
-  useThisGroupForActivity = (activityId, groupId, prevTimeId, prevGroupId) => {
-    this.props.useThisGroupForActivity(activityId, groupId, prevTimeId, prevGroupId);
+  useThisGroupForActivity = (activityId, groupId, prevGroupId) => {
+    this.props.useThisGroupForActivity(activityId, groupId, prevGroupId);
   }
 
   renderTagsGroup = (activityId, groupId, tags) => {
@@ -148,7 +148,7 @@ class UsedTagsItem extends React.PureComponent {
             }}
             title='START'
             onPress={() => {
-              this.useThisGroupForActivity(activity.id, groupId, this.props.prevTimeId, this.props.prevGroupId);
+              this.useThisGroupForActivity(activity.id, groupId, this.props.prevGroupId);
             }}
           />
         </View>

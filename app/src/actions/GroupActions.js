@@ -43,7 +43,7 @@ import {
 } from './TimeActions';
 
 // add addTagsGroupToMyActivity action
-export const addTagsGroupToMyActivity = (activity, tags, prevTimeId, prevGroupId) => (
+export const addTagsGroupToMyActivity = (activity, tags, prevGroupId, shouldStart) => (
   async (dispatch, getState) => {
     try {
       dispatch({
@@ -98,7 +98,9 @@ export const addTagsGroupToMyActivity = (activity, tags, prevTimeId, prevGroupId
         payload: myactivity
       });
 
-      await dispatch(startActivity(prevTimeId, activityId, groupId));
+      if (shouldStart !== false) {
+        await dispatch(startActivity(activityId, groupId));
+      }
     } catch (error) {
       console.log('addTagsGroupToMyActivity', error);
       if (!_.isUndefined(error.response) && error.response.status === 401) {
@@ -143,9 +145,9 @@ export const getMyActivities = () => (
         //if (isConnected) {
           const response = await ApiRequest(payload);
           //console.log('responseGetMyActivities:');
-          console.log(response);
+          //console.log(response);
           const { data } = response;
-          console.log(data);
+          //console.log(data);
           //_.reverse(data.rows);
           _.forEach(data.rows, (row) => {
             const { activityId } = row._id;
@@ -206,7 +208,7 @@ export const getMyActivities = () => (
   }
 );
 
-export const useThisGroupForActivity = (activityId, groupId, prevTimeId, prevGroupId) => (
+export const useThisGroupForActivity = (activityId, groupId, prevGroupId) => (
   async (dispatch, getState) => {
     try {
       dispatch({
@@ -233,28 +235,40 @@ export const useThisGroupForActivity = (activityId, groupId, prevTimeId, prevGro
         await fakePromise(300);
       }
 
-      // const onlygroups = getState().onlygroups;
-      //
-      // let tagsGroup = [];
-      // //if (!_.isNil(groupId)) {
-      //   tagsGroup = _.filter(onlygroups.data, { id: groupId });
-      // //}
+      const onlygroups = getState().onlygroups;
+      let tagsGroup = [];
+      if (!_.isNil(groupId)) {
+        tagsGroup = _.filter(onlygroups.data, { id: groupId });
+      }
+      if (tagsGroup.length > 0) {
+        tagsGroup = tagsGroup[0].tags;
+      } else {
+        const myActivities = getState().myActivities;
+        if (myActivities.byActivityId[activityId].byGroupId[groupId]) {
+          if (myActivities.byActivityId[activityId].byGroupId[groupId].tagsGroup) {
+            tagsGroup = myActivities.byActivityId[activityId].byGroupId[groupId].tagsGroup;
+          }
+        }
+      }
+
       // console.log(tagsGroup);
-      const myActivities = getState().myActivities;
-
-
-      const { tagsGroup } = myActivities.byActivityId[activityId].byGroupId[groupId];
+      // const myActivities = getState().myActivities;
+      //
+      // console.log('myActivities', myActivities);
+      //
+      // const { tagsGroup } = myActivities.byActivityId[activityId].byGroupId[groupId];
 
       const data = {
         tagsGroup,
         activityId,
         groupId
       };
+      //console.log(data);
       dispatch({
         type: GROUP_GROUP_ADD_SUCCESS,
         payload: data
       });
-      await dispatch(startActivity(prevTimeId, activityId, groupId));
+      await dispatch(startActivity(activityId, groupId));
     } catch (error) {
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         dispatch({
@@ -364,7 +378,7 @@ export const removeGroupFromActivity = (activityId, groupId, onlyPrevGroupId) =>
 
 
       const onlygroups = getState().onlygroups;
-      console.log('removeGroupFromActivity', onlygroups, onlyPrevGroupId);
+      //console.log('removeGroupFromActivity', onlygroups, onlyPrevGroupId);
 
       let tagsGroup = [];
       if (!_.isNil(onlyPrevGroupId)) {
@@ -381,12 +395,12 @@ export const removeGroupFromActivity = (activityId, groupId, onlyPrevGroupId) =>
       //   });
       //   await fakePromise(100);
       // }
-      console.log({
-        tagsGroup,
-        groupTimes: resp.data.nextGroupLatestTime,
-        activityId,
-        groupId,
-      });
+      // console.log({
+      //   tagsGroup,
+      //   groupTimes: resp.data.nextGroupLatestTime,
+      //   activityId,
+      //   groupId,
+      // });
 
       dispatch({
         type: GROUP_REMOVE_GROUP_SUCCESS,

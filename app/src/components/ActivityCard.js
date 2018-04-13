@@ -126,7 +126,7 @@ class ActivityCard extends React.PureComponent {
       //console.log(this.state.started);
     const toggle = !started;
     if (toggle) {
-      this.props.startActivity(this.props.timeId, activityId, groupId);
+      this.props.startActivity(activityId, groupId);
       this.props.scrollToOffset();
     } else {
       this.props.stopActivity(this.props.timeId, activityId, groupId);
@@ -136,7 +136,7 @@ class ActivityCard extends React.PureComponent {
 
   showTags = (started, individualLoading) => {
     if (!started & !individualLoading) {
-      this.props.showTags(this.props.activityId, this.props.timeId, this.props.groupId);
+      this.props.showTags(this.props.activityId, this.props.groupId);
     }
   }
   renderTagsSentence = (name, tags) => (
@@ -320,7 +320,7 @@ const styles = EStyleSheet.create({
     paddingHorizontal: 15,
   },
   cardFooter: {
-    //backgroundColor: '#f7f8f9',
+    backgroundColor: 'rgba(245,246,247,1)', //'#f7f8f9',
     alignItems: 'center',
     justifyContent: 'space-between',
 

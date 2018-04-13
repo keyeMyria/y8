@@ -13,12 +13,12 @@ export const feed = (state = INITIAL_FEED_STATE, action) => {
     case FEED_FETCH_DATA:
       return Object.assign({}, state, {
         badgeCount: action.payload.badgeCount,
-        data: [...state.data, ...action.payload.notifications]
+        data: [...action.payload.notifications, ...state.data]
       });
     case FEED_UPDATE:
       return Object.assign({}, state, {
         badgeCount: action.payload.badgeCount,
-        data: [...state.data, action.payload.notification]
+        data: [action.payload.notification, ...state.data]
       });
     case FEED_UPDATE_BADGE_COUNT:
       return Object.assign({}, state, {

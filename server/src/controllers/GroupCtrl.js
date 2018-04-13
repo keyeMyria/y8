@@ -75,7 +75,7 @@ class GroupCtrl {
       groupId,
       updatedAt
     } = req.body;
-    console.log(req.body);
+    console.log('body: ',req.body);
 
     const Group = mongoose.model('group');
 
@@ -105,29 +105,6 @@ class GroupCtrl {
         res.status(400).send('Bad request');
         next();
       });
-
-    // Find activity and check if same group is isExist
-    // add to array if group not isExists
-    // const criteria =  {};
-    // criteria._id = {$eq: groupId};
-    //
-    // Group.findOneAndUpdate(criteria, { $set: { updatedAt } }).then((result) => {
-    //   console.log('result', result);
-    //   if (!result || result === false) {
-    //     console.log("Failed to update");
-    //     res.status(400).send("Failed to update");
-    //   } else {
-    //     console.log("Group updated successfully");
-    //     res.status(200).send("Group updated successfully");
-    //   }
-    //   next();
-    //
-    // }).catch((groupError) => {
-    //   console.log(groupError);
-    //   req.log.error(groupError.message);
-    //   res.status(400).send('Bad request');
-    //   next();
-    // });
   }
 
   get(req, res, next) {

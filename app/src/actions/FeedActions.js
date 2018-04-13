@@ -61,7 +61,7 @@ export const getFeed = () => (
         const notifications = [];
         _.forEach(results, (result) => {
           const { startedAt, stoppedAt } = result.userInfo.payload.data;
-          notifications.push({
+          notifications.unshift({
             title: result.title, body: result.body, id: result.identifier, startedAt, stoppedAt
           });
         });

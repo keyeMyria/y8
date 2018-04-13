@@ -290,7 +290,7 @@ class TagsScreen extends React.Component {
       title: 'Share',
       passProps: {
         prevGroupId: this.props.prevGroupId,
-        prevTimeId: this.props.prevTimeId,
+        //prevTimeId: this.props.prevTimeId,
         activity,
         isExisted: true,
         groupId,
@@ -369,16 +369,16 @@ class TagsScreen extends React.Component {
       animated: true,
       animationType: 'fade',
     });
-    this.props.addTagsGroupToMyActivity(activity, selectedTags, this.props.prevTimeId, this.props.prevGroupId);
+    this.props.addTagsGroupToMyActivity(activity, selectedTags, this.props.prevGroupId, false);
   }
 
-  useThisGroupForActivity = (activityId, groupId, prevTimeId, prevGroupId) => {
+  useThisGroupForActivity = (activityId, groupId, prevGroupId) => {
     this.props.navigator.popToRoot({
       animated: true,
       animationType: 'fade',
     });
 
-    this.props.useThisGroupForActivity(activityId, groupId, prevTimeId, prevGroupId);
+    this.props.useThisGroupForActivity(activityId, groupId, prevGroupId);
   }
 
   removeTagFromGroup = (activityId, groupId, tagId, onlyPrevGroupId) => {
@@ -544,7 +544,7 @@ class TagsScreen extends React.Component {
                 position: 'relative',
                 //borderColor: 'gray',
                 //borderBottomWidth: 1
-                paddingBottom: 10,
+                paddingBottom: 15,
               }}
             >
             {
@@ -570,19 +570,8 @@ class TagsScreen extends React.Component {
               // />
             }
             <TextButton
-              containerStyle={{
-                borderWidth: 0.3,
-                borderRadius: 3,
-                borderColor: '#38B211',
-                height: 25,
-                marginRight: 10
-              }}
-              titleStyle={{
-                fontSize: 14,
-                color: '#38B211',
-                fontWeight: '600'
-              }}
-              title='START'
+              containerStyle={{ marginRight: 10 }}
+              title='Continue'
               onPress={this.addTagsGroupToMyActivity}
             />
             </View>

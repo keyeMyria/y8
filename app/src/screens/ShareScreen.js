@@ -240,9 +240,9 @@ class ShareScreen extends React.Component {
                   selectedTags = [...this.props.selectedTags];
                 }
                 if (!this.props.isExisted) {
-                  this.props.addTagsGroupToMyActivity(activity, selectedTags, this.props.prevTimeId, this.props.prevGroupId);
+                  this.props.addTagsGroupToMyActivity(activity, selectedTags, this.props.prevGroupId);
                 } else {
-                  this.props.useThisGroupForActivity(activity.id, this.props.groupId, this.props.prevTimeId, this.props.prevGroupId);
+                  this.props.useThisGroupForActivity(activity.id, this.props.groupId, this.props.prevGroupId);
                 }
               }}
             />

@@ -29,7 +29,7 @@ export const getTimes = () => (
     }
   });
 
-export const startActivity = (prevTimeId, activityId, groupId) => (
+export const startActivity = (activityId, groupId) => (
   async (dispatch, getState) => {
     try {
       const { isConnected } = getState().network;
@@ -46,7 +46,6 @@ export const startActivity = (prevTimeId, activityId, groupId) => (
       const startedAt = moment().valueOf();
       const data = {
         id: uuidv4(),
-        prevTimeId,
         groupId,
         startedAt
       };
