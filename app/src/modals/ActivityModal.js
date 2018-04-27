@@ -7,7 +7,6 @@ import {
   FlatList
 } from 'react-native';
 import _ from 'lodash';
-import Spinner from 'react-native-loading-spinner-overlay';
 import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import TextButton from '../components/TextButton';
@@ -20,6 +19,9 @@ import {
   updateActivity,
   deleteActivity
 } from '../actions/ActivityActions';
+
+import SnackBar from '../services/SnackBar';
+import { fakePromise } from '../services/Common';
 
 const ERROR_MSG = 'Only these a-zA-Z0-9_!@#$& and space are allowed';
 class ActivityModal extends React.Component {
@@ -36,7 +38,6 @@ class ActivityModal extends React.Component {
       isEditing: false,
       searchIds: [],
       isItemPressed: false,
-      canUpdateComp: true
     };
     this.timeout = 0;
 
@@ -51,7 +52,7 @@ class ActivityModal extends React.Component {
         }],
         leftButtons: [{
           id: 'close',
-          title: 'Cancel',
+          title: 'Close',
           //disabled: true,
           buttonColor: EStyleSheet.value('$iconColor')
         }]
@@ -61,39 +62,52 @@ class ActivityModal extends React.Component {
     }
   }
 
-  // shouldComponentUpdate() {
-  //   return this.state.canUpdateComp;
-  // }
-/*
-  //componentWillReceiveProps(nextProps) {
-  async componentDidUpdate(nextProps) {
-    //console.log('componentDidUpdate', nextProps.activities.adding, this.props.activities.adding);
-    if (nextProps.activities.adding === true &&
-      this.props.activities.adding === false &&
-      nextProps.activities.addingError === null) {
+  async componentWillReceiveProps(nextProps) {
+    if (nextProps.activities.adding === false &&
+       this.props.activities.adding === true &&
+      _.isNull(nextProps.activities.addingError)) {
       await this.closeModal('Activity created!');
-    } else if (nextProps.activities.adding === true &&
-      this.props.activities.adding === false &&
-      nextProps.activities.addingError !== null) {
-      await this.closeModal('TODO:Network error');
-    } else if (nextProps.activities.updating === true &&
-      this.props.activities.updating === false &&
-      nextProps.activities.updatingError === null) {
-      await this.closeModal('Activity Updated!');
-    } else if (nextProps.activities.updating === true &&
-      this.props.activities.updating === false &&
-      nextProps.activities.updatingError !== null) {
-      await this.closeModal('TODO:Network error');
-    } else if (nextProps.activities.deleting === true &&
-      this.props.activities.deleting === false &&
-      nextProps.activities.deletingError === null) {
-      await this.closeModal('Activity deleted!');
-    } else if (nextProps.activities.deleting === true &&
-      this.props.activities.deleting === false &&
-      nextProps.activities.deletingError !== null) {
-      await this.closeModal('TODO:Network error');
+    } else if (nextProps.activities.adding === false &&
+      this.props.activities.adding === true &&
+      !_.isNull(nextProps.activities.addingError) &&
+      !_.isUndefined(nextProps.activities.addingError)) {
+      await this.closeModal(nextProps.activities.addingError.status);
+    } else if (nextProps.activities.adding === false &&
+      this.props.activities.adding === true &&
+      _.isUndefined(nextProps.activities.addingError)) {
+      await this.closeModal('Service down, please try later');
     }
-  }*/
+
+    if (!nextProps.activities.updating &&
+      this.props.activities.updating &&
+      _.isNull(nextProps.activities.updatingError)) {
+      await this.closeModal('Activity updated!');
+    } else if (!nextProps.activities.updating &&
+      this.props.activities.updating &&
+      !_.isNull(nextProps.activities.updatingError) &&
+      !_.isUndefined(nextProps.activities.updatingError)) {
+      await this.closeModal(nextProps.activities.updatingError.status);
+    } else if (!nextProps.activities.updating &&
+      this.props.activities.updating &&
+      _.isUndefined(nextProps.activities.updatingError)) {
+      await this.closeModal('Service down, please try later');
+    }
+
+    if (!nextProps.activities.deleting &&
+      this.props.activities.deleting &&
+      _.isNull(nextProps.activities.deletingError)) {
+      await this.closeModal('Activity deleted!');
+    } else if (!nextProps.activities.deleting &&
+      this.props.activities.deleting &&
+      !_.isNull(nextProps.activities.deletingError) &&
+      !_.isUndefined(nextProps.activities.deletingError)) {
+      await this.closeModal(nextProps.activities.deletingError.status);
+    } else if (!nextProps.activities.deleting &&
+      this.props.activities.deleting &&
+      _.isUndefined(nextProps.activities.deletingError)) {
+      await this.closeModal('Service down, please try later');
+    }
+  }
 
   onNavigatorEvent = (event) => {
     if (event.type === 'NavBarButtonPress') {
@@ -124,35 +138,38 @@ class ActivityModal extends React.Component {
   };
 
   onSave = async () => {
+    this.props.navigator.setButtons({
+      rightButtons: [{
+        id: 'loader',
+        component: 'app.Loader'
+      }]
+    });
     Keyboard.dismiss();
     const isExist = isActivityExist(this.props.activities.byId, this.state.name);
     if (isExist) {
       if (!_.isNull(this.props.activity) &&
         this.state.name.toLowerCase() === this.props.activity.name.toLowerCase()) {
-        this.closeModal();
+        //this.closeModal();
       } else {
         this.setState({
           isValid: false,
           errorMsg: 'Activity already exists'
+        });
+        this.props.navigator.setButtons({
+          rightButtons: [{
+            id: 'save',
+            title: 'Save',
+            buttonColor: EStyleSheet.value('$iconColor')
+          }]
         });
       }
       return false;
     }
 
     if (this.state.isUpdate) {
-      this.setState({
-        canUpdateComp: false
-      }, () => {
-        this.props.updateActivity({ name: this.state.name, id: this.props.activity.id });
-        this.closeModal();
-      });
+      this.props.updateActivity({ name: this.state.name, id: this.props.activity.id });
     } else {
-      this.setState({
-        canUpdateComp: false
-      }, () => {
-        this.props.addActivity({ name: this.state.name });
-        this.closeModal();
-      });
+      this.props.addActivity({ name: this.state.name });
     }
   }
   onChangeText = (name) => {
@@ -214,6 +231,8 @@ class ActivityModal extends React.Component {
 
   closeModal = async (msg) => {
     Keyboard.dismiss();
+    await fakePromise(100);
+    SnackBar(msg);
     await this.props.navigator.dismissModal({
       animationType: msg !== '' ? 'none' : 'slide-down'// 'none' / 'slide-down'
     });
@@ -252,13 +271,13 @@ class ActivityModal extends React.Component {
               this.setState({
                 isDelete: true
               }, () => {
-                  //this.closeModal();
-                  this.setState({
-                    canUpdateComp: false
-                  }, () => {
-                    this.props.deleteActivity(this.props.activity.id);
-                    this.closeModal();
-                  });
+                this.props.navigator.setButtons({
+                  rightButtons: [{
+                    id: 'loader',
+                    component: 'app.Loader'
+                  }]
+                });
+                this.props.deleteActivity(this.props.activity.id);
               });
             }
           },
@@ -325,26 +344,20 @@ class ActivityModal extends React.Component {
                 paddingBottom: 30
               }}
             >
+            {
+              !this.state.isDelete &&
               <TextButton
                 containerStyle={{ padding: 10 }}
                 titleStyle={{ color: 'red' }}
                 title='Delete'
                 onPress={this.deleteActivity}
               />
+            }
+
             </View>
           }
 
         </View>
-        <Spinner
-          visible={
-            this.props.activities.adding ||
-            this.props.activities.updating ||
-            this.props.activities.deleting
-          }
-          color={EStyleSheet.value('$textColor')}
-          textContent={'Loading...'}
-          textStyle={{ color: EStyleSheet.value('$textColor') }}
-        />
       </View>
       </KeyboardAvoidingView>
     );

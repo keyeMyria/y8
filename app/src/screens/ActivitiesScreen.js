@@ -79,79 +79,50 @@ class ActivitiesScreen extends React.Component {
 
   async componentDidUpdate(nextProps) {
     //console.log('componentDidUpdate', nextProps.activities.adding, this.props.activities.adding, this.props.activities.error);
-    if (nextProps.activities.adding === true &&
-       this.props.activities.adding === false &&
-      _.isNull(this.props.activities.addingError)) {
-      await this.showSnackBar('Activity created!');
-    } else if (nextProps.activities.adding === true &&
-      this.props.activities.adding === false &&
-      !_.isNull(this.props.activities.addingError) &&
-      !_.isUndefined(this.props.activities.addingError)) {
-      await this.showSnackBar(this.props.activities.addingError.status);
-    } else if (nextProps.activities.adding &&
-      !this.props.activities.adding &&
-      _.isUndefined(this.props.activities.addingError)) {
-      await this.showSnackBar('Service down, please try later');
-    }
-
-    if (nextProps.activities.updating &&
-      !this.props.activities.updating &&
-      _.isNull(this.props.activities.updatingError)) {
-      await this.showSnackBar('Activity updated!');
-    } else if (nextProps.activities.updating &&
-      !this.props.activities.updating &&
-      !_.isNull(this.props.activities.updatingError) &&
-      !_.isUndefined(this.props.activities.updatingError)) {
-      await this.showSnackBar(this.props.activities.updatingError.status);
-    } else if (nextProps.activities.updating &&
-      !this.props.activities.updating &&
-      _.isUndefined(this.props.activities.updatingError)) {
-      await this.showSnackBar('Service down, please try later');
-    }
-
-    if (nextProps.activities.deleting &&
-      !this.props.activities.deleting &&
-      _.isNull(this.props.activities.deletingError)) {
-      await this.showSnackBar('Activity deleted!');
-    } else if (nextProps.activities.deleting &&
-      !this.props.activities.deleting &&
-      !_.isNull(this.props.activities.deletingError) &&
-      !_.isUndefined(this.props.activities.deletingError)) {
-      await this.showSnackBar(this.props.activities.deletingError.status);
-    } else if (nextProps.activities.deleting &&
-      !this.props.activities.deleting &&
-      _.isUndefined(this.props.activities.deletingError)) {
-      await this.showSnackBar('Service down, please try later');
-    }
-
-
-    // asdfasdfasdf asdf asdfasdf
-
-    /*if (nextProps.activities.adding === true &&
-      this.props.activities.adding === false &&
-      nextProps.activities.addingError === null) {
-      await this.showSnackBar('Activity created!');
-    } else if (nextProps.activities.adding === true &&
-      this.props.activities.adding === false &&
-      nextProps.activities.addingError !== null) {
-      await this.showSnackBar('TODO:Network error');
-    } else if (nextProps.activities.updating === true &&
-      this.props.activities.updating === false &&
-      nextProps.activities.updatingError === null) {
-      await this.showSnackBar('Activity Updated!');
-    } else if (nextProps.activities.updating === true &&
-      this.props.activities.updating === false &&
-      nextProps.activities.updatingError !== null) {
-      await this.showSnackBar('TODO:Network error');
-    } else if (nextProps.activities.deleting === true &&
-      this.props.activities.deleting === false &&
-      nextProps.activities.deletingError === null) {
-      await this.showSnackBar('Activity deleted!');
-    } else if (nextProps.activities.deleting === true &&
-      this.props.activities.deleting === false &&
-      nextProps.activities.deletingError !== null) {
-      await this.showSnackBar('TODO:Network error');
-    }*/
+    // if (nextProps.activities.adding === true &&
+    //    this.props.activities.adding === false &&
+    //   _.isNull(this.props.activities.addingError)) {
+    //   await this.showSnackBar('Activity created1!');
+    // } else if (nextProps.activities.adding === true &&
+    //   this.props.activities.adding === false &&
+    //   !_.isNull(this.props.activities.addingError) &&
+    //   !_.isUndefined(this.props.activities.addingError)) {
+    //   await this.showSnackBar(this.props.activities.addingError.status);
+    // } else if (nextProps.activities.adding &&
+    //   !this.props.activities.adding &&
+    //   _.isUndefined(this.props.activities.addingError)) {
+    //   await this.showSnackBar('Service down, please try later');
+    // }
+    //
+    // if (nextProps.activities.updating &&
+    //   !this.props.activities.updating &&
+    //   _.isNull(this.props.activities.updatingError)) {
+    //   await this.showSnackBar('Activity updated!');
+    // } else if (nextProps.activities.updating &&
+    //   !this.props.activities.updating &&
+    //   !_.isNull(this.props.activities.updatingError) &&
+    //   !_.isUndefined(this.props.activities.updatingError)) {
+    //   await this.showSnackBar(this.props.activities.updatingError.status);
+    // } else if (nextProps.activities.updating &&
+    //   !this.props.activities.updating &&
+    //   _.isUndefined(this.props.activities.updatingError)) {
+    //   await this.showSnackBar('Service down, please try later');
+    // }
+    //
+    // if (nextProps.activities.deleting &&
+    //   !this.props.activities.deleting &&
+    //   _.isNull(this.props.activities.deletingError)) {
+    //   await this.showSnackBar('Activity deleted!');
+    // } else if (nextProps.activities.deleting &&
+    //   !this.props.activities.deleting &&
+    //   !_.isNull(this.props.activities.deletingError) &&
+    //   !_.isUndefined(this.props.activities.deletingError)) {
+    //   await this.showSnackBar(this.props.activities.deletingError.status);
+    // } else if (nextProps.activities.deleting &&
+    //   !this.props.activities.deleting &&
+    //   _.isUndefined(this.props.activities.deletingError)) {
+    //   await this.showSnackBar('Service down, please try later');
+    // }
   }
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
@@ -185,7 +156,9 @@ class ActivitiesScreen extends React.Component {
         activity: this.props.activities.byId[id],
         activities: this.props.activities
       },
-      navigatorStyle: {},
+      navigatorStyle: {
+        navBarTextColor: EStyleSheet.value('$textColor')
+      },
       animationType: 'slide-up'
     });
   }
@@ -339,16 +312,7 @@ class ActivitiesScreen extends React.Component {
           }
 
         />
-        <Spinner
-          visible={
-            this.props.activities.adding ||
-            this.props.activities.updating ||
-            this.props.activities.deleting
-          }
-          color={EStyleSheet.value('$textColor')}
-          textContent={'Loading...'}
-          textStyle={{ color: EStyleSheet.value('$textColor') }}
-        />
+
       </KeyboardAvoidingView>
       </View>
     );

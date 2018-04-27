@@ -6,5 +6,5 @@ module.exports = {
   facebookClientSecret: '55ff1120f4bf89ae36620274c5bf8392',
 
   appSecureKey: 'hello-asdfasdfasdf',
-  secureKeyExpiresIn: '24h' // '1m' ,'1h', '10 days'
+  secureKeyExpiresIn: '1h' // '1m' ,'1h', '10 days'
 }

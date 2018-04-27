@@ -9,7 +9,7 @@ module.exports = (criteria, sortBy, offset = 0, limit = 20) => {
   // ]);
   const query = Group.aggregate([
     { $match : criteria },
-    //{ "$sort": { [sortBy]: 1 } },
+    { "$sort": { [sortBy]: 1 } },
     {
       "$lookup": {
         "from": "canshares",
@@ -64,7 +64,7 @@ module.exports = (criteria, sortBy, offset = 0, limit = 20) => {
           "userId": "$userId",
           "activityId": "$activityId",
           "_id": "$_id",
-          "updatedAt": "$updatedAt"
+          //"updatedAt": "$updatedAt"
         },
         groups: {
           "$push": {
@@ -80,7 +80,7 @@ module.exports = (criteria, sortBy, offset = 0, limit = 20) => {
         //tags: { $addToSet: { tags1: "$$ROOT" , sharedWith: {$sum: "1"}} } ,
       }
     },
-    { "$sort": { "_id.updatedAt": -1 } },
+    //{ "$sort": { "_id.updatedAt": -1 } },
     // {
     //   $project:{
     //     "tags": 0,

@@ -10,6 +10,10 @@ import {
 
 } from '../types/GroupTypes';
 
+import {
+  UPDATE_SHARE_COUNT
+} from '../types/ShareTypes';
+
 const removeOnlyGroupItem = (state, action) => {
   const newState = Object.assign({}, state);
   const rows = [...state.data];
@@ -23,9 +27,6 @@ const removeTagFromOnlyGroupItem = (state, action) => {
   const newState = Object.assign({}, state);
   const rows = [...state.data];
 
-  //rows = _.filter(rows);
-  console.log(rows);
-
   _.forEach(rows, (row, index) => {
     if (!_.isNil(row)) {
       if (row.id === groupId) {
@@ -37,7 +38,27 @@ const removeTagFromOnlyGroupItem = (state, action) => {
     }
   });
 
-  console.log(rows);
+  newState.data = rows;
+  return Object.assign({}, newState);
+};
+
+const updateShareCount = (state, action) => {
+  const { groupId, increment } = action.payload;
+  const newState = Object.assign({}, state);
+  const rows = [...state.data];
+
+  _.forEach(rows, (row) => {
+    if (row.id === groupId) {
+      if (_.isNil(row.cansharewith)) {
+        row.cansharewith = 0;
+      }
+      if (increment) {
+        row.cansharewith += 1;
+      } else {
+        row.cansharewith -= 1;
+      }
+    }
+  });
 
   newState.data = rows;
   return Object.assign({}, newState);
@@ -50,6 +71,8 @@ const INITIAL_ONLYGROUPS_STATE = {
 };
 export const onlygroups = (state = INITIAL_ONLYGROUPS_STATE, action) => {
   switch (action.type) {
+    case UPDATE_SHARE_COUNT:
+      return updateShareCount(state, action);
     case GROUP_REMOVE_TAG_SUCCESS:
       return removeTagFromOnlyGroupItem(state, action);
     case GROUP_REMOVE_GROUP_SUCCESS:

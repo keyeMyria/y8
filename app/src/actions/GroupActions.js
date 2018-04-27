@@ -165,7 +165,7 @@ export const getMyActivities = () => (
             myactivities.byActivityId[activityId] = { allGroupIds, byGroupId };
           });
 
-
+          // filter already started activities
           const temp = [];
           myactivities.allActivityIds.forEach((aId, index) => {
             const gId = myactivities.byActivityId[aId].allGroupIds[0];
@@ -294,8 +294,12 @@ export const removeTagFromGroup = (activityId, groupId, tagId, onlyPrevGroupId) 
     try {
       dispatch({
         type: GROUP_REMOVE_TAG_REQUEST,
+        payload: {
+          groupId
+        }
       });
-      const { isConnected } = getState().network;
+
+      //const { isConnected } = getState().network;
 
       const apiUrl = `/api/private/group/${groupId}/${tagId}/${onlyPrevGroupId}/tag`;
       const payload = {
@@ -316,7 +320,7 @@ export const removeTagFromGroup = (activityId, groupId, tagId, onlyPrevGroupId) 
       // }
 
       const onlygroups = getState().onlygroups;
-      console.log('removeGroupFromActivity', onlygroups, onlyPrevGroupId);
+
 
       let tagsGroup = [];
       if (!_.isNil(onlyPrevGroupId)) {
@@ -346,7 +350,10 @@ export const removeTagFromGroup = (activityId, groupId, tagId, onlyPrevGroupId) 
         console.log(error.response);
         dispatch({
           type: GROUP_REMOVE_TAG_ERROR,
-          payload: error.response
+          payload: {
+            groupId,
+            error: error.response
+          }
         });
       }
     }
@@ -362,6 +369,9 @@ export const removeGroupFromActivity = (activityId, groupId, onlyPrevGroupId) =>
     try {
       dispatch({
         type: GROUP_REMOVE_GROUP_REQUEST,
+        payload: {
+          groupId
+        }
       });
       const { isConnected } = getState().network;
 
@@ -420,7 +430,10 @@ export const removeGroupFromActivity = (activityId, groupId, onlyPrevGroupId) =>
       } else {
         dispatch({
           type: GROUP_REMOVE_GROUP_ERROR,
-          payload: error.response
+          payload: {
+            groupId,
+            error: error.response
+          }
         });
       }
     }

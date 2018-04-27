@@ -264,10 +264,6 @@ class ActivityCard extends React.PureComponent {
         </CardContent>
         <CardFooter style={styles.cardFooter}>
           <ShareIconButton
-            type={'feather'}
-            name={'share-2'}
-            size={25}
-            color={EStyleSheet.value('$iconColor')}
             groupId={groupId}
             activity={activity}
             sentence={sentence}

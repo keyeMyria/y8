@@ -42,6 +42,7 @@ class TimeCtrl {
     const Group = mongoose.model('group');
     Group.findOneAndUpdate({_id: groupId}, { $set: { updatedAt: Date.now()}})
       .then((result) => {
+        console.log("updating group updatedAt", result, "---");
 
       });
 
@@ -140,7 +141,7 @@ class TimeCtrl {
       { _id: id, userId, stoppedAt: '' },
       { $set: { stoppedAt } },
       (done)=>{
-        console.log(done);
+        console.log(done, 1231);
         if(!done) {
           //throw new Error('Failed to update');
         }

@@ -23,7 +23,7 @@ import FriendInfoModal from '../modals/FriendInfoModal';
 import SubscribersModal from '../modals/SubscribersModal';
 
 // PushNotifications
-import InAppNotification from  '../pushnotifications/InAppNotification';
+import InAppNotification from '../pushnotifications/InAppNotification';
 
 
 // HOC
@@ -32,6 +32,8 @@ import NetworkChange from '../hoc/NetworkChange';
 //TODO: samples need to delete these
 import FirstTabScreen from './FirstTabScreen';
 import SecondTabScreen from './SecondTabScreen';
+
+import Loader from '../components/Loader';
 
 
 // register all screens of the app (including internal ones)
@@ -61,7 +63,11 @@ export function registerScreens(store, Provider) {
 
   // pushnotifications
   Navigation.registerComponent('app.InAppNotification', () => InAppNotification, store, Provider);
-  
+
+  // Loading
+  Navigation.registerComponent('app.Loader', () => Loader, store, Provider);
+
+
   //TODO: need to remove
   Navigation.registerComponent('app.FirstTabScreen', () => FirstTabScreen, store, Provider);
   Navigation.registerComponent('app.SecondTabScreen', () => SecondTabScreen, store, Provider);

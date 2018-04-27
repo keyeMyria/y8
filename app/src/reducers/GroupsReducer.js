@@ -40,6 +40,10 @@ import {
   TIME_TOGGLE_SUCCESS
 } from '../types/TimeTypes';
 
+import {
+  UPDATE_SHARE_COUNT
+} from '../types/ShareTypes';
+
 const getMyActivities = (state, action) => {
   const { payload, isOnline } = action;
   const newState = Object.assign({}, state);
@@ -148,11 +152,12 @@ const deleteTagFromGroup = (state, action) => {
 
   _.forOwn(newState.byActivityId, (groups, activityId) => { // activityId
     _.forEach(groups.byGroupId, (tags, groupId) => { // groupId
-        const index = tags.indexOf(tagId);
+        const { tagsGroup } = tags;
+        const index = tagsGroup.indexOf(tagId);
         if (index !== -1) {
-          tags.splice(index, 1);
+          tagsGroup.splice(index, 1);
         }
-        if (tags.length === 0) {
+        if (tagsGroup.length === 0) {
           const groupIndex = groups.allGroupIds.indexOf(groupId);
           if (groupIndex !== -1) {
             groups.allGroupIds.splice(groupIndex, 1);
@@ -213,7 +218,7 @@ const removeTagFromGroup = (state, action) => {
       }
     }
   }
-  newState.removingTag = false;
+  newState.removingTag = { loading: false, groupId };
   return Object.assign({}, newState);
 };
 
@@ -248,7 +253,8 @@ const removeGroupFromActivity = (state, action) => {
       newState.allActivityIds.splice(activityIndex, 1);
     }
   }
-  newState.removingGroup = false;
+
+  newState.removingGroup = { loading: false, groupId };
   return Object.assign({}, newState);
 };
 
@@ -338,6 +344,21 @@ const updateTimeForActivity = (state, action) => {
   return Object.assign({}, newState);
 };
 
+const updateShareCount = (state, action) => {
+  const { activityId, groupId, increment } = action.payload;
+  const newState = Object.assign({}, state);
+  let sharedWith = newState.byActivityId[activityId].byGroupId[groupId].sharedWith;
+  if (_.isNil(sharedWith)) {
+    sharedWith = 0;
+  }
+  if (increment) {
+    sharedWith += 1;
+  } else {
+    sharedWith -= 1;
+  }
+  newState.byActivityId[activityId].byGroupId[groupId].sharedWith = sharedWith;
+  return Object.assign({}, newState);
+};
 
 const getMyActivitiesError = (state, action) => {
   console.log(action);
@@ -357,8 +378,8 @@ const getMyActivitiesReset = (state, action) => {
     loading: false,
     addingMyActivity: false,
     addingGroup: false,
-    removingGroup: false,
-    removingTag: false,
+    removingGroup: {},
+    removingTag: {},
   });
 };
 
@@ -367,21 +388,23 @@ const INITIAL_GROUP_STATE = {
   loading: false,
   addingMyActivity: false,
   addingGroup: false,
-  removingGroup: false,
-  removingTag: false,
+  removingGroup: {},
+  removingTag: {},
   byActivityId: {},
   allActivityIds: [],
 };
 export const myActivities = (state = INITIAL_GROUP_STATE, action) => {
   switch (action.type) {
+    case UPDATE_SHARE_COUNT:
+      return updateShareCount(state, action);
     case GROUP_FETCH_REQUEST:
       return Object.assign({}, state, {
         error: null,
         loading: true,
         addingMyActivity: false,
         addingGroup: false,
-        removingGroup: false,
-        removingTag: false,
+        removingGroup: {},
+        removingTag: {},
       });
     case GROUP_FETCH_SUCCESS:
       return getMyActivities(state, action);
@@ -413,37 +436,37 @@ export const myActivities = (state = INITIAL_GROUP_STATE, action) => {
 
     case GROUP_REMOVE_TAG_REQUEST:
       return Object.assign({}, state, {
-        removingTag: true,
+        removingTag: { loading: true, groupId: action.payload.groupId },
         error: null
       });
     case GROUP_REMOVE_TAG_SUCCESS:
       return removeTagFromGroup(state, action);
     case GROUP_REMOVE_TAG_ERROR:
       return Object.assign({}, state, {
-        removingTag: false,
-        error: action.payload
+        removingTag: { loading: false, groupId: action.payload.groupId },
+        error: action.payload.error
       });
     case GROUP_REMOVE_TAG_RESET:
       return Object.assign({}, state, {
-        removingTag: false,
+        removingTag: {},
         error: null
       });
 
     case GROUP_REMOVE_GROUP_REQUEST:
       return Object.assign({}, state, {
-        removingGroup: true,
+        removingGroup: { loading: true, groupId: action.payload.groupId },
         error: null
       });
     case GROUP_REMOVE_GROUP_SUCCESS:
       return removeGroupFromActivity(state, action);
     case GROUP_REMOVE_GROUP_ERROR:
       return Object.assign({}, state, {
-        removingGroup: false,
-        error: action.payload
+        removingGroup: { loading: false, groupId: action.payload.groupId },
+        error: action.payload.error
       });
     case GROUP_REMOVE_GROUP_RESET:
       return Object.assign({}, state, {
-        removingGroup: false,
+        removingGroup: {},
         error: null
       });
 

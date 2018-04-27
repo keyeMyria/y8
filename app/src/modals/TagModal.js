@@ -21,6 +21,9 @@ import {
   deleteTag
 } from '../actions/TagActions';
 
+import SnackBar from '../services/SnackBar';
+import { fakePromise } from '../services/Common';
+
 const NETWORK_ERR = 'Network error, try again';
 const ERROR_MSG = 'Only these a-zA-Z0-9_!@#$& and space are allowed';
 class TagModal extends React.Component {
@@ -35,7 +38,6 @@ class TagModal extends React.Component {
       isEditing: false,
       searchIds: [],
       isItemPressed: false,
-      canUpdateComp: true
     };
     this.timeout = 0;
 
@@ -50,7 +52,7 @@ class TagModal extends React.Component {
         }],
         leftButtons: [{
           id: 'close',
-          title: 'Cancel',
+          title: 'Close',
           //disabled: true,
           buttonColor: EStyleSheet.value('$iconColor')
         }]
@@ -60,9 +62,82 @@ class TagModal extends React.Component {
     }
   }
 
-  shouldComponentUpdate() {
-    return this.state.canUpdateComp;
+  async componentWillReceiveProps(nextProps) {
+    if (!nextProps.myActivities.removingTag &&
+      this.props.myActivities.removingTag &&
+      _.isNull(nextProps.myActivities.error)) {
+      await this.closeModal('Tag removed from group');
+    } else if (!nextProps.myActivities.removingTag &&
+      this.props.myActivities.removingTag &&
+      !_.isNil(nextProps.myActivities.error)) {
+      await this.closeModal(nextProps.myActivities.error.data);
+    } else if (!nextProps.myActivities.removingTag &&
+      this.props.myActivities.removingTag &&
+      _.isUndefined(nextProps.myActivities.error)) {
+      await this.closeModal('Service down, please try later');
+    }
+
+    if (!nextProps.myActivities.removingGroup &&
+      this.props.myActivities.removingGroup &&
+      _.isNull(nextProps.myActivities.error)) {
+      await this.closeModal('Group removed from activity');
+    } else if (!nextProps.myActivities.removingGroup &&
+      this.props.myActivities.removingGroup &&
+      !_.isNull(nextProps.myActivities.error) &&
+      !_.isUndefined(nextProps.myActivities.error)) {
+      await this.closeModal(this.props.myActivities.error.data);
+    } else if (!nextProps.myActivities.removingGroup &&
+      this.props.myActivities.removingGroup &&
+      _.isUndefined(nextProps.myActivities.error)) {
+      await this.closeModal('Service down, please try later');
+    }
+
+    if (!nextProps.tags.adding &&
+      this.props.tags.adding &&
+      _.isNull(nextProps.tags.addingError)) {
+      await this.closeModal('Tag created!');
+    } else if (!nextProps.tags.adding &&
+      this.props.tags.adding &&
+      !_.isNull(nextProps.tags.addingError) &&
+      !_.isUndefined(nextProps.tags.addingError)) {
+      await this.closeModal(nextProps.tags.addingError.data);
+    } else if (!nextProps.tags.adding &&
+      this.props.tags.adding &&
+      _.isUndefined(nextProps.tags.addingError)) {
+      await this.closeModal('Service down, please try later');
+    }
+
+    if (!nextProps.tags.updating &&
+      this.props.tags.updating &&
+      _.isNull(nextProps.tags.updatingError)) {
+      await this.closeModal('Tag updated!');
+    } else if (!nextProps.tags.updating &&
+      this.props.tags.updating &&
+      !_.isNull(nextProps.tags.updatingError) &&
+      !_.isUndefined(nextProps.tags.updatingError)) {
+      await this.closeModal(nextProps.tags.updatingError.data);
+    } else if (!nextProps.tags.updating &&
+      this.props.tags.updating &&
+      _.isUndefined(nextProps.tags.updatingError)) {
+      await this.closeModal('Service down, please try later');
+    }
+
+    if (!nextProps.tags.deleting &&
+      this.props.tags.deleting &&
+      _.isNull(nextProps.tags.deletingError)) {
+      await this.closeModal('Tag deleted!');
+    } else if (!nextProps.tags.deleting &&
+      this.props.tags.deleting &&
+      !_.isNull(nextProps.tags.deletingError) &&
+      !_.isUndefined(nextProps.tags.deletingError)) {
+      await this.closeModal(nextProps.tags.deletingError.data);
+    } else if (!nextProps.tags.deleting &&
+      this.props.tags.deleting &&
+      _.isUndefined(nextProps.tags.deletingError)) {
+      await this.closeModal('Service down, please try later');
+    }
   }
+
 /*
   //componentWillReceiveProps(nextProps) {
   async componentDidUpdate(nextProps) {
@@ -123,12 +198,18 @@ class TagModal extends React.Component {
   };
 
   onSave = async () => {
+    this.props.navigator.setButtons({
+      rightButtons: [{
+        id: 'loader',
+        component: 'app.Loader'
+      }]
+    });
     Keyboard.dismiss();
     const isExist = isTagExist(this.props.tags.byId, this.state.name);
     if (isExist) {
       if (!_.isNull(this.props.tag) &&
         this.state.name.toLowerCase() === this.props.tag.name.toLowerCase()) {
-        this.closeModal();
+        //this.closeModal();
       } else {
         this.setState({
           isValid: false,
@@ -139,19 +220,9 @@ class TagModal extends React.Component {
     }
 
     if (this.state.isUpdate) {
-      this.setState({
-        canUpdateComp: false
-      }, () => {
-        this.props.updateTag({ name: this.state.name, id: this.props.tag.id });
-        this.closeModal();
-      });
+      this.props.updateTag({ name: this.state.name, id: this.props.tag.id });
     } else {
-      this.setState({
-        canUpdateComp: false
-      }, () => {
-        this.props.addTag({ name: this.state.name });
-        this.closeModal();
-      });
+      this.props.addTag({ name: this.state.name });
     }
   }
   onChangeText = (name) => {
@@ -206,7 +277,9 @@ class TagModal extends React.Component {
 
 
   closeModal = async (msg) => {
-    //Keyboard.dismiss();
+    Keyboard.dismiss();
+    await fakePromise(100);
+    SnackBar(msg);
     await this.props.navigator.dismissModal({
       animationType: msg !== '' ? 'none' : 'slide-down'// 'none' / 'slide-down'
     });
@@ -245,13 +318,13 @@ class TagModal extends React.Component {
               this.setState({
                 isDelete: true
               }, () => {
-                  //this.closeModal();
-                  this.setState({
-                    canUpdateComp: false
-                  }, () => {
-                    this.props.deleteTag(this.props.tag.id);
-                    this.closeModal();
-                  });
+                this.props.navigator.setButtons({
+                  rightButtons: [{
+                    id: 'loader',
+                    component: 'app.Loader'
+                  }]
+                });
+                this.props.deleteTag(this.props.tag.id);
               });
             }
           },
@@ -318,26 +391,19 @@ class TagModal extends React.Component {
                 paddingBottom: 30
               }}
             >
+            {
+              !this.state.isDelete &&
               <TextButton
                 containerStyle={{ padding: 10 }}
                 titleStyle={{ color: 'red' }}
                 title='Delete'
                 onPress={this.deleteTag}
               />
+            }
+
             </View>
           }
-
         </View>
-        <Spinner
-          visible={
-            this.props.tags.adding ||
-            this.props.tags.updating ||
-            this.props.tags.deleting
-          }
-          color={EStyleSheet.value('$textColor')}
-          textContent={'Loading...'}
-          textStyle={{ color: EStyleSheet.value('$textColor') }}
-        />
       </View>
       </KeyboardAvoidingView>
     );

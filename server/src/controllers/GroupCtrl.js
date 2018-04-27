@@ -140,7 +140,7 @@ class GroupCtrl {
     criteria.latest = {$eq: 1};
 
     getMyActivities(criteria, 'updatedAt', offset,limit).then((results) => {
-      //console.log("GETGETGET" ,JSON.stringify(results));
+      console.log(results);
 
       /*
       let data = {
@@ -343,11 +343,18 @@ class GroupCtrl {
     criteria.userId = {$eq: userId};
     criteria.activityId = {$eq: activityId};
 
-    Group.find(criteria,{ tags: 1 })
+    Group.find(criteria,{tags: 1})
+    .populate('cansharewith')
     .sort({ 'updatedAt': -1})
     .then((results) => {
-      //console.log(results);
-      res.status(200).send(results);
+      let finalResults = [];
+      results.forEach((row)=>{
+        const newRow = row.toObject();
+        delete newRow._id;
+        newRow.cansharewith = newRow.cansharewith.length;
+        finalResults.push(newRow);
+      });
+      res.status(200).send(finalResults);
       next();
     }).catch((getGroupByActivityError) => {
       console.log(getGroupByActivityError);

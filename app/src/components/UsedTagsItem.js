@@ -1,25 +1,20 @@
 import React from 'react';
 import {
-  StyleSheet,
   View,
   Text,
   Alert,
 } from 'react-native';
 
+import EStyleSheet from 'react-native-extended-stylesheet';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import TextButton from '../components/TextButton';
-import {
-  globalIconColor,
-  globalTextColor,
-  globalBackgroundColor,
-} from '../styles/Global';
+import ShareIconButton from './ShareIconButton';
 
 class UsedTagsItem extends React.PureComponent {
 
   onShare = () => {
     const { groupId, activity, tagsGroup } = this.props;
-    console.log(this.props);
-
+  
     //const { tagsGroup } = myActivities.byActivityId[activity.id].byGroupId[groupId];
 
     const sentence = tagsGroup.map((id) => `${this.props.tags.byId[id].name} `);
@@ -90,13 +85,13 @@ class UsedTagsItem extends React.PureComponent {
         key={tagId}
         style={styles.textContainer}
       >
-        <Text style={{ fontSize: 18, marginRight: 10, color: globalTextColor }}>
+        <Text style={{ fontSize: 18, marginRight: 10, color: EStyleSheet.value('$textColor') }}>
           {this.props.tags.byId[tagId].name}
         </Text>
         <MaterialIcons
           name='clear'
           size={21}
-          color={globalIconColor}
+          color={EStyleSheet.value('$iconColor')}
           onPress={() => { this.removeTagFromGroup(activityId, groupId, tagId); }}
         />
       </View>
@@ -120,7 +115,7 @@ class UsedTagsItem extends React.PureComponent {
           <MaterialIcons
             name='clear'
             size={21}
-            color={globalIconColor}
+            color={EStyleSheet.value('$iconColor')}
             onPress={this.removeGroupFromActivity}
           />
         </View>
@@ -128,10 +123,10 @@ class UsedTagsItem extends React.PureComponent {
           {this.renderTagsGroup(activity.id, groupId, tagsGroup)}
         </View>
         <View style={styles.footer}>
-          <TextButton
-            containerStyle={{ marginLeft: 10 }}
-            title={'Share'}
-            onPress={this.onShare}
+          <ShareIconButton
+            outerContainer={{ marginLeft: 10 }}
+            onSharePress={this.onShare}
+            sharedWith={this.props.sharedWith}
           />
           <TextButton
             containerStyle={{
@@ -139,7 +134,7 @@ class UsedTagsItem extends React.PureComponent {
               borderRadius: 3,
               borderColor: '#38B211',
               height: 25,
-              marginRight: 10
+              marginRight: 10,
             }}
             titleStyle={{
               fontSize: 14,
@@ -157,7 +152,7 @@ class UsedTagsItem extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   outerContainer: {
     // borderWidth: 1,
     // borderColor: 'gray',
@@ -179,11 +174,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF'
   },
   footer: {
-    //backgroundColor: globalBackgroundColor,
+    backgroundColor: 'rgba(245,246,247,1)', //'#f7f8f9',
     flexDirection: 'row',
-    height: 30,
+    //height: 30,
+    alignItems: 'center',
     justifyContent: 'space-between',
-    paddingBottom: 15,
+    paddingVertical: 8,
   },
   innerContainer: {
     paddingHorizontal: 15,
@@ -193,6 +189,15 @@ const styles = StyleSheet.create({
     marginBottom: 3,
     flexDirection: 'row',
     alignItems: 'center'
+  },
+  loading: {
+    position: 'absolute',
+    zIndex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    height: '100%',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 
 });

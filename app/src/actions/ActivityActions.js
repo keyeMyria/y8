@@ -88,7 +88,6 @@ export const addActivity = (newActivity) => (
       });
       let activity = newActivity;
 
-
       if (!_.has(activity, 'id')) {
         activity.id = uuidv4();
       }
@@ -99,7 +98,7 @@ export const addActivity = (newActivity) => (
         activity.updatedAt = Date.now();
       }
 
-      const { isConnected } = getState().network;
+      //const { isConnected } = getState().network;
       const apiUrl = '/api/private/activity';
       const payload = {
         UID: uuidv4(),
@@ -108,17 +107,17 @@ export const addActivity = (newActivity) => (
         method: 'post',
       };
 
-      if (isConnected) {
+      //if (isConnected) {
         //TODO: Make api call if network available, otherwise store in activity queue
         await ApiRequest(payload);
         //const { data } = response;
-      } else {
-        dispatch({
-          type: OFFLINE_QUEUE,
-          payload
-        });
-        await fakePromise(100);
-      }
+      // } else {
+      //   dispatch({
+      //     type: OFFLINE_QUEUE,
+      //     payload
+      //   });
+      //   await fakePromise(100);
+      // }
 
       const activityId = activity.id;
       activity = {
@@ -163,7 +162,7 @@ export const updateActivity = (updatedActivity) => (
       const activity = updatedActivity;
       activity.updatedAt = Date.now();
 
-      const { isConnected } = getState().network;
+      //const { isConnected } = getState().network;
       const apiUrl = '/api/private/activity';
       const payload = {
         UID: uuidv4(),
@@ -172,16 +171,16 @@ export const updateActivity = (updatedActivity) => (
         method: 'put',
       };
 
-      if (isConnected) {
+      //if (isConnected) {
         await ApiRequest(payload);
         //const { data } = response;
-      } else {
-        dispatch({
-          type: OFFLINE_QUEUE,
-          payload
-        });
-        await fakePromise(100);
-      }
+      // } else {
+      //   dispatch({
+      //     type: OFFLINE_QUEUE,
+      //     payload
+      //   });
+      //   await fakePromise(100);
+      // }
       dispatch({
         type: ACTIVITY_UPDATE_SUCCESS,
         payload: {
@@ -223,16 +222,16 @@ export const deleteActivity = (id) => (
         method: 'delete',
       };
 
-      if (isConnected) {
+      //if (isConnected) {
         await ApiRequest(payload);
         //const { data } = response;
-      } else {
-        dispatch({
-          type: OFFLINE_QUEUE,
-          payload
-        });
-        await fakePromise(100);
-      }
+      //} else {
+      //   dispatch({
+      //     type: OFFLINE_QUEUE,
+      //     payload
+      //   });
+      //   await fakePromise(100);
+      // }
       dispatch({
         type: ACTIVITY_DELETE_SUCCESS,
         payload: {

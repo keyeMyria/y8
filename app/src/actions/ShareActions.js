@@ -17,13 +17,15 @@ import {
   SHARES_FETCH_SUCCESS,
   SHARES_FETCH_ERROR,
 
+  UPDATE_SHARE_COUNT
+
 } from '../types/ShareTypes';
 
 import { AUTH_ERROR } from '../types/AuthTypes';
 import { fakePromise } from '../services/Common';
 
 // subscribes userId to other user
-export const shareWith = (groupId, sharedWith, sharedWithObj) => (
+export const shareWith = (activityId, groupId, sharedWith, sharedWithObj) => (
   async (dispatch, getState) => {
     try {
       const { isConnected } = getState().network;
@@ -41,7 +43,7 @@ export const shareWith = (groupId, sharedWith, sharedWithObj) => (
 
         const resp = await ApiRequest(payload);
         const { data } = resp;
-        console.log(data);
+        
 
         dispatch({
           type: SHARE_ADD_SUCCESS,
@@ -49,6 +51,14 @@ export const shareWith = (groupId, sharedWith, sharedWithObj) => (
             shareId: data.id,
             sharedWith,
             sharedWithObj
+          }
+        });
+        dispatch({
+          type: UPDATE_SHARE_COUNT,
+          payload: {
+            activityId,
+            groupId,
+            increment: true
           }
         });
       }
@@ -75,7 +85,7 @@ export const shareWith = (groupId, sharedWith, sharedWithObj) => (
   }
 );
 
-export const unshare = (id, sharedWith) => (
+export const unshare = (activityId, groupId, id, sharedWith) => (
   async (dispatch, getState) => {
     try {
       const { isConnected } = getState().network;
@@ -101,6 +111,14 @@ export const unshare = (id, sharedWith) => (
             shareId: id,
             unshareDone: data === 'done',
             sharedWith
+          }
+        });
+        dispatch({
+          type: UPDATE_SHARE_COUNT,
+          payload: {
+            activityId,
+            groupId,
+            increment: false
           }
         });
       }

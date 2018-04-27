@@ -92,7 +92,7 @@ class ShareScreen extends React.Component {
 
   onItemPress = (checked, userId, id) => {
     if (!checked && !_.isNil(id)) {
-      this.props.unshare(id, userId);
+      this.props.unshare(this.props.activity.id, this.props.groupId, id, userId);
     }
   }
 
@@ -205,6 +205,7 @@ class ShareScreen extends React.Component {
                 screen: 'app.SubscribersModal',
                 title: 'Subscribers',
                 passProps: {
+                  activity: this.props.activity,
                   groupId: this.props.groupId,
                   selectedFriends: this.props.shares.data.rows
                 },

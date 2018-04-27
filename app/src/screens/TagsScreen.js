@@ -3,7 +3,6 @@ import {
   View,
   Platform,
   FlatList,
-  Keyboard,
   Text,
   UIManager,
   ScrollView,
@@ -16,13 +15,14 @@ import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Feather from 'react-native-vector-icons/Feather';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
-import Spinner from 'react-native-loading-spinner-overlay';
-import Snackbar from 'react-native-snackbar';
 
+import SnackBar from '../services/SnackBar';
 import TextButton from '../components/TextButton';
 import TagItem from '../components/TagItem';
 import SearchBar from '../components/SearchBar';
 import UsedTagsItem from '../components/UsedTagsItem';
+import Loading from '../components/Loading';
+
 import { SearchTags } from '../services/TagService';
 import {
   getTags,
@@ -106,115 +106,40 @@ class TagsScreen extends React.Component {
     //this.props.getTags();
   }
 
+  async componentWillReceiveProps(nextProps) {
+    if (!nextProps.myActivities.removingTag.loading &&
+      this.props.myActivities.removingTag.loading &&
+      _.isNull(nextProps.myActivities.error)) {
+      SnackBar('Tag removed from group');
+    } else if (!nextProps.myActivities.removingTag.loading &&
+      this.props.myActivities.removingTag.loading &&
+      !_.isNil(nextProps.myActivities.error)) {
+      SnackBar(nextProps.myActivities.error.data);
+    } else if (!nextProps.myActivities.removingTag.loading &&
+      this.props.myActivities.removingTag.loading &&
+      _.isUndefined(nextProps.myActivities.error)) {
+      SnackBar('Service down, please try later');
+    }
+
+    if (!nextProps.myActivities.removingGroup.loading &&
+      this.props.myActivities.removingGroup.loading &&
+      _.isNull(nextProps.myActivities.error)) {
+      SnackBar('Group removed from activity');
+    } else if (!nextProps.myActivities.removingGroup.loading &&
+      this.props.myActivities.removingGroup.loading &&
+      !_.isNull(nextProps.myActivities.error) &&
+      !_.isUndefined(nextProps.myActivities.error)) {
+      SnackBar(this.props.myActivities.error.data);
+    } else if (!nextProps.myActivities.removingGroup.loading &&
+      this.props.myActivities.removingGroup.loading &&
+      _.isUndefined(nextProps.myActivities.error)) {
+      SnackBar('Service down, please try later');
+    }
+  }
+
   componentWillUpdate() {
     LayoutAnimation.easeInEaseOut();
   }
-
-  async componentDidUpdate(nextProps) {
-    //console.log('componentDidUpdate', nextProps.myActivities.removingTag, this.props.myActivities.removingTag, this.props.myActivities.error);
-
-    if (nextProps.myActivities.removingTag &&
-      !this.props.myActivities.removingTag &&
-      _.isNull(this.props.myActivities.error)) {
-      await this.showSnackBar('Tag removed from group');
-    } else if (nextProps.myActivities.removingTag &&
-      !this.props.myActivities.removingTag &&
-      !_.isNil(this.props.myActivities.error)) {
-      await this.showSnackBar(this.props.myActivities.error.data);
-    } else if (nextProps.myActivities.removingTag &&
-      !this.props.myActivities.removingTag &&
-      _.isUndefined(this.props.myActivities.error)) {
-      await this.showSnackBar('Service down, please try later');
-    }
-
-    if (nextProps.myActivities.removingGroup &&
-      !this.props.myActivities.removingGroup &&
-      _.isNull(this.props.myActivities.error)) {
-      await this.showSnackBar('Group removed from activity');
-    } else if (nextProps.myActivities.removingGroup &&
-      !this.props.myActivities.removingGroup &&
-      !_.isNull(this.props.myActivities.error) &&
-      !_.isUndefined(this.props.myActivities.error)) {
-      await this.showSnackBar(this.props.myActivities.error.data);
-    } else if (nextProps.myActivities.removingGroup &&
-      !this.props.myActivities.removingGroup &&
-      _.isUndefined(this.props.myActivities.error)) {
-      await this.showSnackBar('Service down, please try later');
-    }
-
-    if (nextProps.tags.adding &&
-      !this.props.tags.adding &&
-      _.isNull(this.props.tags.addingError)) {
-      await this.showSnackBar('Tag created!');
-    } else if (nextProps.tags.adding &&
-      !this.props.tags.adding &&
-      !_.isNull(this.props.tags.addingError) &&
-      !_.isUndefined(this.props.tags.addingError)) {
-      await this.showSnackBar(this.props.tags.addingError.data);
-    } else if (nextProps.tags.adding &&
-      !this.props.tags.adding &&
-      _.isUndefined(this.props.tags.addingError)) {
-      await this.showSnackBar('Service down, please try later');
-    }
-
-    if (nextProps.tags.updating &&
-      !this.props.tags.updating &&
-      _.isNull(this.props.tags.updatingError)) {
-      await this.showSnackBar('Tag updated!');
-    } else if (nextProps.tags.updating &&
-      !this.props.tags.updating &&
-      !_.isNull(this.props.tags.updatingError) &&
-      !_.isUndefined(this.props.tags.updatingError)) {
-      await this.showSnackBar(this.props.tags.updatingError.data);
-    } else if (nextProps.tags.updating &&
-      !this.props.tags.updating &&
-      _.isUndefined(this.props.tags.updatingError)) {
-      await this.showSnackBar('Service down, please try later');
-    }
-
-    if (nextProps.tags.deleting &&
-      !this.props.tags.deleting &&
-      _.isNull(this.props.tags.deletingError)) {
-      await this.showSnackBar('Tag deleted!');
-    } else if (nextProps.tags.deleting &&
-      !this.props.tags.deleting &&
-      !_.isNull(this.props.tags.deletingError) &&
-      !_.isUndefined(this.props.tags.deletingError)) {
-      await this.showSnackBar(this.props.tags.deletingError.data);
-    } else if (nextProps.tags.deleting &&
-      !this.props.tags.deleting &&
-      _.isUndefined(this.props.tags.deletingError)) {
-      await this.showSnackBar('Service down, please try later');
-    }
-
-    /*
-    if (nextProps.tags.adding === true &&
-      this.props.tags.adding === false &&
-      nextProps.tags.addingError === null) {
-      await this.showSnackBar('Tag created!');
-    } else if (nextProps.tags.adding === true &&
-      this.props.tags.adding === false &&
-      nextProps.tags.addingError !== null) {
-      await this.showSnackBar('TODO:Network error');
-    } else if (nextProps.tags.updating === true &&
-      this.props.tags.updating === false &&
-      nextProps.tags.updatingError === null) {
-      await this.showSnackBar('Tag Updated!');
-    } else if (nextProps.tags.updating === true &&
-      this.props.tags.updating === false &&
-      nextProps.tags.updatingError !== null) {
-      await this.showSnackBar('TODO:Network error');
-    } else if (nextProps.tags.deleting === true &&
-      this.props.tags.deleting === false &&
-      nextProps.tags.deletingError === null) {
-      await this.showSnackBar('Tag deleted!');
-    } else if (nextProps.tags.deleting === true &&
-      this.props.tags.deleting === false &&
-      nextProps.tags.deletingError !== null) {
-      await this.showSnackBar('TODO:Network error');
-    }*/
-  }
-
 
   onNavigatorEvent = (event) => {
     if (event.type === 'NavBarButtonPress') {
@@ -243,7 +168,9 @@ class TagsScreen extends React.Component {
         tag: this.props.tags.byId[id],
         tags: this.props.tags
       },
-      navigatorStyle: {},
+      navigatorStyle: {
+        navBarTextColor: EStyleSheet.value('$textColor')
+      },
       animationType: 'slide-up'
     });
   }
@@ -451,11 +378,12 @@ class TagsScreen extends React.Component {
     const onlyPrevGroupId = this.getPrevGroupIdFromOnlygroups(item.id);
     return (
       <UsedTagsItem
+        sharedWith={item.cansharewith}
         prevGroupId={this.props.prevGroupId}
         prevTimeId={this.props.prevTimeId}
         activity={this.state.activity}
         groupId={item.id}
-        tagsGroup={item.tags}
+        tagsGroup={[...item.tags]}
         onlyPrevGroupId={onlyPrevGroupId}
         tags={this.props.tags}
         removeTagFromGroup={this.removeTagFromGroup}
@@ -641,7 +569,10 @@ class TagsScreen extends React.Component {
             //removeClippedSubviews={false}
             keyboardShouldPersistTaps='always'
             //ref={(ref) => { this.flatListRef = ref; }}
-            extraData={this.props.onlygroups.data}
+            extraData={{
+              data: this.props.onlygroups.data,
+              myActivities: this.props.myActivities,
+            }}
             //ListHeaderComponent={this.renderListHeader}
             keyExtractor={item => item.id}
             data={this.props.onlygroups.data}
@@ -650,18 +581,12 @@ class TagsScreen extends React.Component {
           />
         </View>
       }
-        <Spinner
-          visible={
-            this.props.myActivities.removingTag ||
-            this.props.myActivities.removingGroup ||
-            this.props.tags.adding ||
-            this.props.tags.updating ||
-            this.props.tags.deleting
-          }
-          color={EStyleSheet.value('$textColor')}
-          textContent={'Loading...'}
-          textStyle={{ color: EStyleSheet.value('$textColor') }}
-        />
+      <Loading
+        show={
+          this.props.myActivities.removingTag.loading ||
+          this.props.myActivities.removingGroup.loading
+        }
+      />
       </View>
 
     );
