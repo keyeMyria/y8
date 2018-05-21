@@ -44,11 +44,31 @@ config.log.stdout_level = 'fatal';
 config.log.period = '1h',
 config.log.copies = 5,
 
+
+// pagination settings for all pages by default
+config.paging.page = {};
+config.paging.page.limit = 5;
+config.paging.page.max_limit = 10;
+
 // pagination settings for times
 config.paging.times = {};
 config.paging.times.limit = 5;
 config.paging.times.max_limit = 10;
 
+// pagination settings for myactivites
+config.paging.myactivites = {};
+config.paging.myactivites.limit = 100;
+config.paging.myactivites.max_limit = 100;
+
+// pagination settings for activites
+config.paging.activites = {};
+config.paging.activites.limit = 100;
+config.paging.activites.max_limit = 100;
+
+// pagination settings for tags
+config.paging.tags = {};
+config.paging.tags.limit = 500;
+config.paging.tags.max_limit = 500;
 
 
 

@@ -48,7 +48,7 @@ export const offlineQueue = (state = INITIAL_OFFLINE_STATE, action) => {
     case OFFLINE_DONE:
       return Object.assign({}, state, {
         syncing: false,
-        payloads: []
+        //payloads: []
       });
     case OFFLINE_ERROR:
       return Object.assign({}, state, {

@@ -50,9 +50,7 @@ class FriendsScreen extends React.Component {
       UIManager.setLayoutAnimationEnabledExperimental &&
        UIManager.setLayoutAnimationEnabledExperimental(true);
     }
-  }
 
-  componentDidMount() {
     if (this.props.navigator) {
       // if you want to listen on navigator events, set this up
       this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
@@ -63,7 +61,15 @@ class FriendsScreen extends React.Component {
       //   badgeColor: 'rgba(221,93,89,1)',
       //   // (optional) if missing, the badge will use the default color
       // });
+      this.props.navigator.setStyle({
+        navBarSubtitleColor: EStyleSheet.value('$subTextColor'),
+        navBarSubtitleFontSize: 12,
+      });
     }
+  }
+
+  componentDidMount() {
+    this.setOfflineMode();
     this.props.getFriends();
     this.props.getFriendRequests();
   }
@@ -73,7 +79,7 @@ class FriendsScreen extends React.Component {
   }
 
   async componentDidUpdate(nextProps) {
-    //console.log('componentDidUpdate', nextProps.friendActions.sendLoading, this.props.friendActions.sendLoading, this.props.friendActions.error);
+    this.setOfflineMode();
     if (nextProps.friendActions.sendLoading &&
       !this.props.friendActions.sendLoading &&
       _.isNull(this.props.friendActions.error)) {
@@ -173,6 +179,7 @@ class FriendsScreen extends React.Component {
     });
   }
 
+
   onSearchCancel = () => {
     this.setState({
       SegmentedControlTabTopPadding: 0
@@ -190,6 +197,16 @@ class FriendsScreen extends React.Component {
 
   onRefreshFriendRequests = () => {
     this.props.getFriendRequests();
+  }
+
+  setOfflineMode = () => {
+    let subtitle = null;
+    if (this.props.network.offlineMode) {
+      subtitle = 'offline mode';
+    }
+    this.props.navigator.setSubTitle({
+      subtitle
+    });
   }
 
   showSnackBar = (msg) => {
@@ -383,17 +400,22 @@ class FriendsScreen extends React.Component {
         </View>
       }
 
-        <Loader
-          visible={
-            this.props.friendActions.sendLoading ||
-            this.props.friendActions.acceptLoading
-          }
-        />
+
       </View>
 
     );
   }
 }
+
+/*
+  <Loader
+    visible={false
+      // TODO: need to fix this
+      //this.props.friendActions.sendLoading ||
+      //this.props.friendActions.acceptLoading
+    }
+  />
+*/
 
 const styles = EStyleSheet.create({
   container: {
@@ -402,16 +424,15 @@ const styles = EStyleSheet.create({
   }
 });
 
-const mapStateToProps = (state) => {
-  //console.log('FriendsScreen:mapStateToProps:', state);
-  const { friendActions, friendRequests, friends, user } = state;
-  return {
-    friendActions,
-    friendRequests,
-    friends,
-    user
-  };
-};
+const mapStateToProps = (state) => (
+  {
+    friendActions: state.friendActions,
+    friendRequests: state.friendRequests,
+    friends: state.friends,
+    user: state.user,
+    network: state.network
+  }
+);
 export default connect(mapStateToProps, {
   acceptFriendRequest,
   getFriendRequests,

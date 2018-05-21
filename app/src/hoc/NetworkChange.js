@@ -42,13 +42,13 @@ export default (ComposedComponent) => {
     componentDidMount() {
       console.log("NetworkChange: componentDidMount ");
       if (Platform.OS === 'android') {
-        NetInfo.isConnected.fetch().then(isConnected => {
-          console.log('First, is ' + (isConnected ? 'online' : 'offline'));
-          this.handleConnectionChange(isConnected);
-        });
+        // NetInfo.isConnected.fetch().then(isConnected => {
+        //   console.log('First, is ' + (isConnected ? 'online' : 'offline'));
+        //   this.handleConnectionChange(isConnected);
+        // });
       }
 
-      NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+      //NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
       AppState.addEventListener('change', this.handleAppStateChange);
     }
 
@@ -101,7 +101,7 @@ export default (ComposedComponent) => {
 
     componentWillUnmount() {
       //console.log("NetworkChange: componentWillUnmount ");
-      NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
+      //NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
       AppState.removeEventListener('change', this.handleAppStateChange);
     }
 

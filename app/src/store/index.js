@@ -39,7 +39,8 @@ const config = {
     'device',
     'subscribers',
     'onlygroups',
-    'feed'
+    'feed',
+    'network'
   ],
   debounce: 100,
   migrate: (state) => {
@@ -51,6 +52,8 @@ const config = {
     const newActivitiesState = Object.assign({}, state.activities, {
       error: null,
       loading: false,
+      //byId: {},
+      //allIds: [],
       adding: null,
       addingError: null,
       updating: null,
@@ -63,6 +66,8 @@ const config = {
     const newTagsState = Object.assign({}, state.tags, {
       error: null,
       loading: false,
+      //byId: {},
+      //allIds: [],
       adding: null,
       addingError: null,
       updating: null,
@@ -75,8 +80,8 @@ const config = {
     const newMyActivitiesState = Object.assign({}, state.myActivities, {
       error: null,
       loading: false,
-      byActivityId: {},
-      allActivityIds: [],
+      //byActivityId: {},
+      //allActivityIds: [],
       addingMyActivity: false,
       addingGroup: false,
       removingGroup: false,
@@ -92,19 +97,20 @@ const config = {
     });
 
     // reset tags state every time on app launch
-    // const newInitDataState = Object.assign({}, state.initData, {
-    //   //dataLoaded: false,
-    //   loading: false
-    // });
+    const newInitDataState = Object.assign({}, state.initData, {
+      loading: null,
+      dataLoaded: null,
+    });
 
     const newTimesState = Object.assign({}, state.times, {
       error: null,
       loading: false
     });
 
-    const newNetworkState = Object.assign({}, state.network, {
-      isConnected: false
-    });
+    // const newNetworkState = Object.assign({}, state.network, {
+    //   isConnected: false,
+    //   offlineMode: false
+    // });
 
     const newState = Object.assign({}, state, {
       activities: newActivitiesState,
@@ -112,8 +118,8 @@ const config = {
       myActivities: newMyActivitiesState,
       times: newTimesState,
       offlineQueue: newOfflineQueueState,
-      //initData: newInitDataState,
-      network: newNetworkState
+      initData: newInitDataState,
+      //network: newNetworkState
     });
 
     // return migrated state
@@ -130,8 +136,8 @@ const configureStore = () => {
     reducer,
     {},
     compose(
-      //applyMiddleware(thunk, createLogger()),
-      applyMiddleware(thunk),
+      applyMiddleware(thunk, createLogger()),
+      //applyMiddleware(thunk),
     )
   );
   return store;

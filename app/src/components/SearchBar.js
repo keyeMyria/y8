@@ -1,18 +1,13 @@
 import React from 'react';
 import {
-  StyleSheet,
   View,
   TextInput,
   TouchableOpacity
 } from 'react-native';
 
+import EStyleSheet from 'react-native-extended-stylesheet';
 import Icon from 'react-native-vector-icons/Ionicons';
 import TextButton from '../components/TextButton';
-import {
-  globalIconColor,
-  globalTextColor,
-  globalBackgroundColor,
-} from '../styles/Global';
 
 class SearchBar extends React.PureComponent {
   static defaultProps = {
@@ -52,7 +47,12 @@ class SearchBar extends React.PureComponent {
       this.props.onCancel();
     });
   }
-
+  inputRef = (ref) => {
+    this.textInputRef = ref;
+    if (this.props.onTextInputRef) {
+      this.props.onTextInputRef(ref);
+    }
+  }
   render() {
     const {
       outerContainerStyle,
@@ -70,7 +70,8 @@ class SearchBar extends React.PureComponent {
       <View style={[styles.container, containerStyle]}>
 
         <TextInput
-          ref={(ref) => { this.textInputRef = ref; }}
+          //ref={(ref) => { this.textInputRef = ref; this.props.textInputRef(ref); }}
+          ref={this.inputRef}
           autoCorrect={false}
           underlineColorAndroid='rgba(0,0,0,0)'
           placeholder={placeholderText || 'Search Item'}
@@ -103,11 +104,11 @@ class SearchBar extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   container: {
     padding: 8,
     justifyContent: 'center',
-    backgroundColor: globalBackgroundColor,
+    backgroundColor: '$backgroundColor',
     height: 50,
     flexDirection: 'row'
   },
@@ -119,6 +120,8 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     paddingLeft: 33,
     paddingRight: 30,
+    fontSize: 18,
+    color: '$textColor'
   },
   searchIcon: {
     position: 'absolute',
@@ -126,9 +129,7 @@ const styles = StyleSheet.create({
     //marginLeft: -100,
     left: 18,
     top: 12,
-
-
-    color: globalIconColor,
+    color: '$iconColor',
     fontSize: 25,
   },
   clearIconButton: {

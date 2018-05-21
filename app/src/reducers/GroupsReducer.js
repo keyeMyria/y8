@@ -45,14 +45,42 @@ import {
 } from '../types/ShareTypes';
 
 const getMyActivities = (state, action) => {
-  const { payload, isOnline } = action;
+  const { payload, count, offset, limit, page, totalPages } = action;
   const newState = Object.assign({}, state);
 
-  //if (isOnline) {
-    newState.allActivityIds = payload.allActivityIds;
-    newState.byActivityId = payload.byActivityId;
-    newState.loading = false;
-  //}
+  newState.byActivityId = {
+    ...payload.byActivityId,
+    ...newState.byActivityId
+  };
+
+  if (page === 1) {
+    newState.allActivityIds = [
+      ...new Set(
+        [
+          ...payload.allActivityIds,
+          ...newState.allActivityIds
+        ]
+      )
+    ];
+  } else {
+    newState.allActivityIds = [
+      ...new Set(
+        [
+          ...newState.allActivityIds,
+          ...payload.allActivityIds
+        ]
+      )
+    ];
+  }
+
+
+  newState.count = count;
+  newState.offset = offset;
+  newState.limit = limit;
+  newState.page = page;
+  newState.totalPages = totalPages;
+
+  newState.refreshing = false;
   return Object.assign({}, newState);
 };
 
@@ -65,8 +93,95 @@ const deleteActivityFromMyActivity = (state, action) => {
   return Object.assign({}, newState);
 };
 
-
 const addTagsGroupToMyActivity = (state, action) => {
+  const newState = Object.assign({}, state);
+  console.log('addTagsGroupToMyActivity', newState);
+
+  const { payload } = action;
+  const activityId = Object.keys(payload.byActivityId)[0];
+  const groupId = Object.keys(payload.byActivityId[activityId].byGroupId)[0];
+  const { tagsGroup } = payload.byActivityId[activityId].byGroupId[groupId];
+  const sortedTags = tagsGroup.sort();
+
+  if (!_.isEmpty(newState.byActivityId[activityId])) {
+    // check if tags already exists for this activity
+    let isExists = false;
+    let currentGroupId = null;
+    const groups = newState.byActivityId[activityId].byGroupId;
+    _.forEach(groups, (value, key) => {
+        const oldSortedTags = value.tagsGroup.sort();
+        if (_.isEqual(oldSortedTags, sortedTags)) {
+          isExists = true;
+          currentGroupId = key;
+        }
+    });
+
+    // if tags set is already exists, then pull activity to the top and return
+    if (isExists) {
+      // put groupId to 0 index
+      const groupIndex = newState.byActivityId[activityId].allGroupIds.indexOf(currentGroupId);
+      if (groupIndex !== -1) {
+        newState.byActivityId[activityId].allGroupIds.splice(groupIndex, 1);
+      }
+      newState.byActivityId[activityId].allGroupIds = [
+        currentGroupId,
+        ...newState.byActivityId[activityId].allGroupIds
+      ];
+
+      // pull activityId to 0 index
+      const activityIdIndex = newState.allActivityIds.indexOf(activityId);
+      if (activityIdIndex !== -1) {
+        newState.allActivityIds.splice(activityIdIndex, 1);
+      }
+      newState.allActivityIds = [activityId, ...newState.allActivityIds];
+      newState.addingMyActivity = false;
+      return Object.assign({}, newState);
+    }
+  }
+
+  const newObject = {};
+  if (_.isNil(newState.byActivityId[activityId])) {
+    newState.byActivityId[activityId] = {};
+    if (_.isNil(newState.byActivityId[activityId].byGroupId)) {
+      newState.byActivityId[activityId].byGroupId = {};
+    }
+    if (_.isNil(newState.byActivityId[activityId].allGroupIds)) {
+      newState.byActivityId[activityId].allGroupIds = [];
+    }
+  }
+  newObject.byActivityId = {
+    [activityId]: {
+      byGroupId: {
+        ...newState.byActivityId[activityId].byGroupId,
+        ...payload.byActivityId[activityId].byGroupId
+      },
+      allGroupIds: [ // make unique array
+        ...new Set(
+          [
+            ...payload.byActivityId[activityId].allGroupIds,
+            ...newState.byActivityId[activityId].allGroupIds
+          ]
+        )
+      ]
+    }
+  };
+
+  newState.byActivityId = {
+    ...newState.byActivityId,
+    ...newObject.byActivityId
+  };
+
+  const index = newState.allActivityIds.indexOf(activityId);
+  if (index !== -1) {
+    newState.allActivityIds.splice(index, 1);
+  }
+  newState.allActivityIds = [activityId, ...newState.allActivityIds];
+
+  newState.addingMyActivity = false;
+  return Object.assign({}, newState);
+};
+
+const addTagsGroupToMyActivity1 = (state, action) => {
   const newState = Object.assign({}, state);
 
   // const myactivity = {
@@ -197,17 +312,6 @@ const removeTagFromGroup = (state, action) => {
       if (groupIndex !== -1) {
         newState.byActivityId[activityId].allGroupIds.splice(groupIndex, 1);
       }
-
-      if (!_.isNil(action.payload.groupTimes)) {
-        const gId = action.payload.groupTimes.groupId;
-        newState.byActivityId[activityId].allGroupIds[0] = gId;
-        if (_.isNil(newState.byActivityId[activityId].byGroupId[gId])) {
-          newState.byActivityId[activityId].byGroupId[gId] = {};
-        }
-        newState.byActivityId[activityId].byGroupId[gId].tagsGroup = action.payload.tagsGroup;
-        newState.byActivityId[activityId].byGroupId[gId].groupTimes = [action.payload.groupTimes];
-      }
-
       // if activities length is zero, then remove activity
       if (newState.byActivityId[activityId].allGroupIds.length === 0) {
         delete newState.byActivityId[activityId];
@@ -225,24 +329,15 @@ const removeTagFromGroup = (state, action) => {
 const removeGroupFromActivity = (state, action) => {
   const { activityId, groupId } = action.payload;
   const newState = Object.assign({}, state);
-  //console.log('removeGroupFromActivity');
-  //console.log(newState.byActivityId[activityId].byGroupId[groupId]);
-  //console.log(action.payload.tagsGroup);
-  delete newState.byActivityId[activityId].byGroupId[groupId];
+
+  if (!_.isNil(newState.byActivityId[activityId].byGroupId[groupId])) {
+    delete newState.byActivityId[activityId].byGroupId[groupId];
+  }
+
 
   const groupIndex = newState.byActivityId[activityId].allGroupIds.indexOf(groupId);
   if (groupIndex !== -1) {
     newState.byActivityId[activityId].allGroupIds.splice(groupIndex, 1);
-  }
-
-  if (!_.isNil(action.payload.groupTimes)) {
-    const gId = action.payload.groupTimes.groupId;
-    newState.byActivityId[activityId].allGroupIds[0] = gId;
-    if (_.isNil(newState.byActivityId[activityId].byGroupId[gId])) {
-      newState.byActivityId[activityId].byGroupId[gId] = {};
-    }
-    newState.byActivityId[activityId].byGroupId[gId].tagsGroup = action.payload.tagsGroup;
-    newState.byActivityId[activityId].byGroupId[gId].groupTimes = [action.payload.groupTimes];
   }
 
   // if activities length is zero, then remove activity
@@ -259,7 +354,7 @@ const removeGroupFromActivity = (state, action) => {
 };
 
 const addGroupToMyActivity = (state, action) => {
-  const { activityId, groupId, tagsGroup } = action.payload;
+  const { activityId, groupId } = action.payload;
   const newState = Object.assign({}, state);
 
   // const groupIndex = newState.byActivityId[activityId].allGroupIds.indexOf(groupId);
@@ -268,20 +363,28 @@ const addGroupToMyActivity = (state, action) => {
   //   newState.byActivityId[activityId].allGroupIds.unshift(groupId);
   // }
 
-  if (!_.isNil(tagsGroup)) {
+  /*if (!_.isNil(tagsGroup)) {
     newState.byActivityId[activityId].allGroupIds[0] = groupId;
     if (_.isNil(newState.byActivityId[activityId].byGroupId[groupId])) {
       newState.byActivityId[activityId].byGroupId[groupId] = {};
     }
     newState.byActivityId[activityId].byGroupId[groupId].tagsGroup = tagsGroup;
     //newState.byActivityId[activityId].byGroupId[gId].groupTimes = [action.payload.groupTimes];
-  }
+  }*/
 
   const activityIndex = newState.allActivityIds.indexOf(activityId);
   if (activityIndex !== -1) {
     newState.allActivityIds.splice(activityIndex, 1);
     newState.allActivityIds.unshift(activityId);
   }
+
+  const groupIndex = newState.byActivityId[activityId].allGroupIds.indexOf(groupId);
+  if (groupIndex !== -1) {
+    newState.byActivityId[activityId].allGroupIds.splice(groupIndex, 1);
+    newState.byActivityId[activityId].allGroupIds.unshift(groupId);
+  }
+
+
   newState.addingGroup = false;
   return Object.assign({}, newState);
 };
@@ -386,12 +489,18 @@ const getMyActivitiesReset = (state, action) => {
 const INITIAL_GROUP_STATE = {
   error: null,
   loading: false,
+  refreshing: false,
   addingMyActivity: false,
   addingGroup: false,
   removingGroup: {},
   removingTag: {},
   byActivityId: {},
   allActivityIds: [],
+  count: 0,
+  offset: 0,
+  limit: 0,
+  page: 1,
+  totalPages: 0
 };
 export const myActivities = (state = INITIAL_GROUP_STATE, action) => {
   switch (action.type) {
@@ -400,7 +509,8 @@ export const myActivities = (state = INITIAL_GROUP_STATE, action) => {
     case GROUP_FETCH_REQUEST:
       return Object.assign({}, state, {
         error: null,
-        loading: true,
+        loading: false,
+        refreshing: action.page === 1,
         addingMyActivity: false,
         addingGroup: false,
         removingGroup: {},

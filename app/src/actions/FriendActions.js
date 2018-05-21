@@ -30,21 +30,21 @@ import {
   FRIEND_ACCEPT_SUCCESS,
   FRIEND_ACCEPT_ERROR,
 
-  FRIEND_REJECT_RESET,
-  FRIEND_REJECT_REQUEST,
-  FRIEND_REJECT_SUCCESS,
-  FRIEND_REJECT_ERROR,
+  // FRIEND_REJECT_RESET,
+  // FRIEND_REJECT_REQUEST,
+  // FRIEND_REJECT_SUCCESS,
+  // FRIEND_REJECT_ERROR,
 } from '../types/FriendTypes';
 
 import { AUTH_ERROR } from '../types/AuthTypes';
-import { OFFLINE_QUEUE } from '../types/OfflineTypes';
+//import { OFFLINE_QUEUE } from '../types/OfflineTypes';
 import { fakePromise } from '../services/Common';
 
 export const searchUsers = (text) => (
   async (dispatch, getState) => {
     try {
-      const { isConnected } = getState().network;
-      if (isConnected) {
+      const { offlineMode } = getState().network;
+      if (!offlineMode) {
         await dispatch({
           type: USERS_FETCH_REQUEST
         });
@@ -86,10 +86,10 @@ export const searchUsers = (text) => (
 );
 
 export const getFriendRequests = () => (
-  async (dispatch) => {
+  async (dispatch, getState) => {
     try {
-      //const { isConnected } = getState().network;
-      if (true) {
+      const { offlineMode } = getState().network;
+      if (!offlineMode) {
         await dispatch({
           type: FRIEND_GET_REQUESTS_REQUEST
         });
@@ -100,10 +100,7 @@ export const getFriendRequests = () => (
           method: 'get'
         };
 
-        //console.log(payload);
-
         const response = await ApiRequest(payload);
-        //console.log(response);
         const { data } = response;
         await dispatch({
           type: FRIEND_GET_REQUESTS_SUCCESS,
@@ -111,7 +108,6 @@ export const getFriendRequests = () => (
         });
       }
     } catch (error) {
-      //console.log(error);
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         await dispatch({
           type: AUTH_ERROR,
@@ -132,10 +128,10 @@ export const getFriendRequests = () => (
 
 
 export const getFriends = () => (
-  async (dispatch) => {
+  async (dispatch, getState) => {
     try {
-      //const { isConnected } = getState().network;
-      if (true) {
+      const { offlineMode } = getState().network;
+      if (!offlineMode) {
         dispatch({
           type: FRIENDS_FETCH_REQUEST
         });
@@ -177,9 +173,9 @@ export const getFriends = () => (
 // add activity action
 export const sendFriendRequest = (userId) => (
   async (dispatch, getState) => {
-    const { isConnected } = getState().network;
+    const { offlineMode } = getState().network;
     try {
-      if (isConnected) {
+      if (!offlineMode) {
         dispatch({
           type: FRIEND_REQUEST_REQUEST
         });
@@ -194,8 +190,8 @@ export const sendFriendRequest = (userId) => (
           apiUrl,
           method: 'post',
         };
+
         const resp = await ApiRequest(payload);
-        //console.log(resp);
         dispatch({
           type: FRIEND_REQUEST_SUCCESS,
           payload: {
@@ -205,7 +201,6 @@ export const sendFriendRequest = (userId) => (
         dispatch({ type: USERS_FETCH_RESET_DATA });
       }
     } catch (error) {
-      //console.log(error);
       if (!_.isUndefined(error.response) && error.response.status === 401) {
         dispatch({
           type: AUTH_ERROR,
@@ -218,7 +213,7 @@ export const sendFriendRequest = (userId) => (
         });
       }
     }
-    if (isConnected) {
+    if (!offlineMode) {
       dispatch({
         type: FRIEND_REQUEST_RESET
       });
@@ -230,8 +225,8 @@ export const sendFriendRequest = (userId) => (
 export const acceptFriendRequest = (requestId) => (
   async (dispatch, getState) => {
     try {
-      const { isConnected } = getState().network;
-      if (isConnected) {
+      const { offlineMode } = getState().network;
+      if (!offlineMode) {
         dispatch({
           type: FRIEND_ACCEPT_REQUEST
         });
@@ -245,8 +240,6 @@ export const acceptFriendRequest = (requestId) => (
         };
 
         const resp = await ApiRequest(payload);
-        console.log('acceptFriendRequest', resp);
-
         dispatch({
           type: FRIEND_ACCEPT_SUCCESS,
           payload: {
@@ -269,57 +262,6 @@ export const acceptFriendRequest = (requestId) => (
     }
     dispatch({
       type: FRIEND_ACCEPT_RESET
-    });
-  }
-);
-
-// update activity action
-export const deleteActivity = (id) => (
-  async (dispatch, getState) => {
-    try {
-      dispatch({
-        type: FRIEND_REJECT_REQUEST
-      });
-      const { isConnected } = getState().network;
-      const apiUrl = `/api/private/activity/${id}`;
-      const payload = {
-        UID: uuidv4(),
-        data: null,
-        apiUrl,
-        method: 'delete',
-      };
-
-      if (isConnected) {
-        await ApiRequest(payload);
-        //const { data } = response;
-      } else {
-        dispatch({
-          type: OFFLINE_QUEUE,
-          payload
-        });
-        await fakePromise(100);
-      }
-      dispatch({
-        type: FRIEND_REJECT_SUCCESS,
-        payload: {
-          id
-        }
-      });
-    } catch (error) {
-      if (!_.isUndefined(error.response) && error.response.status === 401) {
-        dispatch({
-          type: AUTH_ERROR,
-          payload: error.response
-        });
-      } else {
-        dispatch({
-          type: FRIEND_REJECT_ERROR,
-          payload: error.response
-        });
-      }
-    }
-    dispatch({
-      type: FRIEND_REJECT_RESET
     });
   }
 );

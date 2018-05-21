@@ -30,7 +30,7 @@ class LoginScreen extends Component {
       } else {
         try {
           const data = await AccessToken.getCurrentAccessToken();
-          console.log(data.accessToken);
+          //console.log(data.accessToken);
           await fakePromise(800);
           this.props.doLogin(data.accessToken);
         } catch (err) {

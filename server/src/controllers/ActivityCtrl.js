@@ -1,5 +1,7 @@
 'use strict'
 const mongoose = require('mongoose');
+const Pagination = require('../services/Pagination');
+
 
 class ActivityCtrl {
 
@@ -40,6 +42,7 @@ class ActivityCtrl {
   }
 
   get(req, res, next) {
+    const { page, offset, limit } = Pagination(req, 'activites');
     const { userId } = req;
     const Activity = mongoose.model('activities');
     Activity.find({userId},{
@@ -50,8 +53,8 @@ class ActivityCtrl {
       //.populate({path: 'fromUser', select: ['email','firstName']})
       //.populate({path: 'toUser', select: 'email'})
       .sort({updatedAt: -1})
-      //.skip(offset)
-      //.limit(limit);
+      .skip(offset)
+      .limit(limit)
       .then((activities)=>{
         console.log(activities);
         res.status(200).send(activities);
@@ -82,6 +85,8 @@ class ActivityCtrl {
           res.status(200).send(activity);
           next();
         });
+
+
       // Activity.findByIdAndUpdate(id,
       //   { $set: { name, updatedAt } }, { new: true },
       //   (err, activity) => {

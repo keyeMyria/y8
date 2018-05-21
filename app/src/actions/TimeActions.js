@@ -32,7 +32,8 @@ export const getTimes = () => (
 export const startActivity = (activityId, groupId) => (
   async (dispatch, getState) => {
     try {
-      const { isConnected } = getState().network;
+      const { myActivities, network } = getState();
+      const { offlineMode } = network;
 
       await dispatch({
         type: TIME_TOGGLE_REQUEST,
@@ -42,7 +43,6 @@ export const startActivity = (activityId, groupId) => (
         }
       });
 
-      const { myActivities, times } = getState();
       const startedAt = moment().valueOf();
       const data = {
         id: uuidv4(),
@@ -70,8 +70,7 @@ export const startActivity = (activityId, groupId) => (
         method: 'post',
       };
 
-      if (isConnected) {
-        //TODO: Make api call if network available, otherwise store in activity queue
+      if (!offlineMode) {
         await ApiRequest(payload);
       } else {
         dispatch({
@@ -109,11 +108,11 @@ export const startActivity = (activityId, groupId) => (
     });
   });
 
-export const stopActivity = (id, activityId, groupId) => (
+export const stopActivity = (id, activityId, groupId, stoppedAt) => (
   async (dispatch, getState) => {
     try {
-      const { isConnected } = getState().network;
-
+      const { network, myActivities } = getState();
+      const { offlineMode } = network;
       await dispatch({
         type: TIME_TOGGLE_REQUEST,
         payload: {
@@ -122,24 +121,11 @@ export const stopActivity = (id, activityId, groupId) => (
         }
       });
 
-      const stoppedAt = moment().valueOf();
+      //const stoppedAt = moment().valueOf();
       const data = {
         id,
         stoppedAt
       };
-
-      const { myActivities, times } = getState();
-      // let newIndex = 0;
-      // myActivities.allActivityIds.forEach((aId, index) => {
-      //   const gId = myActivities.byActivityId[aId].allGroupIds[0];
-      //   if (!_.isUndefined(times.byActivityId[aId]) &&
-      //     !_.isUndefined(times.byActivityId[aId][gId])) {
-      //     const stoppedTime = times.byActivityId[aId][gId][0].stoppedAt;
-      //     if (_.isNull(stoppedTime)) {
-      //       newIndex = index;
-      //     }
-      //   }
-      // });
 
       let newIndex = 0;
       myActivities.allActivityIds.forEach((aId, index) => {
@@ -161,7 +147,7 @@ export const stopActivity = (id, activityId, groupId) => (
         method: 'put',
       };
 
-      if (isConnected) {
+      if (!offlineMode) {
         await ApiRequest(payload);
       } else {
         await dispatch({

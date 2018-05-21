@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import EStyleSheet from 'react-native-extended-stylesheet';
 //import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {
   globalIconColor,
@@ -52,8 +53,8 @@ class TagItem extends React.PureComponent {
             <View
               style={{
                 backgroundColor: this.state.showCheck ? 'gray' : '#ffffff',
-                height: 20,
-                width: 20,
+                height: 23,
+                width: 23,
                 borderRadius: 50,
                 borderWidth: 1,
                 borderColor: 'gray',
@@ -66,8 +67,8 @@ class TagItem extends React.PureComponent {
                 this.state.showCheck &&
                 <Ionicons
                   name='ios-checkmark'
-                  size={25} color='#ffffff'
-                  style={{ paddingTop: 3, backgroundColor: 'transparent' }}
+                  size={23} color='#ffffff'
+                  style={{ backgroundColor: 'transparent' }}
                 />
               }
 
@@ -106,7 +107,7 @@ class TagItem extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   outerContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -132,8 +133,8 @@ const styles = StyleSheet.create({
   },
   text: {
     //backgroundColor: 'lightpink',
-    fontSize: 17,
-    color: globalTextColor,
+    fontSize: 18,
+    color: '$textColor',
     //justifyContent: 'flex-start',
     //alignItems: 'flex-end'
   },

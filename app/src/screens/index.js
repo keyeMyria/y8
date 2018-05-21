@@ -17,6 +17,7 @@ import ShareScreen from './ShareScreen';
 
 // modals
 import ActivityModal from '../modals/ActivityModal';
+import StopActivityModal from '../modals/StopActivityModal';
 import TagModal from '../modals/TagModal';
 import FriendModal from '../modals/FriendModal';
 import FriendInfoModal from '../modals/FriendInfoModal';
@@ -56,6 +57,7 @@ export function registerScreens(store, Provider) {
 
   // Modals
   Navigation.registerComponent('app.ActivityModal', () => ActivityModal, store, Provider);
+  Navigation.registerComponent('app.StopActivityModal', () => StopActivityModal, store, Provider);
   Navigation.registerComponent('app.TagModal', () => TagModal, store, Provider);
   Navigation.registerComponent('app.FriendModal', () => FriendModal, store, Provider);
   Navigation.registerComponent('app.FriendInfoModal', () => FriendInfoModal, store, Provider);

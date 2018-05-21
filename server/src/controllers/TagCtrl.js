@@ -1,6 +1,7 @@
 'use strict'
 const _ = require('lodash');
 const mongoose = require('mongoose');
+const Pagination = require('../services/Pagination');
 
 class TagCtrl {
 
@@ -41,6 +42,7 @@ class TagCtrl {
   }
 
   get(req, res, next) {
+    const { page, offset, limit } = Pagination(req, 'tags');
     const { userId } = req;
     const Tag = mongoose.model('tags');
     Tag.find({userId},{
@@ -51,8 +53,8 @@ class TagCtrl {
       //.populate({path: 'fromUser', select: ['email','firstName']})
       //.populate({path: 'toUser', select: 'email'})
       .sort({updatedAt: -1})
-      //.skip(offset)
-      //.limit(limit);
+      .skip(offset)
+      .limit(limit)
       .then((tags)=>{
         //console.log(tags._id);
         //console.log(tags);

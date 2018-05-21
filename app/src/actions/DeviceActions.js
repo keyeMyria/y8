@@ -9,18 +9,17 @@ import {
 } from '../types/DeviceTypes';
 
 import { AUTH_ERROR } from '../types/AuthTypes';
-import { fakePromise } from '../services/Common';
+//import { fakePromise } from '../services/Common';
 
 // add activity action
 export const registerDevice = (tokenInfo) => (
   async (dispatch, getState) => {
     try {
-      const { isConnected } = getState().network;
-      if (isConnected) {
+      const { offlineMode } = getState().network;
+      if (!offlineMode) {
         dispatch({
           type: REGISTER_DEVICE_REQUEST
         });
-
 
         const apiUrl = '/api/private/device';
         const payload = {

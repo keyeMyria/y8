@@ -3,6 +3,7 @@ import {
   Platform,
   FlatList,
   RefreshControl,
+  ScrollView,
   Keyboard,
   UIManager,
   KeyboardAvoidingView,
@@ -15,6 +16,7 @@ import Snackbar from 'react-native-snackbar';
 import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Feather from 'react-native-vector-icons/Feather';
+import DeviceInfo from 'react-native-device-info';
 import SearchBar from '../components/SearchBar';
 import ActivityItem from '../components/ActivityItem';
 import { SearchActivities } from '../services/ActivityService';
@@ -38,12 +40,21 @@ class ActivitiesScreen extends React.Component {
   };
   constructor(props) {
     super(props);
+    const deviceId = DeviceInfo.getDeviceId();
+    console.log(deviceId);
+    this.iphoneVersion = 0;
+    if (deviceId.indexOf('iPhone10') !== -1) {
+      this.iphoneVersion = 10;
+    }
+    console.log(this.iphoneVersion);
+
     this.state = {
       visible: false,
       activity: null,
       searchIds: [],
       isSearchOn: false,
       searchBarTopPadding: 0,
+
     };
     this.timeout = 0;
     if (Platform.OS === 'android') {
@@ -64,10 +75,15 @@ class ActivitiesScreen extends React.Component {
       // });
       // if you want to listen on navigator events, set this up
       this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
+      this.props.navigator.setStyle({
+        navBarSubtitleColor: EStyleSheet.value('$subTextColor'),
+        navBarSubtitleFontSize: 12,
+      });
     }
   }
 
   componentDidMount() {
+    this.setOfflineMode();
     //this.props.getActivities();
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
@@ -77,52 +93,8 @@ class ActivitiesScreen extends React.Component {
     LayoutAnimation.easeInEaseOut();
   }
 
-  async componentDidUpdate(nextProps) {
-    //console.log('componentDidUpdate', nextProps.activities.adding, this.props.activities.adding, this.props.activities.error);
-    // if (nextProps.activities.adding === true &&
-    //    this.props.activities.adding === false &&
-    //   _.isNull(this.props.activities.addingError)) {
-    //   await this.showSnackBar('Activity created1!');
-    // } else if (nextProps.activities.adding === true &&
-    //   this.props.activities.adding === false &&
-    //   !_.isNull(this.props.activities.addingError) &&
-    //   !_.isUndefined(this.props.activities.addingError)) {
-    //   await this.showSnackBar(this.props.activities.addingError.status);
-    // } else if (nextProps.activities.adding &&
-    //   !this.props.activities.adding &&
-    //   _.isUndefined(this.props.activities.addingError)) {
-    //   await this.showSnackBar('Service down, please try later');
-    // }
-    //
-    // if (nextProps.activities.updating &&
-    //   !this.props.activities.updating &&
-    //   _.isNull(this.props.activities.updatingError)) {
-    //   await this.showSnackBar('Activity updated!');
-    // } else if (nextProps.activities.updating &&
-    //   !this.props.activities.updating &&
-    //   !_.isNull(this.props.activities.updatingError) &&
-    //   !_.isUndefined(this.props.activities.updatingError)) {
-    //   await this.showSnackBar(this.props.activities.updatingError.status);
-    // } else if (nextProps.activities.updating &&
-    //   !this.props.activities.updating &&
-    //   _.isUndefined(this.props.activities.updatingError)) {
-    //   await this.showSnackBar('Service down, please try later');
-    // }
-    //
-    // if (nextProps.activities.deleting &&
-    //   !this.props.activities.deleting &&
-    //   _.isNull(this.props.activities.deletingError)) {
-    //   await this.showSnackBar('Activity deleted!');
-    // } else if (nextProps.activities.deleting &&
-    //   !this.props.activities.deleting &&
-    //   !_.isNull(this.props.activities.deletingError) &&
-    //   !_.isUndefined(this.props.activities.deletingError)) {
-    //   await this.showSnackBar(this.props.activities.deletingError.status);
-    // } else if (nextProps.activities.deleting &&
-    //   !this.props.activities.deleting &&
-    //   _.isUndefined(this.props.activities.deletingError)) {
-    //   await this.showSnackBar('Service down, please try later');
-    // }
+  componentDidUpdate() {
+    this.setOfflineMode();
   }
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
@@ -144,6 +116,10 @@ class ActivitiesScreen extends React.Component {
           },
           animationType: 'slide-up'
         });
+      }
+      if (event.id === 'search') {
+        this.onSearchBarFocus();
+        this.textInputRef.focus();
       }
     }
   };
@@ -181,8 +157,9 @@ class ActivitiesScreen extends React.Component {
   }
 
   onSearchBarFocus = () => {
+    console.log(this.iphoneVersion);
     this.setState({
-      searchBarTopPadding: 20
+      searchBarTopPadding: this.iphoneVersion === 10 ? 40 : 20
     }, () => {
       this.props.navigator.toggleNavBar({
         to: 'hidden', // required, 'hidden' = hide , 'shown' = show
@@ -203,7 +180,17 @@ class ActivitiesScreen extends React.Component {
   }
 
   onRefresh = () => {
-    this.props.getActivities();
+    //this.props.getActivities();
+  }
+
+  setOfflineMode = () => {
+    let subtitle = null;
+    if (this.props.network.offlineMode) {
+      subtitle = 'offline mode';
+    }
+    this.props.navigator.setSubTitle({
+      subtitle
+    });
   }
 
   showSnackBar = (msg) => {
@@ -269,6 +256,9 @@ class ActivitiesScreen extends React.Component {
     );
   };
 
+  searchInputRef = (input) => {
+    this.textInputRef = input;
+  }
   render() {
     const { activities } = this.props;
 
@@ -282,10 +272,12 @@ class ActivitiesScreen extends React.Component {
         ref="myRef"
       >
         <SearchBar
+          placeholderText={'Search activities'}
           outerContainerStyle={{
             backgroundColor: EStyleSheet.value('$backgroundColor'),
             paddingTop: this.state.searchBarTopPadding
           }}
+          onTextInputRef={this.searchInputRef}
           onChangeText={this.handleSearchChangeText}
           onClear={this.handleSearchOnClear}
           onFocus={this.onSearchBarFocus}
@@ -304,15 +296,14 @@ class ActivitiesScreen extends React.Component {
           }
           renderItem={this.renderRow}
           ListFooterComponent={this.renderListFooter}
-          refreshControl={
-            <RefreshControl
-              refreshing={activities.loading}
-              onRefresh={this.onRefresh}
-            />
-          }
+          // refreshControl={
+          //   <RefreshControl
+          //     refreshing={activities.loading}
+          //     onRefresh={this.onRefresh}
+          //   />
+          // }
 
         />
-
       </KeyboardAvoidingView>
       </View>
     );
@@ -329,13 +320,12 @@ const styles = EStyleSheet.create({
   }
 });
 
-const mapStateToProps = (state) => {
-  //console.log('ActivitiesScreen:mapStateToProps:', state);
-  const { activities } = state;
-  return {
-    activities,
-  };
-};
+const mapStateToProps = (state) => (
+  {
+    network: state.network,
+    activities: state.activities,
+  }
+);
 export default connect(mapStateToProps, {
   getActivities,
   addActivity,

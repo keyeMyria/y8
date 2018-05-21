@@ -18,5 +18,8 @@ yarn add react-native-segmented-control-tab
 yarn add react-native-loading-spinner-overlay@latest
 yarn add react-native-extended-stylesheet
 yarn add react-native-vector-icons
+yarn add react-native-device-info
+
+react-native link react-native-device-info:
 react-native link react-native-vector-icons
 cp ../fb_install/.eslintrc .

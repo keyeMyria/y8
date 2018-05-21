@@ -8,7 +8,6 @@ class GroupCtrl {
   create(req, res, next) {
     const { userId } = req;
     const {
-      prevGroupId,
       groupId,
       activityId,
       tags,
@@ -30,11 +29,6 @@ class GroupCtrl {
     console.log('data', data);
     const Group = mongoose.model('group');
 
-    Group.findOneAndUpdate({_id: prevGroupId}, { $set: { latest: 0}})
-      .then((result) => {
-
-      });
-
     // Find activity and check if same group is isExist
     // add to array if group not isExists
     const criteria =  {};
@@ -43,13 +37,14 @@ class GroupCtrl {
     criteria.tags = {$eq: sortedTags}
 
     Group.findOne(criteria).then((result) => {
-      console.log('result', result);
       if (!result) {
         return Group.create(data);
+      }else{
+        result.updatedAt = Date.now();
+        result.save();
       }
       return false;
     }).then((result) => {
-
       if (!result || result === false) {
         console.log("Group already exists");
         res.status(200).send("Group already exists");
@@ -71,7 +66,6 @@ class GroupCtrl {
   update(req, res, next) {
     const { userId } = req;
     const {
-      prevGroupId,
       groupId,
       updatedAt
     } = req.body;
@@ -79,16 +73,10 @@ class GroupCtrl {
 
     const Group = mongoose.model('group');
 
-    Group.findOneAndUpdate({_id: prevGroupId}, { $set: { latest: 0}})
+    const criteria =  {};
+    criteria._id = {$eq: groupId};
+    Group.findOneAndUpdate(criteria, { $set: { updatedAt, latest: 1 } })
       .then((result) => {
-        //if(result) {
-          const criteria =  {};
-          criteria._id = {$eq: groupId};
-          return Group.findOneAndUpdate(criteria, { $set: { updatedAt, latest: 1 } });
-        //}
-        //return result;
-
-      }).then((result) => {
         console.log('result', result);
         if (!result || result === false) {
           console.log("Failed to update");
@@ -108,38 +96,18 @@ class GroupCtrl {
   }
 
   get(req, res, next) {
-
-    /*
-    Dont delete this:
-
-    { _id: { activityId: 'db65c16a-9122-11e7-97f1-1d02b1732d86' },
-  tags:
-   [ { _id: 'ab4c839b-0704-4523-a539-5517d953dcee',
-       userId: 'bd8e2421-557c-497e-bba9-1f9e934f9f0d',
-       activityId: 'db65c16a-9122-11e7-97f1-1d02b1732d86',
-       createdAt: '1522031982020',
-       updatedAt: '1522031982020',
-       tags: [Array],
-       __v: 0 },
-     { _id: '183ba495-9e8b-4c63-9bdb-3601119999ed',
-       userId: 'bd8e2421-557c-497e-bba9-1f9e934f9f0d',
-       activityId: 'db65c16a-9122-11e7-97f1-1d02b1732d86',
-       createdAt: '1522031977356',
-       updatedAt: '1522031977356',
-       tags: [Array],
-       __v: 0 } ] }
-    */
-    const { page, offset, limit } = Pagination(req);
+    const { page, offset, limit } = Pagination(req, 'myactivites');
     const { userId } = req;
     const Group = mongoose.model('group');
 
+    console.log(page, offset, limit);
 
     // build search criteria
     const criteria =  {};
     criteria.userId = {$eq: userId};
-    criteria.latest = {$eq: 1};
 
-    getMyActivities(criteria, 'updatedAt', offset,limit).then((results) => {
+    getMyActivities(criteria, 'updatedAt', page, offset, limit).then((results) => {
+      console.log('################');
       console.log(results);
 
       /*
@@ -197,9 +165,7 @@ class GroupCtrl {
 
   deleteTagFromGroupByActivity(req, res, next) {
     const { userId } = req;
-    const { groupId, tagId, onlyPrevGroupId } = req.params;
-
-    //console.log(req.params);
+    const { groupId, tagId } = req.params;
 
     const Group = mongoose.model('group');
 
@@ -220,18 +186,6 @@ class GroupCtrl {
         result.tags.splice(index, 1);
       }
       if (result.tags.length === 0) {
-
-        // Group.findOneAndUpdate({_id: onlyPrevGroupId}, { $set: { latest: 1}});
-        //
-        //   let nextGroupLatestTime = {};
-        //   const Time = mongoose.model('time');
-        //   Time.findOne({userId, groupId: onlyPrevGroupId, latest: 1})
-        //     .then((results) => {
-        //       nextGroupLatestTime = results;
-        //     });
-
-        deleteAll = true;
-
         return result.remove();
       } else {
         return result.save();
@@ -239,30 +193,14 @@ class GroupCtrl {
 
     }).then((updated) => {
 
-      if(deleteAll){
-        Group.findOneAndUpdate({_id: onlyPrevGroupId}, { $set: { latest: 1}}).then((result) => {
-
-        });;
-
-          let nextGroupLatestTime = {};
-          const Time = mongoose.model('time');
-          Time.findOne({userId, groupId: onlyPrevGroupId, latest: 1})
-            .then((results) => {
-              nextGroupLatestTime = results;
-              res.status(200).send({nextGroupLatestTime});
-              next();
-            });
-      }else{
-        if (!updated) {
-          console.log("Failed to delete tag from group");
-          res.status(400).send("Failed to delete tag from group");
-        } else {
-          console.log("Tag deleted successfully from group");
-          res.status(200).send("Deleted");
-        }
-        next();
+      if (!updated) {
+        console.log("Failed to delete tag from group");
+        res.status(400).send("Failed to delete tag from group");
+      } else {
+        console.log("Tag deleted successfully from group");
+        res.status(200).send("Deleted");
       }
-
+      next();
 
     }).catch((myActivityError) => {
       console.log(myActivityError);
@@ -275,35 +213,22 @@ class GroupCtrl {
   //deleteGroupFromActivity
   deleteGroupFromActivity(req, res, next) {
     const { userId } = req;
-    const { groupId, onlyPrevGroupId } = req.params;
+    const { groupId } = req.params;
 
     //console.log(req.params);
 
     const Group = mongoose.model('group');
 
-    Group.findOneAndUpdate({_id: onlyPrevGroupId}, { $set: { latest: 1}})
-      .then((result) => {
-
-      });
-
-    let nextGroupLatestTime = {};
-    const Time = mongoose.model('time');
-    Time.findOne({userId, groupId: onlyPrevGroupId, latest: 1})
-      .then((result) => {
-        return result;
-      }).then((time) => {
-        nextGroupLatestTime = time;
-        const criteria =  {};
-        criteria._id = {$eq: groupId};
-        criteria.userId = {$eq: userId};
-        return Group.remove(criteria);
-      }).then((deleted) => {
+    const criteria =  {};
+    criteria._id = {$eq: groupId};
+    criteria.userId = {$eq: userId};
+    Group.remove(criteria).then((deleted) => {
         if (!deleted) {
           console.log("Failed to delete group");
           res.status(400).send("Failed to delete group");
         } else {
           console.log("Group deleted successfully");
-          res.status(200).send({nextGroupLatestTime});
+          res.status(200).send("");
         }
         next();
       }).catch((myActivityError) => {

@@ -16,6 +16,7 @@ class ShareIconButton extends React.PureComponent {
   render() {
     return (
       <TouchableOpacity
+        disabled={this.props.offlineMode}
         onPress={this.onSharePress}
         style={[styles.outerContainer, this.props.outerContainer]}
       >
@@ -24,10 +25,15 @@ class ShareIconButton extends React.PureComponent {
             type={'feather'}
             name={'share-2'}
             size={18}
-            color={EStyleSheet.value('$iconColor')}
+            color={
+              !this.props.offlineMode ?
+              EStyleSheet.value('$iconColor') : EStyleSheet.value('$subTextColor')
+            }
           />
           <Text
-            style={{ color: EStyleSheet.value('$textColor'), padding: 3 }}
+            style={{ color: !this.props.offlineMode ?
+              EStyleSheet.value('$textColor') : EStyleSheet.value('$subTextColor'), 
+              padding: 3 }}
           >
             {this.props.sharedWith}
           </Text>
@@ -43,13 +49,13 @@ const styles = EStyleSheet.create({
   },
   container: {
     //flex: 1,
-    padding: 5,
+    padding: 2,
     height: 25,
     width: 35,
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row'
-    //backgroundColor: 'red'
+    flexDirection: 'row',
+    //backgroundColor: 'lightpink'
   }
 });
 

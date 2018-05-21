@@ -101,7 +101,7 @@ export const getTags = () => (
           tag.updatedAt = Date.now();
         }
 
-        //const { isConnected } = getState().network;
+        const { offlineMode } = getState().network;
         const apiUrl = '/api/private/tag';
         const payload = {
           UID: uuidv4(),
@@ -110,16 +110,15 @@ export const getTags = () => (
           method: 'post',
         };
 
-        //if (isConnected) {
+        if (!offlineMode) {
           await ApiRequest(payload);
-          //const { data } = response;
-        // } else {
-        //   dispatch({
-        //     type: OFFLINE_QUEUE,
-        //     payload
-        //   });
-        //   await fakePromise(100);
-        // }
+        } else {
+          dispatch({
+            type: OFFLINE_QUEUE,
+            payload
+          });
+          await fakePromise(100);
+        }
 
         const tagId = tag.id;
         tag = {
@@ -162,7 +161,7 @@ export const getTags = () => (
         const tag = updatedTag;
         tag.updatedAt = Date.now();
 
-        //const { isConnected } = getState().network;
+        const { offlineMode } = getState().network;
         const apiUrl = '/api/private/tag';
         const payload = {
           UID: uuidv4(),
@@ -171,16 +170,15 @@ export const getTags = () => (
           method: 'put',
         };
 
-        //if (isConnected) {
+        if (!offlineMode) {
           await ApiRequest(payload);
-          //const { data } = response;
-        // } else {
-        //   await dispatch({
-        //     type: OFFLINE_QUEUE,
-        //     payload
-        //   });
-        //   await fakePromise(100);
-        // }
+        } else {
+          await dispatch({
+            type: OFFLINE_QUEUE,
+            payload
+          });
+          await fakePromise(100);
+        }
 
         await dispatch({
           type: TAG_UPDATE_SUCCESS,
@@ -214,7 +212,7 @@ export const getTags = () => (
         await dispatch({
           type: TAG_DELETE_REQUEST
         });
-        const { isConnected } = getState().network;
+        const { offlineMode } = getState().network;
         const apiUrl = `/api/private/tag/${id}`;
         const payload = {
           UID: uuidv4(),
@@ -223,16 +221,15 @@ export const getTags = () => (
           method: 'delete',
         };
 
-        //if (isConnected) {
+        if (!offlineMode) {
           await ApiRequest(payload);
-          //const { data } = response;
-        // } else {
-        //   dispatch({
-        //     type: OFFLINE_QUEUE,
-        //     payload
-        //   });
-        //   await fakePromise(100);
-        // }
+        } else {
+          dispatch({
+            type: OFFLINE_QUEUE,
+            payload
+          });
+          await fakePromise(100);
+        }
         await dispatch({
           type: TAG_DELETE_SUCCESS,
           payload: {

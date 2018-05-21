@@ -10,12 +10,14 @@ import { LoginButton } from 'react-native-fbsdk';
 import { connect } from 'react-redux';
 import { ClearLoginToken } from '../services/AuthService';
 import { changeAppRoot } from '../actions/AppActions';
-import { setConnectionStatus } from '../actions/ConnectionActions';
+import {
+  setConnectionStatus,
+  setOfflineMode
+} from '../actions/ConnectionActions';
 import {
   offlineRequest
 } from '../actions/OfflineActions';
 import { resetUserId } from '../actions/UserActions';
-
 
 class MoreScreen extends React.Component {
   state = {
@@ -32,10 +34,15 @@ class MoreScreen extends React.Component {
   };
 
   onValueChange = (isOffline) => {
-    this.props.setConnectionStatus(!isOffline);
+    this.props.setOfflineMode(isOffline);
     if (!isOffline) {
       this.props.offlineRequest();
     }
+
+    // this.props.setConnectionStatus(!isOffline);
+    // if (!isOffline) {
+    //   this.props.offlineRequest();
+    // }
     // this.setState({
     //   isOffline
     // }, () => {
@@ -54,7 +61,7 @@ class MoreScreen extends React.Component {
         />
         <Text>Offline mode</Text>
         <Switch
-         value={!this.props.network.isConnected}
+         value={this.props.network.offlineMode}
          onValueChange={this.onValueChange}
         />
       </View>
@@ -85,6 +92,7 @@ const mapStateToProps = (state) => state;
 export default connect(mapStateToProps, {
   changeAppRoot,
   setConnectionStatus,
+  setOfflineMode,
   offlineRequest,
   resetUserId
 })(MoreScreen);

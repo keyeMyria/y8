@@ -122,19 +122,23 @@ class ShareScreen extends React.Component {
 
         }}
       >
-      <ScrollView
-        style={{
-          maxHeight: 80
-        }}
-      >
         <Text
           style={{
-            fontSize: 17,
+            fontSize: 21,
+            fontWeight: '600',
             color: EStyleSheet.value('$textColor')
-            //flexGrow: 1,
           }}
-        >{name} {this.props.sentence}</Text>
-      </ScrollView>
+        >
+        {name}
+        </Text>
+        <Text
+          style={{
+            fontSize: 18,
+            color: EStyleSheet.value('$textColor'),
+            letterSpacing: 0.8,
+          }}
+        >{this.props.sentence}</Text>
+
       </View>
     );
   };

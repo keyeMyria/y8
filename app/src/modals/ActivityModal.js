@@ -59,7 +59,15 @@ class ActivityModal extends React.Component {
       });
       // if you want to listen on navigator events, set this up
       this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
+      this.props.navigator.setStyle({
+        navBarSubtitleColor: EStyleSheet.value('$subTextColor'),
+        navBarSubtitleFontSize: 12,
+      });
     }
+  }
+
+  componentDidMount() {
+    this.setOfflineMode();
   }
 
   async componentWillReceiveProps(nextProps) {
@@ -107,6 +115,10 @@ class ActivityModal extends React.Component {
       _.isUndefined(nextProps.activities.deletingError)) {
       await this.closeModal('Service down, please try later');
     }
+  }
+
+  componentDidUpdate() {
+    this.setOfflineMode();
   }
 
   onNavigatorEvent = (event) => {
@@ -172,6 +184,7 @@ class ActivityModal extends React.Component {
       this.props.addActivity({ name: this.state.name });
     }
   }
+
   onChangeText = (name) => {
     let isValid = this.isValid(name);
     this.props.navigator.setButtons({
@@ -214,6 +227,16 @@ class ActivityModal extends React.Component {
       passProps: {
         activity: this.props.activities.byId[activityId]
       }
+    });
+  }
+
+  setOfflineMode = () => {
+    let subtitle = null;
+    if (this.props.network.offlineMode) {
+      subtitle = 'offline mode';
+    }
+    this.props.navigator.setSubTitle({
+      subtitle
     });
   }
 
@@ -300,10 +323,10 @@ class ActivityModal extends React.Component {
   };
 
   render() {
-    let name = null;
-    if (!_.isNull(this.props.activity)) {
-      name = this.props.activity.name;
-    }
+    // let name = null;
+    // if (!_.isNull(this.props.activity)) {
+    //   name = this.props.activity.name;
+    // }
     return (
       <KeyboardAvoidingView
         style={styles.container}
@@ -399,7 +422,13 @@ const styles = EStyleSheet.create({
 //     color: '$iconColor'
 //   }
 // });
-const mapStateToProps = (state) => state;
+
+const mapStateToProps = (state) => (
+  {
+    network: state.network,
+    activities: state.activities,
+  }
+);
 export default connect(mapStateToProps, {
   addActivity,
   updateActivity,

@@ -59,38 +59,46 @@ class TagModal extends React.Component {
       });
       // if you want to listen on navigator events, set this up
       this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
+      this.props.navigator.setStyle({
+        navBarSubtitleColor: EStyleSheet.value('$subTextColor'),
+        navBarSubtitleFontSize: 12,
+      });
     }
   }
 
-  async componentWillReceiveProps(nextProps) {
-    if (!nextProps.myActivities.removingTag &&
-      this.props.myActivities.removingTag &&
-      _.isNull(nextProps.myActivities.error)) {
-      await this.closeModal('Tag removed from group');
-    } else if (!nextProps.myActivities.removingTag &&
-      this.props.myActivities.removingTag &&
-      !_.isNil(nextProps.myActivities.error)) {
-      await this.closeModal(nextProps.myActivities.error.data);
-    } else if (!nextProps.myActivities.removingTag &&
-      this.props.myActivities.removingTag &&
-      _.isUndefined(nextProps.myActivities.error)) {
-      await this.closeModal('Service down, please try later');
-    }
+  componentDidMount() {
+    this.setOfflineMode();
+  }
 
-    if (!nextProps.myActivities.removingGroup &&
-      this.props.myActivities.removingGroup &&
-      _.isNull(nextProps.myActivities.error)) {
-      await this.closeModal('Group removed from activity');
-    } else if (!nextProps.myActivities.removingGroup &&
-      this.props.myActivities.removingGroup &&
-      !_.isNull(nextProps.myActivities.error) &&
-      !_.isUndefined(nextProps.myActivities.error)) {
-      await this.closeModal(this.props.myActivities.error.data);
-    } else if (!nextProps.myActivities.removingGroup &&
-      this.props.myActivities.removingGroup &&
-      _.isUndefined(nextProps.myActivities.error)) {
-      await this.closeModal('Service down, please try later');
-    }
+  async componentWillReceiveProps(nextProps) {
+    // if (!nextProps.myActivities.removingTag &&
+    //   this.props.myActivities.removingTag &&
+    //   _.isNull(nextProps.myActivities.error)) {
+    //   await this.closeModal('Tag removed from group');
+    // } else if (!nextProps.myActivities.removingTag &&
+    //   this.props.myActivities.removingTag &&
+    //   !_.isNil(nextProps.myActivities.error)) {
+    //   await this.closeModal(nextProps.myActivities.error.data);
+    // } else if (!nextProps.myActivities.removingTag &&
+    //   this.props.myActivities.removingTag &&
+    //   _.isUndefined(nextProps.myActivities.error)) {
+    //   await this.closeModal('Service down, please try later');
+    // }
+
+    // if (!nextProps.myActivities.removingGroup &&
+    //   this.props.myActivities.removingGroup &&
+    //   _.isNull(nextProps.myActivities.error)) {
+    //   await this.closeModal('Group removed from activity');
+    // } else if (!nextProps.myActivities.removingGroup &&
+    //   this.props.myActivities.removingGroup &&
+    //   !_.isNull(nextProps.myActivities.error) &&
+    //   !_.isUndefined(nextProps.myActivities.error)) {
+    //   await this.closeModal(this.props.myActivities.error.data);
+    // } else if (!nextProps.myActivities.removingGroup &&
+    //   this.props.myActivities.removingGroup &&
+    //   _.isUndefined(nextProps.myActivities.error)) {
+    //   await this.closeModal('Service down, please try later');
+    // }
 
     if (!nextProps.tags.adding &&
       this.props.tags.adding &&
@@ -136,6 +144,9 @@ class TagModal extends React.Component {
       _.isUndefined(nextProps.tags.deletingError)) {
       await this.closeModal('Service down, please try later');
     }
+  }
+  componentDidUpdate() {
+    this.setOfflineMode();
   }
 
 /*
@@ -269,6 +280,16 @@ class TagModal extends React.Component {
     });
   }
 
+  setOfflineMode = () => {
+    let subtitle = null;
+    if (this.props.network.offlineMode) {
+      subtitle = 'offline mode';
+    }
+    this.props.navigator.setSubTitle({
+      subtitle
+    });
+  }
+
   isValid = (name) => {
     const regex = /^[a-zA-Z0-9_ !@#$&*-]{2,20}$/;
 
@@ -347,10 +368,6 @@ class TagModal extends React.Component {
   };
 
   render() {
-    let name = null;
-    if (!_.isNull(this.props.tag)) {
-      name = this.props.tag.name;
-    }
     return (
       <KeyboardAvoidingView
         style={styles.container}
@@ -445,7 +462,12 @@ const styles = EStyleSheet.create({
 //     color: '$iconColor'
 //   }
 // });
-const mapStateToProps = (state) => state;
+const mapStateToProps = (state) => (
+  {
+    network: state.network,
+    tags: state.tags,
+  }
+);
 export default connect(mapStateToProps, {
   addTag,
   updateTag,

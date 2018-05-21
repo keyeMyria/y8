@@ -20,7 +20,6 @@ class TimeCtrl {
     //console.log(req.body);
     const {
       id,
-      //prevTimeId,
       groupId,
       startedAt,
     } = req.body;
@@ -34,21 +33,18 @@ class TimeCtrl {
       startedAt,
       stoppedAt: null
     };
-    // console.log('START ACTIVITY - start');
-    // console.log(data);
-    // console.log(prevTimeId);
-    // console.log('START ACTIVITY - end');
 
     const Group = mongoose.model('group');
     Group.findOneAndUpdate({_id: groupId}, { $set: { updatedAt: Date.now()}})
       .then((result) => {
-        console.log("updating group updatedAt", result, "---");
+        //console.log("updating group updatedAt", result, "---");
 
       });
 
 
     const Time = mongoose.model('time');
     //Time.update({ _id: prevTimeId, groupId }, { $set: { latest: 0 } })
+
     Time.update({  groupId, latest: 1 }, { $set: { latest: 0 } })
       .then((result) => {
         if(result){
@@ -78,7 +74,7 @@ class TimeCtrl {
           res.status(200).send({id: result._id});
         } else {
           console.log("Failed to start activity");
-          res.status(200).send("Failed to start activity");
+          res.status(400).send("Failed to start activity");
         }
         next();
       }).catch((timesError) => {

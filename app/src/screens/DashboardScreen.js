@@ -6,6 +6,7 @@ import {
   FlatList,
   UIManager,
   RefreshControl,
+  Text,
   //NetInfo,
   //AppState
 } from 'react-native';
@@ -54,13 +55,16 @@ Feather.getImageSource('plus', 30, iconColor).then((source) => {
 
 class DashboardScreen extends React.Component {
   static navigatorStyle = {
-    //navBarBackgroundColor: 'blue'
+
   };
+
   constructor(props) {
     super(props);
     console.log('screenInstanceID', props.navigator.screenInstanceID);
+    this.timeout = 0;
     this.state = {
-      //refreshing: false,
+      addingMyActivity: false,
+      refreshing: false,
       rand: 0,
     };
 
@@ -81,6 +85,24 @@ class DashboardScreen extends React.Component {
       // });
       // if you want to listen on navigator events, set this up
       this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
+      // this.props.navigator.setSubTitle({
+      //   subtitle: 'offline',
+      //   navBarSubtitleFontSize: 3,
+      //   navBarSubtitleColor: 'red',
+      // });
+      // this.props.navigator.setStyle({
+      //   //largeTitle: true,
+      //
+      //   //navBarBackgroundColor: 'blue',
+      //   navBarSubtitleFontSize: 3,
+      //   navBarSubtitleColor: 'red',
+      // });
+      this.props.navigator.setStyle({
+        //largeTitle: true,
+        //navBarBackgroundColor: 'lightblue',
+        navBarSubtitleColor: EStyleSheet.value('$subTextColor'),
+        navBarSubtitleFontSize: 12,
+      });
     }
   }
 
@@ -88,11 +110,13 @@ class DashboardScreen extends React.Component {
     console.log('componentDidMount Dashboard');
     //TODO
     //await this.props.getTimes();
-    this.props.getMyActivities();
-    this.props.getTags();
+    //this.props.getMyActivities({ page: 1 });
+    //this.props.getTags();
   }
 
   async componentDidUpdate(nextProps) {
+    this.setOfflineMode();
+
     if (nextProps.myActivities.addingMyActivity &&
       !this.props.myActivities.addingMyActivity &&
       _.isNull(this.props.myActivities.error)) {
@@ -144,8 +168,19 @@ class DashboardScreen extends React.Component {
   }
 
   onRefresh = () => {
-    this.props.getMyActivities();
+    console.log('onRefresh');
+    this.setState({
+      refreshing: true
+    }, () => {
+      this.timeout = setTimeout(() => {
+        clearTimeout(this.timeout);
+        this.setState({
+          refreshing: false
+        });
+      }, 800);
+    });
   }
+
 
   onSharePress = (groupId, activity, sentence, started) => {
     console.log(groupId, activity, sentence);
@@ -164,6 +199,16 @@ class DashboardScreen extends React.Component {
       },
       //backButtonTitle: 'Back',
       navigatorButtons: {}
+    });
+  }
+
+  setOfflineMode = () => {
+    let subtitle = null;
+    if (this.props.network.offlineMode) {
+      subtitle = 'offline mode';
+    }
+    this.props.navigator.setSubTitle({
+      subtitle
     });
   }
 
@@ -188,6 +233,32 @@ class DashboardScreen extends React.Component {
   scrollToOffset = () => {
     this.flatListRef.scrollToIndex({ animated: true, index: 0 });
     //this.flatListRef.scrollToOffset({ x: 0, y: 0, animated: true });
+  }
+
+  // loadMore = () => {
+  //   let { page } = this.props.myActivities;
+  //   const { totalPages } = this.props.myActivities;
+  //   page += 1;
+  //   if (page <= totalPages) {
+  //     //console.log('loadMore', page, totalPages);
+  //     this.props.getMyActivities({ page });
+  //   }
+  // }
+
+  stopActivity = (timeId, activityId, groupId) => {
+    this.props.navigator.showModal({
+      screen: 'app.StopActivityModal',
+      title: 'Create Activity',
+      passProps: {
+        timeId, activityId, groupId
+      },
+      navigatorStyle: {
+        navBarHidden: true,
+        navBarTextColor: EStyleSheet.value('$textColor')
+      },
+      animationType: 'slide-up' // none , slide-up
+    });
+    //this.props.stopActivity(timeId, activityId, groupId);
   }
   renderRow = ({ item }) => {
     const activityId = item;
@@ -267,6 +338,7 @@ class DashboardScreen extends React.Component {
 
     return (
       <ActivityCard
+        offlineMode={this.props.network.offlineMode}
         individualLoading={individualLoading}
         loading={loading}
         activityId={activityId}
@@ -282,7 +354,7 @@ class DashboardScreen extends React.Component {
         stoppedTag={stoppedTag}
         showTags={this.showTags}
         startActivity={this.props.startActivity}
-        stopActivity={this.props.stopActivity}
+        stopActivity={this.stopActivity}
         toggleActivity={this.props.toggleActivity}
         scrollToOffset={this.scrollToOffset}
         onSharePress={this.onSharePress}
@@ -295,6 +367,7 @@ class DashboardScreen extends React.Component {
   render() {
     const { myActivities, tags, activities } = this.props;
 
+    const { refreshing } = myActivities;
     return (
       <View style={styles.container}>
         <FlatList
@@ -309,10 +382,12 @@ class DashboardScreen extends React.Component {
           //ListFooterComponent={this.renderListFooter}
           refreshControl={
             <RefreshControl
-              refreshing={myActivities.loading}
+              refreshing={this.state.refreshing}
               onRefresh={this.onRefresh}
             />
           }
+          //onEndReached={this.loadMore}
+          //onEndReachedThreshold={0.2}
 
         />
         <Spinner

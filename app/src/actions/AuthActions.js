@@ -140,7 +140,7 @@ export const doAuthAndLoadInitData = () => (
             });
             await dispatch(getTags());
             await dispatch(getActivities());
-            await dispatch(getMyActivities());
+            await dispatch(getMyActivities({ page: 1 }));
             // await dispatch(getFriendRequests());
             // await dispatch(getFriends());
             await dispatch({

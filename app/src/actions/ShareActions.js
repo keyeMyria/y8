@@ -22,14 +22,14 @@ import {
 } from '../types/ShareTypes';
 
 import { AUTH_ERROR } from '../types/AuthTypes';
-import { fakePromise } from '../services/Common';
+//import { fakePromise } from '../services/Common';
 
 // subscribes userId to other user
 export const shareWith = (activityId, groupId, sharedWith, sharedWithObj) => (
   async (dispatch, getState) => {
     try {
-      const { isConnected } = getState().network;
-      if (isConnected) {
+      const { offlineMode } = getState().network;
+      if (!offlineMode) {
         dispatch({
           type: SHARE_ADD_REQUEST
         });
@@ -43,7 +43,7 @@ export const shareWith = (activityId, groupId, sharedWith, sharedWithObj) => (
 
         const resp = await ApiRequest(payload);
         const { data } = resp;
-        
+
 
         dispatch({
           type: SHARE_ADD_SUCCESS,
@@ -88,8 +88,8 @@ export const shareWith = (activityId, groupId, sharedWith, sharedWithObj) => (
 export const unshare = (activityId, groupId, id, sharedWith) => (
   async (dispatch, getState) => {
     try {
-      const { isConnected } = getState().network;
-      if (isConnected) {
+      const { offlineMode } = getState().network;
+      if (!offlineMode) {
         dispatch({
           type: SHARE_REMOVE_REQUEST
         });
@@ -103,7 +103,6 @@ export const unshare = (activityId, groupId, id, sharedWith) => (
 
         const resp = await ApiRequest(payload);
         const { data } = resp;
-        console.log(data);
 
         dispatch({
           type: SHARE_REMOVE_SUCCESS,
@@ -147,8 +146,8 @@ export const unshare = (activityId, groupId, id, sharedWith) => (
 export const getShares = (groupId) => (
   async (dispatch, getState) => {
     try {
-      const { isConnected } = getState().network;
-      if (isConnected) {
+      const { offlineMode } = getState().network;
+      if (!offlineMode) {
         dispatch({
           type: SHARES_FETCH_REQUEST
         });

@@ -9,3 +9,12 @@ export const setConnectionStatus = (status) => (
       payload: status
     });
   });
+
+
+export const setOfflineMode = (status) => (
+  async dispatch => {
+    dispatch({
+      type: CONNECTION_STATUS,
+      payload: status
+    });
+  });

@@ -14,7 +14,7 @@ class UsedTagsItem extends React.PureComponent {
 
   onShare = () => {
     const { groupId, activity, tagsGroup } = this.props;
-  
+
     //const { tagsGroup } = myActivities.byActivityId[activity.id].byGroupId[groupId];
 
     const sentence = tagsGroup.map((id) => `${this.props.tags.byId[id].name} `);
@@ -38,7 +38,7 @@ class UsedTagsItem extends React.PureComponent {
             this.setState({
               isDelete: true
             }, () => {
-              this.props.removeTagFromGroup(activityId, groupId, tagId, this.props.onlyPrevGroupId);
+              this.props.removeTagFromGroup(activityId, groupId, tagId);
             });
           }
         },
@@ -48,7 +48,7 @@ class UsedTagsItem extends React.PureComponent {
   }
 
   removeGroupFromActivity = () => {
-    const { activity, groupId, onlyPrevGroupId } = this.props;
+    const { activity, groupId } = this.props;
     console.log(this.props);
     Alert.alert(
       'Confirm',
@@ -66,7 +66,7 @@ class UsedTagsItem extends React.PureComponent {
             this.setState({
               isDelete: true
             }, () => {
-              this.props.removeGroupFromActivity(activity.id, groupId, onlyPrevGroupId);
+              this.props.removeGroupFromActivity(activity.id, groupId);
             });
           }
         },
@@ -75,8 +75,8 @@ class UsedTagsItem extends React.PureComponent {
     );
   }
 
-  useThisGroupForActivity = (activityId, groupId, prevGroupId) => {
-    this.props.useThisGroupForActivity(activityId, groupId, prevGroupId);
+  useThisGroupForActivity = (activityId, groupId) => {
+    this.props.useThisGroupForActivity(activityId, groupId);
   }
 
   renderTagsGroup = (activityId, groupId, tags) => {
@@ -105,7 +105,9 @@ class UsedTagsItem extends React.PureComponent {
       <View style={styles.outerContainer}>
         <View
           style={{
-            backgroundColor: 'white',
+            borderTopLeftRadius: 5,
+            borderTopRightRadius: 5,
+            backgroundColor: '#FFFFFF',
             paddingRight: 10,
             paddingTop: 10,
             flexDirection: 'row',
@@ -124,6 +126,7 @@ class UsedTagsItem extends React.PureComponent {
         </View>
         <View style={styles.footer}>
           <ShareIconButton
+            offlineMode={this.props.offlineMode}
             outerContainer={{ marginLeft: 10 }}
             onSharePress={this.onShare}
             sharedWith={this.props.sharedWith}
@@ -143,7 +146,7 @@ class UsedTagsItem extends React.PureComponent {
             }}
             title='START'
             onPress={() => {
-              this.useThisGroupForActivity(activity.id, groupId, this.props.prevGroupId);
+              this.useThisGroupForActivity(activity.id, groupId);
             }}
           />
         </View>
@@ -166,6 +169,7 @@ const styles = EStyleSheet.create({
     shadowOffset: { width: 0.2, height: 0.4 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
+
     //elevation: 1,
     borderWidth: 0,
     marginLeft: 10,
@@ -180,6 +184,8 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 8,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
   },
   innerContainer: {
     paddingHorizontal: 15,

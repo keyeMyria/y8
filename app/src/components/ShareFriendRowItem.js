@@ -59,8 +59,8 @@ class ShareFriendRowItem extends React.PureComponent {
           <View
             style={{
               backgroundColor: this.state.showCheck ? 'gray' : '#ffffff',
-              height: 20,
-              width: 20,
+              height: 23,
+              width: 23,
               borderRadius: 50,
               borderWidth: 1,
               borderColor: 'gray',
@@ -73,8 +73,8 @@ class ShareFriendRowItem extends React.PureComponent {
               this.state.showCheck &&
               <Ionicons
                 name='ios-checkmark'
-                size={25} color='#ffffff'
-                style={{ paddingTop: 3, backgroundColor: 'transparent' }}
+                size={23} color='#ffffff'
+                style={{ backgroundColor: 'transparent' }}
               />
             }
 

@@ -33,15 +33,15 @@ mongoose.connection
     /********************* TEMP CODE *************************/
 
 
-    const Activity = mongoose.model('activities');
-
-    Activity.find({userId: null}).count().then( count => {
-      if(count==0){
-        Activity.insertMany(activities).then(()=>{
-          console.log('Temp Users Created');
-        });
-      }
-    });
+    // const Activity = mongoose.model('activities');
+    //
+    // Activity.find({userId: null}).count().then( count => {
+    //   if(count==0){
+    //     Activity.insertMany(activities).then(()=>{
+    //       console.log('Temp Users Created');
+    //     });
+    //   }
+    // });
 
     //mongoose.connection.collections.friends.drop(()=>{});
     /*mongoose.connection.collections.users.drop(()=>{

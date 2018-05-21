@@ -1,9 +1,13 @@
 var CONFIG = require('../config');
-let PER_PAGE_LIMIT = CONFIG.paging.times.limit;
-let MAX_LIMIT = CONFIG.paging.times.max_limit;
+var _ = require('lodash');
+pagination = (req, type) => {
 
+  if(_.isNil(type) || type == ''){
+    type = 'page';
+  }
+  let PER_PAGE_LIMIT = CONFIG.paging[type].limit;
+  let MAX_LIMIT = CONFIG.paging[type].max_limit;
 
-pagination = (req) => {
   var { page, limit } = req.query;
   // pagination logic
   page = !page ? 1 : parseInt(page);

@@ -264,6 +264,7 @@ class ActivityCard extends React.PureComponent {
         </CardContent>
         <CardFooter style={styles.cardFooter}>
           <ShareIconButton
+            offlineMode={this.props.offlineMode}
             groupId={groupId}
             activity={activity}
             sentence={sentence}

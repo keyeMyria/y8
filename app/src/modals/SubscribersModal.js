@@ -160,6 +160,8 @@ class SubscribersModal extends React.Component {
   }
 
   onItemPress = (checked, userId, id, sharedWithObj) => {
+    console.log('checked, userId, id, sharedWithObj', checked, userId, id, sharedWithObj);
+    //return true;
     if (checked) {
       this.props.shareWith(this.props.activity.id, this.props.groupId, userId, sharedWithObj);
     } else if (!_.isNil(id)) {

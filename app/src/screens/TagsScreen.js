@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import Feather from 'react-native-vector-icons/Feather';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
+import DeviceInfo from 'react-native-device-info';
 
 import SnackBar from '../services/SnackBar';
 import TextButton from '../components/TextButton';
@@ -31,14 +32,7 @@ import {
   deleteTag,
 } from '../actions/TagActions';
 
-// import {
-//   //addTagsGroupToMyActivity,
-//   //removeTagFromGroup,
-//   //removeGroupFromActivity,
-// } from '../actions/MyActivityActions';
-
 import {
-  getGroupsByActivity,
   addTagsGroupToMyActivity,
   useThisGroupForActivity,
   removeTagFromGroup,
@@ -51,6 +45,11 @@ class TagsScreen extends React.Component {
   };
   constructor(props) {
     super(props);
+    const deviceId = DeviceInfo.getDeviceId();
+    this.iphoneVersion = 0;
+    if (deviceId.indexOf('iPhone10') !== -1) {
+      this.iphoneVersion = 10;
+    }
     this.state = {
       visible: false,
       tag: null,
@@ -71,7 +70,6 @@ class TagsScreen extends React.Component {
 
   componentDidMount() {
     const { activity } = this.props;
-    this.props.getGroupsByActivity(activity.id);
     const groups = this.props.myActivities.byActivityId[activity.id];
     let hasTags = false;
     if (!_.isEmpty(groups) && !_.isEmpty(groups.allGroupIds)) {
@@ -101,6 +99,10 @@ class TagsScreen extends React.Component {
       // });
       // if you want to listen on navigator events, set this up
       this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
+      this.props.navigator.setStyle({
+        navBarSubtitleColor: EStyleSheet.value('$subTextColor'),
+        navBarSubtitleFontSize: 12,
+      });
     }
 
     //this.props.getTags();
@@ -139,6 +141,10 @@ class TagsScreen extends React.Component {
 
   componentWillUpdate() {
     LayoutAnimation.easeInEaseOut();
+  }
+
+  componentDidUpdate() {
+    this.setOfflineMode();
   }
 
   onNavigatorEvent = (event) => {
@@ -190,7 +196,7 @@ class TagsScreen extends React.Component {
 
   onSearchBarFocus = () => {
     this.setState({
-      SegmentedControlTabTopPadding: 25
+      SegmentedControlTabTopPadding: this.iphoneVersion === 10 ? 40 : 25
     }, () => {
       this.props.navigator.toggleNavBar({
         to: 'hidden', // required, 'hidden' = hide , 'shown' = show
@@ -231,7 +237,17 @@ class TagsScreen extends React.Component {
   }
 
   onRefresh = () => {
-    this.props.getTags();
+    //this.props.getTags();
+  }
+
+  setOfflineMode = () => {
+    let subtitle = null;
+    if (this.props.network.offlineMode) {
+      subtitle = 'offline mode';
+    }
+    this.props.navigator.setSubTitle({
+      subtitle
+    });
   }
 
   async componentWilUnmount() {
@@ -296,30 +312,23 @@ class TagsScreen extends React.Component {
       animated: true,
       animationType: 'fade',
     });
-    this.props.addTagsGroupToMyActivity(activity, selectedTags, this.props.prevGroupId, false);
+    this.props.addTagsGroupToMyActivity(activity, selectedTags, false);
   }
 
-  useThisGroupForActivity = (activityId, groupId, prevGroupId) => {
+  useThisGroupForActivity = (activityId, groupId) => {
     this.props.navigator.popToRoot({
       animated: true,
       animationType: 'fade',
     });
 
-    this.props.useThisGroupForActivity(activityId, groupId, prevGroupId);
+    this.props.useThisGroupForActivity(activityId, groupId);
   }
 
-  removeTagFromGroup = (activityId, groupId, tagId, onlyPrevGroupId) => {
-    this.props.removeTagFromGroup(activityId, groupId, tagId, onlyPrevGroupId);
+  removeTagFromGroup = (activityId, groupId, tagId) => {
+    this.props.removeTagFromGroup(activityId, groupId, tagId);
   }
-  getPrevGroupIdFromOnlygroups = (id) => {
-    const index = _.findIndex(this.props.onlygroups.data, { id });
-    if (index !== -1 && index === 0 && !_.isNil(this.props.onlygroups.data[index + 1])) {
-      return this.props.onlygroups.data[index + 1].id;
-    }
-    return null;
-  }
-  removeGroupFromActivity = (activityId, groupId, onlyPrevGroupId) => {
-    this.props.removeGroupFromActivity(activityId, groupId, onlyPrevGroupId);
+  removeGroupFromActivity = (activityId, groupId) => {
+    this.props.removeGroupFromActivity(activityId, groupId);
   }
   renderListHeader = () => {
     const { activity } = this.state;
@@ -336,7 +345,7 @@ class TagsScreen extends React.Component {
         style={{
           backgroundColor: EStyleSheet.value('$backgroundColor'),
           justifyContent: 'center',
-          paddingBottom: 15,
+          paddingBottom: 1,
           paddingTop: 5,
           paddingHorizontal: 10
 
@@ -349,11 +358,20 @@ class TagsScreen extends React.Component {
       >
         <Text
           style={{
-            fontSize: 17,
+            fontSize: 21,
+            fontWeight: '600',
             color: EStyleSheet.value('$textColor')
-            //flexGrow: 1,
           }}
-        >{name} {this.state.sentence}</Text>
+        >
+        {name}
+        </Text>
+        <Text
+          style={{
+            fontSize: 18,
+            color: EStyleSheet.value('$textColor'),
+            letterSpacing: 0.8,
+          }}
+        >{this.state.sentence}</Text>
       </ScrollView>
       </View>
     );
@@ -375,16 +393,17 @@ class TagsScreen extends React.Component {
   };
 
   renderRowGroup = ({ item }) => {
-    const onlyPrevGroupId = this.getPrevGroupIdFromOnlygroups(item.id);
+    const { tagsGroup, sharedWith } =
+    this.props.myActivities.byActivityId[this.state.activity.id].byGroupId[item];
+
     return (
       <UsedTagsItem
-        sharedWith={item.cansharewith}
-        prevGroupId={this.props.prevGroupId}
-        prevTimeId={this.props.prevTimeId}
+        offlineMode={this.props.network.offlineMode}
+        onlyPrevGroupId={null}
+        sharedWith={sharedWith}
         activity={this.state.activity}
-        groupId={item.id}
-        tagsGroup={[...item.tags]}
-        onlyPrevGroupId={onlyPrevGroupId}
+        groupId={item}
+        tagsGroup={[...tagsGroup]}
         tags={this.props.tags}
         removeTagFromGroup={this.removeTagFromGroup}
         removeGroupFromActivity={this.removeGroupFromActivity}
@@ -399,6 +418,12 @@ class TagsScreen extends React.Component {
     const { tags, myActivities } = this.props;
     const { byActivityId } = myActivities;
     const { isSearchOn, searchIds, activity, selectedTags } = this.state;
+    let groupIds = [];
+    if (!_.isNil(activity) && !_.isNil(byActivityId[activity.id])) {
+      groupIds = byActivityId[activity.id].allGroupIds;
+    }
+    //console.log(groupIds);
+
 
     if (_.isNull(activity)) {
       return null;
@@ -454,6 +479,7 @@ class TagsScreen extends React.Component {
             keyboardVerticalOffset={17}
           >
           <SearchBar
+            placeholderText={'Search tags'}
             onChangeText={this.handleSearchChangeText}
             onClear={this.handleSearchOnClear}
             onFocus={this.onSearchBarFocus}
@@ -464,15 +490,17 @@ class TagsScreen extends React.Component {
             selectedTags.length > 0 &&
             <View
               style={{
-                height: 35,
+                //height: 35,
                 backgroundColor: EStyleSheet.value('$backgroundColor'),
                 alignItems: 'center',
                 flexDirection: 'row',
                 justifyContent: 'flex-end',
                 position: 'relative',
+                //backgroundColor: 'lightpink',
                 //borderColor: 'gray',
                 //borderBottomWidth: 1
-                paddingBottom: 15,
+                paddingBottom: 10,
+
               }}
             >
             {
@@ -516,12 +544,12 @@ class TagsScreen extends React.Component {
             }
             renderItem={this.renderRow}
             ListFooterComponent={this.renderListFooter}
-            refreshControl={
-              <RefreshControl
-                refreshing={tags.loading}
-                onRefresh={this.onRefresh}
-              />
-            }
+            // refreshControl={
+            //   <RefreshControl
+            //     refreshing={tags.loading}
+            //     onRefresh={this.onRefresh}
+            //   />
+            // }
           />
 
           {/*
@@ -557,25 +585,26 @@ class TagsScreen extends React.Component {
           >
             <Text
               style={{
-                fontSize: 20,
-                fontWeight: '500',
+                fontSize: 21,
+                fontWeight: '600',
                 color: EStyleSheet.value('$textColor')
               }}
             >
-              {activity.name[0].toUpperCase() + activity.name.slice(1).toLowerCase()}
+            {activity.name[0].toUpperCase() + activity.name.slice(1).toLowerCase()}
             </Text>
+
           </View>
           <FlatList
             //removeClippedSubviews={false}
             keyboardShouldPersistTaps='always'
             //ref={(ref) => { this.flatListRef = ref; }}
             extraData={{
-              data: this.props.onlygroups.data,
+              data: groupIds,
               myActivities: this.props.myActivities,
             }}
             //ListHeaderComponent={this.renderListHeader}
-            keyExtractor={item => item.id}
-            data={this.props.onlygroups.data}
+            keyExtractor={item => item}
+            data={groupIds}
             renderItem={this.renderRowGroup}
             ListFooterComponent={this.renderListFooter}
           />
@@ -600,17 +629,14 @@ const styles = EStyleSheet.create({
   }
 });
 
-const mapStateToProps = (state) => {
-  //console.log('TagsScreen:mapStateToProps:', state);
-  const { tags, myActivities, onlygroups } = state;
-  return {
-    tags,
-    myActivities,
-    onlygroups
-  };
-};
+const mapStateToProps = (state) => (
+  {
+    network: state.network,
+    tags: state.tags,
+    myActivities: state.myActivities,
+  }
+);
 export default connect(mapStateToProps, {
-  getGroupsByActivity,
   getTags,
   addTag,
   updateTag,

@@ -11,10 +11,10 @@ const groupRoutes = (router) => {
   // update group
   router.put('/group', ctrl.update);
   // Delete tag from group by activity
-  router.delete('/group/:groupId/:tagId/:onlyPrevGroupId/tag', ctrl.deleteTagFromGroupByActivity);
+  router.delete('/group/:groupId/:tagId/tag', ctrl.deleteTagFromGroupByActivity);
   // router.delete('/myactivity/:activityId/:groupId/:tagId', ctrl.deleteTagFromGroupByActivity);
   // Delete group from activity
-  router.delete('/group/:groupId/:onlyPrevGroupId/group', ctrl.deleteGroupFromActivity);
+  router.delete('/group/:groupId/group', ctrl.deleteGroupFromActivity);
   // // Update useThisGroupForActivity
   // // push group to start of an array
   // router.put('/myactivity', ctrl.updateGroupForActivity);

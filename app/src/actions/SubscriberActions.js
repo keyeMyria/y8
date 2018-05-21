@@ -20,14 +20,14 @@ import {
 } from '../types/SubscribeTypes';
 
 import { AUTH_ERROR } from '../types/AuthTypes';
-import { fakePromise } from '../services/Common';
+//import { fakePromise } from '../services/Common';
 
 // subscribes userId to other user
 export const doSubscribe = (subUserId) => (
   async (dispatch, getState) => {
     try {
-      const { isConnected } = getState().network;
-      if (isConnected) {
+      const { offlineMode } = getState().network;
+      if (!offlineMode) {
         dispatch({
           type: SUBSCRIBE_REQUEST
         });
@@ -71,8 +71,8 @@ export const doSubscribe = (subUserId) => (
 export const doUnsubscribe = (subscribeId) => (
   async (dispatch, getState) => {
     try {
-      const { isConnected } = getState().network;
-      if (isConnected) {
+      const { offlineMode } = getState().network;
+      if (!offlineMode) {
         dispatch({
           type: UNSUBSCRIBE_REQUEST
         });
@@ -115,8 +115,8 @@ export const doUnsubscribe = (subscribeId) => (
 export const hasSubscribed = (subUserId) => (
   async (dispatch, getState) => {
     try {
-      const { isConnected } = getState().network;
-      if (isConnected) {
+      const { offlineMode } = getState().network;
+      if (!offlineMode) {
         dispatch({
           type: SUBSCRIBE_REQUEST
         });
@@ -165,8 +165,8 @@ export const hasSubscribed = (subUserId) => (
 export const getSubscribers = () => (
   async (dispatch, getState) => {
     try {
-      const { isConnected } = getState().network;
-      if (isConnected) {
+      const { offlineMode } = getState().network;
+      if (!offlineMode) {
         dispatch({
           type: SUBSCRIBERS_FETCH_REQUEST
         });
