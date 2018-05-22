@@ -11,8 +11,8 @@ import MoreScreen from './MoreScreen';
 
 import ActivitiesScreen from './ActivitiesScreen';
 import TagsScreen from './TagsScreen';
-
 import ShareScreen from './ShareScreen';
+import TimeHistoryScreen from './TimeHistoryScreen';
 
 
 // modals
@@ -54,6 +54,7 @@ export function registerScreens(store, Provider) {
   Navigation.registerComponent('app.ActivitiesScreen', () => ActivitiesScreen, store, Provider);
   Navigation.registerComponent('app.TagsScreen', () => TagsScreen, store, Provider);
   Navigation.registerComponent('app.ShareScreen', () => ShareScreen, store, Provider);
+  Navigation.registerComponent('app.TimeHistoryScreen', () => TimeHistoryScreen, store, Provider);
 
   // Modals
   Navigation.registerComponent('app.ActivityModal', () => ActivityModal, store, Provider);

@@ -15,6 +15,7 @@ import CardContent from './CardContent';
 import CardFooter from './CardFooter';
 import TextButton from './TextButton';
 import ShareIconButton from './ShareIconButton';
+import TimeHistoryIconButton from './TimeHistoryIconButton';
 
 class ActivityCard extends React.PureComponent {
 
@@ -118,7 +119,9 @@ class ActivityCard extends React.PureComponent {
     // }, 500);
   }
 
-  onStartStopPress = (activityId, groupId, started) => {
+  onStartStopPress = (
+    activityId, groupId, started, activityName, sentence, timeDiff, startedAt
+  ) => {
     //console.log(this.state.started);
     // this.setState({
     //   started: !this.state.started
@@ -129,7 +132,9 @@ class ActivityCard extends React.PureComponent {
       this.props.startActivity(activityId, groupId);
       this.props.scrollToOffset();
     } else {
-      this.props.stopActivity(this.props.timeId, activityId, groupId);
+      this.props.stopActivity(
+        this.props.timeId, activityId, groupId, activityName, sentence, timeDiff, startedAt
+      );
     }
     //this.props.toggleActivity(id, groupId, this.state.started);
   }
@@ -144,7 +149,8 @@ class ActivityCard extends React.PureComponent {
   );
 
   render() {
-    const { activityId, name, groupId, tagsGroup, startedTag, stoppedTag, individualLoading } = this.props;
+    const { activityId, name, groupId, tagsGroup,
+      startedTag, stoppedTag, individualLoading } = this.props;
     const { loading } = this.props;
 
     const activity = {
@@ -244,7 +250,6 @@ class ActivityCard extends React.PureComponent {
                   //fontWeight: '400'
                 }}
               >
-
               {tagsGroup && sentence}
               </Text>
             </View>
@@ -263,16 +268,32 @@ class ActivityCard extends React.PureComponent {
 
         </CardContent>
         <CardFooter style={styles.cardFooter}>
-          <ShareIconButton
-            offlineMode={this.props.offlineMode}
-            groupId={groupId}
-            activity={activity}
-            sentence={sentence}
-            started={started}
-            sharedWith={this.props.sharedWith}
-            onSharePress={this.props.onSharePress}
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <TimeHistoryIconButton
+              groupId={groupId}
+              activityId={activity.id}
+              activityName={activityName}
+              sentence={sentence}
+              onTimeHistoryPress={this.props.onTimeHistoryPress}
+            />
+            <View style={{ paddingHorizontal: 10 }} />
+            <ShareIconButton
+              offlineMode={this.props.offlineMode}
+              groupId={groupId}
+              activity={activity}
+              sentence={sentence}
+              started={started}
+              sharedWith={this.props.sharedWith}
+              onSharePress={this.props.onSharePress}
+            />
 
+          </View>
           <TextButton
             disabled={loading}
             title={btnTitle}
@@ -287,7 +308,11 @@ class ActivityCard extends React.PureComponent {
               borderColor: started ? 'rgba(255, 51, 79,0.8)' : '#38B211',
               height: 25,
             }}
-            onPress={() => { this.onStartStopPress(activityId, groupId, started); }}
+            onPress={() => {
+              this.onStartStopPress(
+                activityId, groupId, started, activityName, sentence, timeDiff, startedAt
+              );
+            }}
           />
         </CardFooter>
       </Card>

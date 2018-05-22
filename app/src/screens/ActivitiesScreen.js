@@ -117,10 +117,6 @@ class ActivitiesScreen extends React.Component {
           animationType: 'slide-up'
         });
       }
-      if (event.id === 'search') {
-        this.onSearchBarFocus();
-        this.textInputRef.focus();
-      }
     }
   };
 

@@ -28,4 +28,15 @@ const TimeSchema = new Schema({
     required: false
   }
 });
+// Duplicate the ID field.
+TimeSchema.virtual('id').get(function(){
+    return this._id;
+});
+
+//Ensure virtual fields are serialised.
+TimeSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: function (doc, ret) {   delete ret._id  }
+});
 mongoose.model('time', TimeSchema);

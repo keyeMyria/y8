@@ -23,7 +23,7 @@ function executeTasks(...args) {
 function createTask(num) {
   return async (callback) => {
     setTimeout(async () => {
-        console.log(num);
+        //console.log(num);
         await num();
         if (typeof callback === 'function') {
           await callback();

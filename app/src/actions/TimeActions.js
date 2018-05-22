@@ -5,7 +5,13 @@ import {
   TIME_TOGGLE_REQUEST,
   TIME_TOGGLE_SUCCESS,
   TIME_TOGGLE_ERROR,
-  TIME_TOGGLE_RESET
+  TIME_TOGGLE_RESET,
+
+  TIME_FETCH_BY_GROUP_REQUEST,
+  TIME_FETCH_BY_GROUP_SUCCESS,
+  TIME_FETCH_BY_GROUP_ERROR,
+  TIME_FETCH_BY_GROUP_RESET,
+
 } from '../types/TimeTypes';
 
 import { AUTH_ERROR } from '../types/AuthTypes';
@@ -13,19 +19,41 @@ import { OFFLINE_QUEUE } from '../types/OfflineTypes';
 import ApiRequest from '../services/ApiRequest';
 import { fakePromise } from '../services/Common';
 
-export const getTimes = () => (
+export const getTimesByGroup = (groupId, query) => (
   async (dispatch) => {
     try {
-      const apiUrl = '/api/private/time/search';
+      await dispatch({
+        type: TIME_FETCH_BY_GROUP_REQUEST,
+      });
+      const apiUrl = `/api/private/time/${groupId}?page=${query.page}`;
       const payload = {
         UID: uuidv4(),
         data: null,
         apiUrl,
         method: 'get',
       };
-      await ApiRequest(payload);
+      const resp = await ApiRequest(payload);
+      await dispatch({
+        type: TIME_FETCH_BY_GROUP_SUCCESS,
+        payload: {
+          ...resp.data
+        }
+      });
     } catch (error) {
-      console.log(error.response);
+      if (!_.isUndefined(error.response) && error.response.status === 401) {
+        await dispatch({
+          type: AUTH_ERROR,
+          payload: error.response
+        });
+      } else {
+        await dispatch({
+          type: TIME_FETCH_BY_GROUP_ERROR,
+          payload: error.response
+        });
+      }
+      await dispatch({
+        type: TIME_FETCH_BY_GROUP_RESET,
+      });
     }
   });
 
@@ -120,7 +148,6 @@ export const stopActivity = (id, activityId, groupId, stoppedAt) => (
           groupId
         }
       });
-
       //const stoppedAt = moment().valueOf();
       const data = {
         id,

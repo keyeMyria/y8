@@ -24,6 +24,7 @@ import { share } from './ShareReducer';
 import { shares } from './SharesReducer';
 import { onlygroups } from './OnlyGroupsReducer';
 import { feed } from './FeedReducer';
+import { timesByGroup } from './TimesByGroupReducer';
 
 export default {
   app,
@@ -51,4 +52,5 @@ export default {
   subscribe,
   share,
   shares,
+  timesByGroup
 };

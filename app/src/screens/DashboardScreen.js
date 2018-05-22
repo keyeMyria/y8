@@ -201,7 +201,15 @@ class DashboardScreen extends React.Component {
       navigatorButtons: {}
     });
   }
-
+  onTimeHistoryPress = (activityId, groupId, activityName, sentence) => {
+    this.props.navigator.push({
+      screen: 'app.TimeHistoryScreen',
+      title: 'History',
+      passProps: {
+        activityId, groupId, activityName, sentence
+      }
+    });
+  }
   setOfflineMode = () => {
     let subtitle = null;
     if (this.props.network.offlineMode) {
@@ -211,6 +219,7 @@ class DashboardScreen extends React.Component {
       subtitle
     });
   }
+
 
   showSnackBar = (msg) => {
     Snackbar.show({
@@ -245,21 +254,29 @@ class DashboardScreen extends React.Component {
   //   }
   // }
 
-  stopActivity = (timeId, activityId, groupId) => {
-    this.props.navigator.showModal({
+  stopActivity = (timeId, activityId, groupId, activityName, sentence, timeDiff, startedAt) => {
+    this.props.navigator.showLightBox({
       screen: 'app.StopActivityModal',
-      title: 'Create Activity',
+      //title: 'Create Activity',
       passProps: {
-        timeId, activityId, groupId
+        timeId, activityId, groupId, activityName, sentence, timeDiff, startedAt
       },
-      navigatorStyle: {
-        navBarHidden: true,
-        navBarTextColor: EStyleSheet.value('$textColor')
-      },
-      animationType: 'slide-up' // none , slide-up
+      // navigatorStyle: {
+      //   navBarHidden: true,
+      //   navBarTextColor: EStyleSheet.value('$textColor')
+      // },
+      // style: {
+      //   backgroundBlur: 'light', // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
+      //   backgroundColor: 'alpha', // tint color for the background, you can specify alpha here (optional)
+      //   tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
+      // },
+      //adjustSoftInput: "resize", // android only, adjust soft input, modes: 'nothing', 'pan', 'resize', 'unspecified' (optional, default 'unspecified')
+      //animationType: 'none' // none , slide-up
     });
     //this.props.stopActivity(timeId, activityId, groupId);
   }
+
+
   renderRow = ({ item }) => {
     const activityId = item;
     const { activities, tags, myActivities, times } = this.props;
@@ -358,6 +375,7 @@ class DashboardScreen extends React.Component {
         toggleActivity={this.props.toggleActivity}
         scrollToOffset={this.scrollToOffset}
         onSharePress={this.onSharePress}
+        onTimeHistoryPress={this.onTimeHistoryPress}
         rand={rand}
         //rand={this.state.refreshing}
       />
@@ -367,7 +385,7 @@ class DashboardScreen extends React.Component {
   render() {
     const { myActivities, tags, activities } = this.props;
 
-    const { refreshing } = myActivities;
+    //const { refreshing } = myActivities;
     return (
       <View style={styles.container}>
         <FlatList
