@@ -207,6 +207,13 @@ class DashboardScreen extends React.Component {
       title: 'History',
       passProps: {
         activityId, groupId, activityName, sentence
+      },
+      navigatorButtons: {
+        rightButtons: [{
+          id: 'add',
+          icon: ADD_ICON,
+          disableIconTint: true, // disable default color,
+        }]
       }
     });
   }

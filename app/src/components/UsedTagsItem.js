@@ -9,15 +9,17 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import TextButton from '../components/TextButton';
 import ShareIconButton from './ShareIconButton';
+import TimeHistoryIconButton from './TimeHistoryIconButton';
+import { createSentence } from '../services/Common';
 
 class UsedTagsItem extends React.PureComponent {
 
-  onShare = () => {
-    const { groupId, activity, tagsGroup } = this.props;
+  onShare = (sentence) => {
+    const { groupId, activity } = this.props;
 
     //const { tagsGroup } = myActivities.byActivityId[activity.id].byGroupId[groupId];
 
-    const sentence = tagsGroup.map((id) => `${this.props.tags.byId[id].name} `);
+    //const sentence = tagsGroup.map((id) => `${this.props.tags.byId[id].name} `);
 
     this.props.onShare(groupId, activity, sentence);
   }
@@ -101,6 +103,13 @@ class UsedTagsItem extends React.PureComponent {
   render() {
     const { groupId, activity, tagsGroup } = this.props;
     //const { byActivityId } = myActivities;
+    //const sentence = tagsGroup.map((id) => `${this.props.tags.byId[id].name} `);
+    const tagNames = [];
+    tagsGroup.forEach((tagId) => {
+      tagNames.push(this.props.tags.byId[tagId].name.toLowerCase());
+    });
+    const sentence = createSentence(tagNames);
+
     return (
       <View style={styles.outerContainer}>
         <View
@@ -125,12 +134,30 @@ class UsedTagsItem extends React.PureComponent {
           {this.renderTagsGroup(activity.id, groupId, tagsGroup)}
         </View>
         <View style={styles.footer}>
-          <ShareIconButton
-            offlineMode={this.props.offlineMode}
-            outerContainer={{ marginLeft: 10 }}
-            onSharePress={this.onShare}
-            sharedWith={this.props.sharedWith}
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingLeft: 10
+            }}
+          >
+            <TimeHistoryIconButton
+              offlineMode={this.props.offlineMode}
+              groupId={groupId}
+              activityId={activity.id}
+              activityName={activity.name}
+              sentence={sentence}
+              onTimeHistoryPress={this.props.onTimeHistoryPress}
+            />
+            <View style={{ paddingHorizontal: 5 }} />
+            <ShareIconButton
+              offlineMode={this.props.offlineMode}
+              outerContainer={{ marginLeft: 10 }}
+              onSharePress={() => { this.onShare(sentence); }}
+              sharedWith={this.props.sharedWith}
+            />
+          </View>
           <TextButton
             containerStyle={{
               borderWidth: 0.3,

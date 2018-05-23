@@ -41,7 +41,10 @@ const getTimesByGroup = (state, action) => {
 
   const sections = [];
   _.forEach(sectionData, (section, key) => {
-    const eachSection = { title: key.replace('_', ' '), data: section };
+    const eachSection = {
+      title: key.replace('_', ' ') + ' -' + section.length, 
+      data: section
+    };
     sections.push(eachSection);
   });
 

@@ -68,12 +68,12 @@ class TimeHistoryScreen extends React.Component {
   onNavigatorEvent = (event) => {
     if (event.type === 'NavBarButtonPress') {
       if (event.id === 'add') {
+        const { activityId, groupId, activityName, sentence } = this.props;
         this.props.navigator.showModal({
-          screen: 'app.ActivityModal',
-          title: 'Create Activity',
+          screen: 'app.TimeModal',
+          title: 'Add Time',
           passProps: {
-            activity: null,
-            activities: this.props.activities
+            activityId, groupId, activityName, sentence
           },
           navigatorStyle: {
             navBarTextColor: EStyleSheet.value('$textColor')

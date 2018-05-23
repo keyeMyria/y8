@@ -166,6 +166,16 @@ class TagsScreen extends React.Component {
     }
   };
 
+  onTimeHistoryPress = (activityId, groupId, activityName, sentence) => {
+    this.props.navigator.push({
+      screen: 'app.TimeHistoryScreen',
+      title: 'History',
+      passProps: {
+        activityId, groupId, activityName, sentence
+      }
+    });
+  }
+
   onEdit = (id) => {
     this.props.navigator.showModal({
       screen: 'app.TagModal',
@@ -409,6 +419,7 @@ class TagsScreen extends React.Component {
         removeGroupFromActivity={this.removeGroupFromActivity}
         useThisGroupForActivity={this.useThisGroupForActivity}
         onShare={this.onShare}
+        onTimeHistoryPress={this.onTimeHistoryPress}
       />
     );
   };

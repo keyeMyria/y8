@@ -14,7 +14,10 @@ import {
 
 class CustomTextInput extends React.PureComponent {
   static defaultProps = {
-    errorMsg: ''
+    errorMsg: '',
+    editable: true,
+    onFocus: () => null,
+    onBlur: () => null
   }
   constructor(props) {
     super(props);
@@ -40,6 +43,7 @@ class CustomTextInput extends React.PureComponent {
       <View style={[styles.container, containerStyle]}>
         <Text style={[styles.label, labelStyle]}>{this.props.label}</Text>
         <TextInput
+          editable={this.props.editable}
           autoCapitalize={'none'}
           autoCorrect={false}
           ref={this.props.textInputRef}
@@ -49,6 +53,8 @@ class CustomTextInput extends React.PureComponent {
           style={[styles.textInput, textInputStyle]}
           onChangeText={this.onChangeText}
           value={this.props.defaultValue ? this.props.defaultValue : this.state.text}
+          onFocus={this.props.onFocus}
+          onBlur={this.props.onBlur}
         />
         <Text
           style={[styles.error, errorStyle]}

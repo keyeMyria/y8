@@ -16,6 +16,7 @@ import CardFooter from './CardFooter';
 import TextButton from './TextButton';
 import ShareIconButton from './ShareIconButton';
 import TimeHistoryIconButton from './TimeHistoryIconButton';
+import { createSentence } from '../services/Common';
 
 class ActivityCard extends React.PureComponent {
 
@@ -218,7 +219,13 @@ class ActivityCard extends React.PureComponent {
     //{tagsGroup && activityName}
     //{' '}
     */
-    const sentence = this.renderTagsSentence(name, tagsGroup);
+    //const sentence = this.renderTagsSentence(name, tagsGroup);
+    const tagNames = [];
+    tagsGroup.forEach((tagId) => {
+      tagNames.push(this.props.tags.byId[tagId].name.toLowerCase());
+    });
+    const sentence = createSentence(tagNames);
+    
     return (
 
       <Card>
@@ -276,6 +283,7 @@ class ActivityCard extends React.PureComponent {
             }}
           >
             <TimeHistoryIconButton
+              offlineMode={this.props.offlineMode}
               groupId={groupId}
               activityId={activity.id}
               activityName={activityName}

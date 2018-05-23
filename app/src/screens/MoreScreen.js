@@ -64,6 +64,7 @@ class MoreScreen extends React.Component {
          value={this.props.network.offlineMode}
          onValueChange={this.onValueChange}
         />
+        <Text>Pending Requests: {this.props.offlineQueue.payloads.length}</Text>
       </View>
     );
   }
@@ -87,8 +88,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
-const mapStateToProps = (state) => state;
-
+const mapStateToProps = (state) => (
+  {
+    network: state.network,
+    offlineQueue: state.offlineQueue
+  }
+);
 export default connect(mapStateToProps, {
   changeAppRoot,
   setConnectionStatus,

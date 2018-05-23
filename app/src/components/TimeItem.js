@@ -52,29 +52,27 @@ class TimeItem extends React.PureComponent {
           <View style={[styles.textContainer]}>
             <View
               style={{
-                flexDirection: 'row'
+                flexDirection: 'column',
+                //backgroundColor: 'lightpink'
               }}
             >
               <Text style={[styles.text]}>{startedAt}</Text>
-            </View>
-            {
-              stoppedAt !== '' &&
-              <View
-                style={{
-                  flexDirection: 'row'
-                }}
-              >
+              {
+                stoppedAt !== '' &&
                 <Text style={[styles.text]}>{stoppedAt}</Text>
 
-              </View>
-            }
+              }
+            </View>
             {
               <View
                 style={{
                   //flexDirection: 'row',
-                  paddingBottom: 5,
-                  paddingHorizontal: 10
+                  //paddingBottom: 5,
+                  //paddingHorizontal: 10,
                   //backgroundColor: 'lightblue',
+                  //justifyContent: 'center',
+                  //alignItems: 'center',
+                  //height: 65
                 }}
               >
                 <Text
@@ -105,7 +103,7 @@ const styles = EStyleSheet.create({
     //alignItems: 'space-between',
     justifyContent: 'center',
     flexDirection: 'row',
-    height: 65,
+    //height: 65,
     backgroundColor: '#FFFFFF'
   },
   innerContainer: {
@@ -114,14 +112,18 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
     borderBottomWidth: 0.25,
     borderColor: 'gray',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    //backgroundColor: 'skyblue',
+    padding: 5
   },
   textContainer: {
     flex: 1,
-    //backgroundColor: 'skyblue',
+    flexDirection: 'column',
+    //alignItems: 'space-between',
+    //backgroundColor: 'red',
     //height: 60,
     justifyContent: 'center',
-    //alignItems: 'flex-start'
+
     //paddingBottom: 3
 
   },
@@ -135,7 +137,9 @@ const styles = EStyleSheet.create({
   textTimeDiff: {
     fontSize: 14,
     color: '$textColor',
-    textAlign: 'right'
+    textAlign: 'right',
+    //marginRight: 10
+    paddingHorizontal: 10
   },
   moreButton: {
     flex: 1,
