@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  StyleSheet,
   View,
   Text,
   TouchableHighlight,
@@ -8,10 +7,8 @@ import {
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import EStyleSheet from 'react-native-extended-stylesheet';
 //import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {
-  globalTextColor,
-} from '../styles/Global';
 
 class ActivityItem extends React.PureComponent {
   static defaultProps = {
@@ -80,7 +77,7 @@ class ActivityItem extends React.PureComponent {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   outerContainer: {
     flex: 1,
     //alignItems: 'space-between',
@@ -109,7 +106,7 @@ const styles = StyleSheet.create({
   text: {
     //backgroundColor: 'lightpink',
     fontSize: 21,
-    color: globalTextColor
+    color: '$textColor'
     //justifyContent: 'flex-start',
     //alignItems: 'flex-end'
   },

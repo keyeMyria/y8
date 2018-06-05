@@ -2,21 +2,20 @@ import React from 'react';
 import {
   View,
   Text,
+  TouchableOpacity
 } from 'react-native';
 import moment from 'moment';
 
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 class TimeItem extends React.PureComponent {
   static defaultProps = {
-    showEditIcon: false,
-    onItemPress: () => null
+    onEdit: () => null
   }
-  onItemPress = () => {
-    this.props.onItemPress(this.props.id);
-  }
+
   onEdit = () => {
-    this.props.onEdit(this.props.id);
+    this.props.onEdit(this.props.time);
   }
 
   timeDiff = (startedAt, stoppedAt) => {
@@ -39,12 +38,11 @@ class TimeItem extends React.PureComponent {
 
     secs = `${secs}s `;
     //millisecs = `${millisecs} milli secs`;
-    const data =  `${hrs}${mins}${secs}`;
+    const data = `${hrs}${mins}${secs}`;
     return data;
   };
   render() {
     const { startedAt, stoppedAt, startedTimestamp, stoppedTimestamp } = this.props.time;
-    console.log(startedAt, stoppedAt, startedTimestamp, stoppedTimestamp);
     return (
       <View style={[styles.outerContainer]}>
         <View style={{ width: 15 }} />
@@ -53,28 +51,16 @@ class TimeItem extends React.PureComponent {
             <View
               style={{
                 flexDirection: 'column',
-                //backgroundColor: 'lightpink'
               }}
             >
               <Text style={[styles.text]}>{startedAt}</Text>
               {
                 stoppedAt !== '' &&
                 <Text style={[styles.text]}>{stoppedAt}</Text>
-
               }
             </View>
             {
-              <View
-                style={{
-                  //flexDirection: 'row',
-                  //paddingBottom: 5,
-                  //paddingHorizontal: 10,
-                  //backgroundColor: 'lightblue',
-                  //justifyContent: 'center',
-                  //alignItems: 'center',
-                  //height: 65
-                }}
-              >
+              <View>
                 <Text
                   style={[styles.textTimeDiff]}
                 >
@@ -90,6 +76,17 @@ class TimeItem extends React.PureComponent {
               </View>
             }
 
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={this.onEdit}
+              style={[styles.moreButton]}
+            >
+              <Ionicons
+                name='ios-information-circle-outline'
+                size={28} color='rgba(0,122,255,0.8)'
+              />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -113,7 +110,7 @@ const styles = EStyleSheet.create({
     borderBottomWidth: 0.25,
     borderColor: 'gray',
     flexDirection: 'row',
-    //backgroundColor: 'skyblue',
+    //backgroundColor: 'lightpink',
     padding: 5
   },
   textContainer: {
@@ -143,7 +140,7 @@ const styles = EStyleSheet.create({
   },
   moreButton: {
     flex: 1,
-    paddingRight: 20,
+    paddingRight: 15,
     paddingLeft: 5,
     justifyContent: 'center',
     //backgroundColor: 'lightpink',

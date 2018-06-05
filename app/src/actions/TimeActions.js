@@ -12,6 +12,20 @@ import {
   TIME_FETCH_BY_GROUP_ERROR,
   TIME_FETCH_BY_GROUP_RESET,
 
+  TIME_CREATE_REQUEST,
+  TIME_CREATE_SUCCESS,
+  TIME_CREATE_ERROR,
+  TIME_CREATE_RESET,
+
+  TIME_UPDATE_REQUEST,
+  TIME_UPDATE_SUCCESS,
+  TIME_UPDATE_ERROR,
+  TIME_UPDATE_RESET,
+
+  TIME_DELETE_REQUEST,
+  TIME_DELETE_SUCCESS,
+  TIME_DELETE_ERROR,
+  TIME_DELETE_RESET,
 } from '../types/TimeTypes';
 
 import { AUTH_ERROR } from '../types/AuthTypes';
@@ -213,6 +227,142 @@ export const stopActivity = (id, activityId, groupId, stoppedAt) => (
     });
   });
 
+
+  export const createTime = (groupId, startedAt, stoppedAt) => (
+    async (dispatch) => {
+      try {
+        await dispatch({
+          type: TIME_CREATE_REQUEST,
+        });
+        const data = {
+          startedAt, stoppedAt
+        };
+
+        const apiUrl = `/api/private/time/${groupId}`;
+        const payload = {
+          UID: uuidv4(),
+          data,
+          apiUrl,
+          method: 'post',
+        };
+
+        const resp = await ApiRequest(payload);
+
+        await dispatch({
+          type: TIME_CREATE_SUCCESS,
+          payload: {
+            id: resp.data.id,
+            groupId,
+            startedAt,
+            stoppedAt,
+          }
+        });
+      } catch (error) {
+        if (!_.isUndefined(error.response) && error.response.status === 401) {
+          await dispatch({
+            type: AUTH_ERROR,
+            payload: error.response
+          });
+        } else {
+        await dispatch({
+            type: TIME_CREATE_ERROR,
+            payload: error.response
+          });
+        }
+      }
+      await dispatch({
+        type: TIME_CREATE_RESET,
+      });
+    });
+
+export const updateTime = (groupId, timeId, startedAt, stoppedAt) => (
+  async (dispatch) => {
+    try {
+      await dispatch({
+        type: TIME_UPDATE_REQUEST,
+      });
+      const data = {
+        startedAt, stoppedAt, timeId
+      };
+
+      const apiUrl = `/api/private/time/${groupId}`;
+      const payload = {
+        UID: uuidv4(),
+        data,
+        apiUrl,
+        method: 'put',
+      };
+
+      const resp = await ApiRequest(payload);
+
+      await dispatch({
+        type: TIME_UPDATE_SUCCESS,
+        payload: {
+          id: resp.data.id,
+          groupId,
+          startedAt,
+          stoppedAt,
+        }
+      });
+    } catch (error) {
+      if (!_.isUndefined(error.response) && error.response.status === 401) {
+        await dispatch({
+          type: AUTH_ERROR,
+          payload: error.response
+        });
+      } else {
+      await dispatch({
+          type: TIME_UPDATE_ERROR,
+          payload: error.response
+        });
+      }
+    }
+    await dispatch({
+      type: TIME_UPDATE_RESET,
+    });
+  });
+
+  export const deleteTime = (groupId, timeId) => (
+    async (dispatch) => {
+      try {
+        await dispatch({
+          type: TIME_DELETE_REQUEST,
+        });
+
+        const apiUrl = `/api/private/time/${groupId}/${timeId}`;
+        const payload = {
+          UID: uuidv4(),
+          data: null,
+          apiUrl,
+          method: 'delete',
+        };
+
+        const resp = await ApiRequest(payload);
+
+        await dispatch({
+          type: TIME_DELETE_SUCCESS,
+          payload: {
+            id: resp.data.id,
+            groupId,
+          }
+        });
+      } catch (error) {
+        if (!_.isUndefined(error.response) && error.response.status === 401) {
+          await dispatch({
+            type: AUTH_ERROR,
+            payload: error.response
+          });
+        } else {
+        await dispatch({
+            type: TIME_DELETE_ERROR,
+            payload: error.response
+          });
+        }
+      }
+      await dispatch({
+        type: TIME_DELETE_RESET,
+      });
+    });
 /*
 // start activity action
 export const toggleActivity = (activityId, groupId, isStart) => (

@@ -52,7 +52,7 @@ config.paging.page.max_limit = 10;
 
 // pagination settings for times
 config.paging.times = {};
-config.paging.times.limit = 5;
+config.paging.times.limit = 15;
 config.paging.times.max_limit = 15;
 
 // pagination settings for myactivites

@@ -37,38 +37,38 @@ const toggActivity = (state, action) => {
 
 
 const startActivity = (state, action) => {
-  const { activityId, groupId, startedAt } = action.payload;
-  const newState = Object.assign({}, state);
+  // const { activityId, groupId, startedAt } = action.payload;
+  // const newState = Object.assign({}, state);
+  //
+  // if (_.isEmpty(newState.byActivityId[activityId])) {
+  //   newState.byActivityId[activityId] = {};
+  // }
+  // if (_.isEmpty(newState.byActivityId[activityId][groupId])) {
+  //   newState.byActivityId[activityId][groupId] = [];
+  // }
+  // const { groupTimes } = newState.byActivityId[activityId][groupId];
+  // groupTimes.unshift({ startedAt, stoppedAt: null });
 
-  if (_.isEmpty(newState.byActivityId[activityId])) {
-    newState.byActivityId[activityId] = {};
-  }
-  if (_.isEmpty(newState.byActivityId[activityId][groupId])) {
-    newState.byActivityId[activityId][groupId] = [];
-  }
-  const times = newState.byActivityId[activityId][groupId];
-  times.unshift({ startedAt, stoppedAt: null });
-
-  return Object.assign({}, newState, {
+  return Object.assign({}, state, {
     error: null,
     loading: false
   });
 };
 
 const stopActivity = (state, action) => {
-  const { activityId, groupId, stoppedAt } = action.payload;
-  const newState = Object.assign({}, state);
+  // const { activityId, groupId, stoppedAt } = action.payload;
+  // const newState = Object.assign({}, state);
+  //
+  // if (_.isEmpty(newState.byActivityId[activityId])) {
+  //   newState.byActivityId[activityId] = {};
+  // }
+  // if (_.isEmpty(newState.byActivityId[activityId][groupId])) {
+  //   newState.byActivityId[activityId][groupId] = [];
+  // }
+  // const { groupTimes } = newState.byActivityId[activityId][groupId];
+  // groupTimes[0].stoppedAt = stoppedAt;
 
-  if (_.isEmpty(newState.byActivityId[activityId])) {
-    newState.byActivityId[activityId] = {};
-  }
-  if (_.isEmpty(newState.byActivityId[activityId][groupId])) {
-    newState.byActivityId[activityId][groupId] = [];
-  }
-  const times = newState.byActivityId[activityId][groupId];
-  times[0].stoppedAt = stoppedAt;
-
-  return Object.assign({}, newState, {
+  return Object.assign({}, state, {
     error: null,
     loading: false
   });
@@ -86,7 +86,6 @@ const toggleActivity = (state, action) => {
 const INITIAL_TIMES_STATE = {
   error: null,
   loading: false,
-  byActivityId: {},
 };
 export const times = (state = INITIAL_TIMES_STATE, action) => {
   switch (action.type) {

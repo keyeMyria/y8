@@ -7,6 +7,9 @@ import {
   UIManager,
   RefreshControl,
   Text,
+  Modal,
+  ScrollView,
+  DatePickerIOS,
   //NetInfo,
   //AppState
 } from 'react-native';
@@ -18,12 +21,12 @@ import Snackbar from 'react-native-snackbar';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ActivityCard from '../components/ActivityCard';
 import PushNotifications from '../pushnotifications';
+import TextButton from '../components/TextButton';
 
 import {
   startActivity,
   stopActivity,
   toggleActivity,
-  getTimes
 } from '../actions/TimeActions';
 
 import {
@@ -66,6 +69,8 @@ class DashboardScreen extends React.Component {
       addingMyActivity: false,
       refreshing: false,
       rand: 0,
+      stopModalVisible: false,
+      stopModalObj: false
     };
 
     if (Platform.OS === 'android') {
@@ -262,7 +267,24 @@ class DashboardScreen extends React.Component {
   // }
 
   stopActivity = (timeId, activityId, groupId, activityName, sentence, timeDiff, startedAt) => {
-    this.props.navigator.showLightBox({
+
+    const maximumDate = new Date();
+    this.setState({
+      stopModalVisible: true,
+      stopModalObj: {
+        activityName,
+        sentence,
+        timeDiff,
+        startedAt,
+        timeId,
+        activityId,
+        groupId,
+        minimumDate: new Date(startedAt),
+        maximumDate,
+        chosenTime: maximumDate,
+      }
+    });
+    /*this.props.navigator.showLightBox({
       screen: 'app.StopActivityModal',
       //title: 'Create Activity',
       passProps: {
@@ -281,8 +303,14 @@ class DashboardScreen extends React.Component {
       //animationType: 'none' // none , slide-up
     });
     //this.props.stopActivity(timeId, activityId, groupId);
+    */
   }
 
+  setTime = (newTime) => {
+    const newState = Object.assign({}, this.state);
+    newState.stopModalObj.chosenTime = newTime;
+    this.setState(newState);
+  }
 
   renderRow = ({ item }) => {
     const activityId = item;
@@ -415,6 +443,140 @@ class DashboardScreen extends React.Component {
           //onEndReachedThreshold={0.2}
 
         />
+
+        <Modal
+          animationType="fade"
+          transparent
+          visible={this.state.stopModalVisible}
+          onRequestClose={() => {
+            console.log('Modal has been closed.');
+          }}
+        >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(107, 112, 123, 0.8)',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <View
+            style={{
+              //flex: 1,
+              backgroundColor: '#ffffff',
+              margin: 20,
+              padding: 20,
+              borderRadius: 10,
+            }}
+          >
+          <Text
+            style={{
+              fontSize: 21,
+              fontWeight: '600',
+              color: EStyleSheet.value('$textColor')
+            }}
+          >
+          {this.state.stopModalObj.activityName}
+          </Text>
+          <ScrollView
+            style={{
+              maxHeight: 55,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                color: EStyleSheet.value('$textColor'),
+                letterSpacing: 0.8,
+              }}
+            >{this.state.stopModalObj.sentence}</Text>
+            </ScrollView>
+            <View style={{ paddingBottom: 5, borderBottomWidth: 1, borderColor: EStyleSheet.value('$subTextColor') }}>
+              <Text
+                style={{
+                  paddingTop: 10,
+                  //backgroundColor: 'red',
+                  color: EStyleSheet.value('$subTextColor'),
+                  textAlign: 'right',
+                }}
+              >{this.state.stopModalObj.timeDiff}</Text>
+            </View>
+            <DatePickerIOS
+              minimumDate={this.state.stopModalObj.minimumDate}
+              maximumDate={this.state.stopModalObj.maximumDate}
+              mode='datetime'
+              date={this.state.stopModalObj.chosenTime}
+              onDateChange={this.setTime}
+            />
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center' }}>
+              <Text
+                style={{
+                  color: EStyleSheet.value('$textColor'),
+                  fontSize: 18
+                }}
+              >
+                {
+                  this.state.stopModalObj &&
+                  moment(this.state.stopModalObj.chosenTime).format('ddd MMMM Do YYYY, h:mm:ss a')}
+              </Text>
+            </View>
+            <View
+              style={{
+                paddingTop: 30,
+                flexDirection: 'row',
+                justifyContent: 'space-around'
+              }}
+            >
+            <TextButton
+              disabled={false}
+              title={'Cancel'}
+              titleStyle={{
+                fontSize: 21,
+                color: EStyleSheet.value('$textColor'),
+                fontWeight: '600'
+              }}
+              containerStyle={{
+                borderWidth: 0.3,
+                borderRadius: 3,
+                borderColor: EStyleSheet.value('$textColor'),
+                height: 40,
+              }}
+              onPress={() => {
+                this.setState({ stopModalVisible: false });
+              }}
+            />
+            <TextButton
+              disabled={false}
+              title={'STOP'}
+              titleStyle={{
+                fontSize: 21,
+                color: true ? 'rgba(255, 51, 79,0.8)' : '#38B211',
+                fontWeight: '600'
+              }}
+              containerStyle={{
+                borderWidth: 0.3,
+                borderRadius: 3,
+                borderColor: true ? 'rgba(255, 51, 79,0.8)' : '#38B211',
+                height: 40,
+
+              }}
+              onPress={() => {
+                const stoppedAt = moment(this.state.stopModalObj.chosenTime).valueOf();
+                this.props.stopActivity(
+                  this.state.stopModalObj.timeId,
+                  this.state.stopModalObj.activityId,
+                  this.state.stopModalObj.groupId,
+                  stoppedAt);
+                  this.setState({ stopModalVisible: false });
+              }}
+            />
+            </View>
+          </View>
+        </View>
+        </Modal>
         <Spinner
           visible={
             this.props.myActivities.addingGroup ||
@@ -466,5 +628,4 @@ export default connect(mapStateToProps, {
   getTags,
   setConnectionStatus,
   offlineRequest,
-  getTimes,
 })(DashboardScreen);

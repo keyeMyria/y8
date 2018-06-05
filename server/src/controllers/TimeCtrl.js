@@ -16,7 +16,7 @@ const {
 
 class TimeCtrl {
   //TODO: remove prevTimeId here and in app
-  create(req, res, next) {
+  startTime(req, res, next) {
     //console.log(req.body);
     const {
       id,
@@ -119,7 +119,7 @@ class TimeCtrl {
     // });
   }
 
-  update(req, res, next) {
+  stopTime(req, res, next) {
 
     const {
       id,
@@ -223,6 +223,86 @@ class TimeCtrl {
         res.status(400).send('Bad request');
         next();
       });
+  }
+
+  createTime(req, res, next) {
+    const {
+      startedAt,
+      stoppedAt
+    } = req.body;
+    const { groupId } = req.params;
+
+    const { userId } = req;
+    const data = {
+      userId,
+      groupId,
+      latest: 0,
+      startedAt,
+      stoppedAt
+    };
+
+    const Time = mongoose.model('time');
+    Time.create(data).then((result) => {
+      if (result) {
+        res.status(200).send({id: result._id});
+      } else {
+        res.status(400).send("Failed to create time");
+      }
+      next();
+    }).catch((timesError) => {
+      console.log(timesError);
+      req.log.error(timesError.message);
+      res.status(400).send('Bad request');
+      next();
+    });
+  }
+
+  updateTime(req, res, next) {
+    const {
+      timeId,
+      startedAt,
+      stoppedAt
+    } = req.body;
+    const { groupId } = req.params;
+    const { userId } = req;
+
+    const Time = mongoose.model('time');
+    Time.update(
+      { _id: timeId, userId, groupId },
+      { $set: { startedAt, stoppedAt } }
+    ).then((result) => {
+      console.log(result);
+      if (result) {
+        res.status(200).send({id: timeId});
+      } else {
+        res.status(400).send("Failed to update time");
+      }
+      next();
+    }).catch((timesError) => {
+      console.log(timesError);
+      req.log.error(timesError.message);
+      res.status(400).send('Bad request');
+      next();
+    });
+  }
+
+  deleteTime(req, res, next) {
+    const { userId } = req;
+    const { groupId, timeId } = req.params;
+
+    const Time = mongoose.model('time');
+    Time.deleteOne({ _id: timeId, userId, groupId })
+    .then((done)=>{
+      if(!done){
+        return Promise.reject({message:"Failed to delete time"});
+      }
+      res.status(200).send({id: timeId});
+      next();
+    }).catch((error)=>{
+      req.log.error(error.message);
+      res.status(400).send('Bad request');
+      next();
+    });
   }
 }
 

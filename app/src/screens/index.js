@@ -22,7 +22,7 @@ import TagModal from '../modals/TagModal';
 import FriendModal from '../modals/FriendModal';
 import FriendInfoModal from '../modals/FriendInfoModal';
 import SubscribersModal from '../modals/SubscribersModal';
-import TimeModal from '../modals/TimeModal';
+import TimeHistoryModal from '../modals/TimeHistoryModal';
 
 // PushNotifications
 import InAppNotification from '../pushnotifications/InAppNotification';
@@ -64,7 +64,7 @@ export function registerScreens(store, Provider) {
   Navigation.registerComponent('app.FriendModal', () => FriendModal, store, Provider);
   Navigation.registerComponent('app.FriendInfoModal', () => FriendInfoModal, store, Provider);
   Navigation.registerComponent('app.SubscribersModal', () => SubscribersModal, store, Provider);
-  Navigation.registerComponent('app.TimeModal', () => TimeModal, store, Provider);
+  Navigation.registerComponent('app.TimeHistoryModal', () => TimeHistoryModal, store, Provider);
 
   // pushnotifications
   Navigation.registerComponent('app.InAppNotification', () => InAppNotification, store, Provider);

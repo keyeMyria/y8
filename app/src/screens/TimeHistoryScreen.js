@@ -17,7 +17,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import TimeItem from '../components/TimeItem';
 
 import {
-  getTimesByGroup
+  getTimesByGroup,
 } from '../actions/TimeActions';
 
 
@@ -70,8 +70,8 @@ class TimeHistoryScreen extends React.Component {
       if (event.id === 'add') {
         const { activityId, groupId, activityName, sentence } = this.props;
         this.props.navigator.showModal({
-          screen: 'app.TimeModal',
-          title: 'Add Time',
+          screen: 'app.TimeHistoryModal',
+          title: 'Create Time',
           passProps: {
             activityId, groupId, activityName, sentence
           },
@@ -84,35 +84,18 @@ class TimeHistoryScreen extends React.Component {
     }
   };
 
-  onEdit = (id) => {
+  onEdit = (timeObj) => {
+    const { activityId, groupId, activityName, sentence } = this.props;
     this.props.navigator.showModal({
-      screen: 'app.ActivityModal',
-      title: 'Update Activity',
+      screen: 'app.TimeHistoryModal',
+      title: 'Update Time',
       passProps: {
-        activity: this.props.activities.byId[id],
-        activities: this.props.activities
+        activityId, groupId, activityName, sentence, time: timeObj
       },
       navigatorStyle: {
         navBarTextColor: EStyleSheet.value('$textColor')
       },
       animationType: 'slide-up'
-    });
-  }
-
-  onItemPress = (activityId) => {
-    this.props.navigator.push({
-      screen: 'app.TagsScreen',
-      title: 'Tags',
-      passProps: {
-        activity: this.props.activities.byId[activityId]
-      },
-      navigatorButtons: {
-        rightButtons: [{
-          id: 'add',
-          icon: ADD_ICON,
-          disableIconTint: true, // disable default color,
-        }]
-      }
     });
   }
 
@@ -148,21 +131,12 @@ class TimeHistoryScreen extends React.Component {
   searchInputRef = (input) => {
     this.textInputRef = input;
   }
-  renderRow = ({ item }) => {
-    const { startedAt, stoppedAt } = item;
-    return (
-      <TimeItem
-        startedAt={startedAt}
-        stoppedAt={stoppedAt}
-      />
-    );
-  };
 
-  renderSectionRow = ({item, index, section}) => {
+  renderSectionRow = ({ item, index, section }) => {
     return (
       <TimeItem
-        key={index}
         time={item}
+        onEdit={this.onEdit}
       />
     )
   };
@@ -203,9 +177,6 @@ class TimeHistoryScreen extends React.Component {
     return (
       <View
         style={{
-          //height: 60,
-          //borderColor: EStyleSheet.value('$textColor'),
-          //borderWidth: 1,
           backgroundColor: EStyleSheet.value('$backgroundColor'),
           justifyContent: 'center',
           padding: 10
@@ -219,12 +190,12 @@ class TimeHistoryScreen extends React.Component {
   renderListHeader = () => null;
   renderListFooter= () => null;
   render() {
-    const { rows, sections } = this.props.timesByGroup;
+    const { sections } = this.props.timesByGroup;
     return (
       <View style={styles.container}>
         {this.renderActivityHeader()}
         <SectionList
-          keyExtractor={(item, index) => item + index}
+          keyExtractor={(item) => item.id}
           renderSectionHeader={this.renderSectionHeader}
           renderItem={this.renderSectionRow}
           sections={sections}
