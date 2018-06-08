@@ -9,6 +9,17 @@ export const fakePromise = async (secs) => (
 );
 
 export const createSentence = (tagNames) => {
+  let sentence = '';
+  tagNames.forEach((tagName) => {
+    sentence += `${tagName} `;
+    //sentence += `#${tagName} `;
+    //sentence += `→${tagName} `;
+  });
+  return sentence;
+};
+
+
+export const createSentenceDontDelete = (tagNames) => {
   const single = [];
   const multi = [];
   tagNames.forEach((tagName) => {

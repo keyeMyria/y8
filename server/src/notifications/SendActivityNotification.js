@@ -30,8 +30,8 @@ const SendStartActivityNotification = async (userId, groupId, startedAt) => {
     sentence = sentence.trim();
 
     const title = group.userId.fullName;
-    const body = `${group.activityId.name} ${sentence} ▶︎`;
-    // ▷ ►
+    const body = `${group.activityId.name}▶︎ ${sentence}`;
+    // ▷ ► • ▶︎
 
     // get can share user ids from canshares model
     const sharedWithUserIds =
