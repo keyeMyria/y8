@@ -19,7 +19,11 @@ yarn add react-native-loading-spinner-overlay@latest
 yarn add react-native-extended-stylesheet
 yarn add react-native-vector-icons
 yarn add react-native-device-info
+yarn add victory-native
+yarn add react-native-svg
 
-react-native link react-native-device-info:
+react-native link react-native-svg
+react-native link react-native-device-info
 react-native link react-native-vector-icons
+
 cp ../fb_install/.eslintrc .

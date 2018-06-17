@@ -84,7 +84,7 @@ class ActivitiesScreen extends React.Component {
 
   componentDidMount() {
     this.setOfflineMode();
-    //this.props.getActivities();
+    this.props.getActivities();
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
   }
@@ -176,7 +176,7 @@ class ActivitiesScreen extends React.Component {
   }
 
   onRefresh = () => {
-    //this.props.getActivities();
+    this.props.getActivities();
   }
 
   setOfflineMode = () => {
@@ -204,6 +204,17 @@ class ActivitiesScreen extends React.Component {
   keyboardDidHide = () => {
     //this.props.navigation.setParams({ hideHeader: false });
     //console.log('keyboardDidHide');
+  }
+
+  loadMore = () => {
+    // let { page } = this.props.activities;
+    // const { totalPages } = this.props.activities;
+    // page += 1;
+    // if (page <= totalPages) {
+    //   //console.log('loadMore', page, totalPages);
+    //   //this.props.getMyActivities({ page });
+    //   this.props.getActivities();
+    // }
   }
 
 
@@ -292,12 +303,15 @@ class ActivitiesScreen extends React.Component {
           }
           renderItem={this.renderRow}
           ListFooterComponent={this.renderListFooter}
-          // refreshControl={
-          //   <RefreshControl
-          //     refreshing={activities.loading}
-          //     onRefresh={this.onRefresh}
-          //   />
-          // }
+          refreshControl={
+            <RefreshControl
+              refreshing={activities.loading}
+              onRefresh={this.onRefresh}
+            />
+          }
+
+          //onEndReached={this.loadMore}
+          //onEndReachedThreshold={0.2}
 
         />
       </KeyboardAvoidingView>

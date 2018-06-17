@@ -12,4 +12,5 @@ require('./GroupRoutes')(router);
 require('./DeviceRoutes')(router);
 require('./SubscriberRoutes')(router);
 require('./SharedRoutes')(router);
+require('./StatsRoutes')(router);
 module.exports = router;

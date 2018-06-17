@@ -23,8 +23,9 @@ class TimeItem extends React.PureComponent {
     let hrs = duration.hours();
     let mins = duration.minutes();
     let secs = duration.seconds();
+    //console.log(stoppedAt-startedAt, stoppedAt, startedAt, duration, hrs, mins, secs);
     //let millisecs = duration.milliseconds();
-
+    //console.log(duration._milliseconds);
     if (hrs !== 0) {
       hrs = `${hrs}h `;
     } else {

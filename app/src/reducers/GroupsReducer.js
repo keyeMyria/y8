@@ -48,6 +48,7 @@ const getMyActivities = (state, action) => {
   const { payload, count, offset, limit, page, totalPages } = action;
   const newState = Object.assign({}, state);
 
+
   newState.byActivityId = {
     ...payload.byActivityId,
     ...newState.byActivityId
@@ -71,6 +72,11 @@ const getMyActivities = (state, action) => {
         ]
       )
     ];
+  }
+
+  if (count === 0) {
+    newState.allActivityIds = [];
+    newState.byActivityId = {};
   }
 
 

@@ -9,6 +9,7 @@ const GroupCtrl = require('./GroupCtrl');
 const DeviceCtrl = require('./DeviceCtrl');
 const SubscriberCtrl = require('./SubscriberCtrl');
 const SharedCtrl = require('./SharedCtrl');
+const StatsCtrl = require('./StatsCtrl');
 
 module.exports = {
   Sample: SampleCtrl,
@@ -21,5 +22,6 @@ module.exports = {
   Group: GroupCtrl,
   Device: DeviceCtrl,
   Subscriber: SubscriberCtrl,
-  Shared: SharedCtrl
+  Shared: SharedCtrl,
+  Stats: StatsCtrl
 };

@@ -11,9 +11,11 @@ export const fakePromise = async (secs) => (
 export const createSentence = (tagNames) => {
   let sentence = '';
   tagNames.forEach((tagName) => {
-    sentence += `${tagName} `;
+    //sentence += `${tagName} `;
     //sentence += `#${tagName} `;
     //sentence += `→${tagName} `;
+    sentence += `•${tagName} `;
+    //•
   });
   return sentence;
 };

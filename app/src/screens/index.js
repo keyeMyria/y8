@@ -7,6 +7,7 @@ import LoginScreen from './LoginScreen';
 import DashboardScreen from './DashboardScreen';
 import FeedScreen from './FeedScreen';
 import FriendsScreen from './FriendsScreen';
+import StatsScreen from './StatsScreen';
 import MoreScreen from './MoreScreen';
 
 import ActivitiesScreen from './ActivitiesScreen';
@@ -49,6 +50,7 @@ export function registerScreens(store, Provider) {
   Navigation.registerComponent('app.DashboardScreen', () => NetworkChange(DashboardScreen), store, Provider);
   Navigation.registerComponent('app.FeedScreen', () => FeedScreen, store, Provider);
   Navigation.registerComponent('app.FriendsScreen', () => FriendsScreen, store, Provider);
+  Navigation.registerComponent('app.StatsScreen', () => StatsScreen, store, Provider);
   Navigation.registerComponent('app.MoreScreen', () => MoreScreen, store, Provider);
 
   // Sub screens

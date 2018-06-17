@@ -16,6 +16,7 @@ import CardFooter from './CardFooter';
 import TextButton from './TextButton';
 import ShareIconButton from './ShareIconButton';
 import TimeHistoryIconButton from './TimeHistoryIconButton';
+import StatsIconButton from './StatsIconButton';
 import { createSentence } from '../services/Common';
 
 class ActivityCard extends React.PureComponent {
@@ -225,7 +226,7 @@ class ActivityCard extends React.PureComponent {
       tagNames.push(this.props.tags.byId[tagId].name.toLowerCase());
     });
     const sentence = createSentence(tagNames);
-    
+
     return (
 
       <Card>
@@ -299,6 +300,12 @@ class ActivityCard extends React.PureComponent {
               started={started}
               sharedWith={this.props.sharedWith}
               onSharePress={this.props.onSharePress}
+            />
+            <View style={{ paddingHorizontal: 10 }} />
+            <StatsIconButton
+              offlineMode={this.props.offlineMode}
+              activity={activity}
+              onStatsPress={this.props.onStatsPress}
             />
 
           </View>

@@ -42,7 +42,21 @@ import {
   startActivity
 } from './TimeActions';
 
+
 export const getMyActivities = (query) => (
+  async (dispatch) => {
+    const payload = {
+      data: null,
+      apiUrl: '/api/private/stats',
+      method: 'get'
+    };
+
+    const response = await ApiRequest(payload);
+    console.log(response);
+  }
+);
+
+export const getMyActivitiesDontRemove = (query) => (
   async (dispatch, getState) => {
     const myactivities = {
       byActivityId: {},

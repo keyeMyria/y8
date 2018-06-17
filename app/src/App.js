@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { persistStore } from 'redux-persist';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { registerScreens } from './screens';
@@ -17,6 +18,7 @@ let heart;
 let feed;
 let users;
 let menu;
+let stats;
 let plus;
 
 const store = configureStore();
@@ -41,6 +43,7 @@ const populateIcons = () => {
           FontAwesome.getImageSource('feed', 30),
           Feather.getImageSource('users', 30),
           Feather.getImageSource('menu', 30),
+          Ionicons.getImageSource('ios-stats', 30),
           Feather.getImageSource('plus', 30, EStyleSheet.value('$iconColor'))
 
         ]
@@ -55,7 +58,8 @@ const populateIcons = () => {
         feed = values[1];
         users = values[2];
         menu = values[3];
-        plus = values[4];
+        stats = values[4];
+        plus = values[5];
 
         resolve(true);
       }).catch((error) => {
@@ -176,6 +180,16 @@ const startApp = (root) => {
                 icon: plus,
                 disableIconTint: true, // disable default color,
               }]
+            }
+          },
+          {
+            label: 'Statistics',
+            screen: 'app.StatsScreen',
+            icon: stats,
+            selectedIcon: stats, // iOS only
+            title: 'Statistics',
+            navigatorStyle: {
+              navBarButtonColor: EStyleSheet.value('$iconColor')
             }
           },
           {

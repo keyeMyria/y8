@@ -105,7 +105,7 @@ class TagsScreen extends React.Component {
       });
     }
 
-    //this.props.getTags();
+    this.props.getTags();
   }
 
   async componentWillReceiveProps(nextProps) {
@@ -193,7 +193,10 @@ class TagsScreen extends React.Component {
 
   onItemPress = (checked, tagId) => {
     if (checked) {
+      // to select multiple
       const selectedTags = [...this.state.selectedTags, tagId];
+      // to select only one
+      //const selectedTags = [tagId];
       //selectedTags.reverse();
       this.setState({
         selectedTags,
@@ -247,7 +250,7 @@ class TagsScreen extends React.Component {
   }
 
   onRefresh = () => {
-    //this.props.getTags();
+    this.props.getTags();
   }
 
   setOfflineMode = () => {
@@ -266,12 +269,12 @@ class TagsScreen extends React.Component {
     });
   }
 
-  showSnackBar = (msg) => {
-    Snackbar.show({
-        title: msg,
-        duration: Snackbar.LENGTH_SHORT,
-    });
-  }
+  // showSnackBar = (msg) => {
+  //   Snackbar.show({
+  //       title: msg,
+  //       duration: Snackbar.LENGTH_SHORT,
+  //   });
+  // }
 
   deleteTagFromSeletedTags = (tagId) => {
     const selectedTags = Object.assign([], this.state.selectedTags);
@@ -388,7 +391,6 @@ class TagsScreen extends React.Component {
   };
   renderListFooter= () => null;
   renderRow = ({ item }) => {
-    //console.log(item);
     const { id, name } = this.props.tags.byId[item];
     return (
       <TagItem
@@ -433,9 +435,6 @@ class TagsScreen extends React.Component {
     if (!_.isNil(activity) && !_.isNil(byActivityId[activity.id])) {
       groupIds = byActivityId[activity.id].allGroupIds;
     }
-    //console.log(groupIds);
-
-
     if (_.isNull(activity)) {
       return null;
     }
@@ -547,7 +546,7 @@ class TagsScreen extends React.Component {
             //removeClippedSubviews={false}
             keyboardShouldPersistTaps='always'
             ref={(ref) => { this.flatListRef = ref; }}
-            extraData={tags}
+            extraData={[tags, this.state.selectedTags]}
             //ListHeaderComponent={this.renderListHeader}
             keyExtractor={item => item}
             data={
@@ -555,12 +554,12 @@ class TagsScreen extends React.Component {
             }
             renderItem={this.renderRow}
             ListFooterComponent={this.renderListFooter}
-            // refreshControl={
-            //   <RefreshControl
-            //     refreshing={tags.loading}
-            //     onRefresh={this.onRefresh}
-            //   />
-            // }
+            refreshControl={
+              <RefreshControl
+                refreshing={tags.loading}
+                onRefresh={this.onRefresh}
+              />
+            }
           />
 
           {/*

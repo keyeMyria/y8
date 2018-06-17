@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  StyleSheet,
   View,
   Text,
   TouchableHighlight,
@@ -10,14 +9,15 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 //import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {
-  globalIconColor,
-  globalTextColor,
-} from '../styles/Global';
 
 class TagItem extends React.PureComponent {
   static defaultProps = {
     showEditIcon: false
+  }
+  static getDerivedStateFromProps(nextProps) {
+    return {
+      showCheck: nextProps.isChecked
+    };
   }
   constructor(props) {
     super(props);
@@ -25,11 +25,11 @@ class TagItem extends React.PureComponent {
       showCheck: false
     };
   }
-  componentWillMount() {
-    this.setState({
-      showCheck: this.props.isChecked
-    });
-  }
+  // componentWillMount() {
+  //   // this.setState({
+  //   //   showCheck: this.props.isChecked
+  //   // });
+  // }
   onPress = () => {
     this.setState({
       showCheck: !this.state.showCheck
@@ -86,7 +86,7 @@ class TagItem extends React.PureComponent {
                 >
                   <Ionicons
                     name='ios-information-circle-outline'
-                    size={25} color={globalIconColor}
+                    size={25} color={EStyleSheet.value('$iconColor')}
                   />
                 </TouchableOpacity>
               }

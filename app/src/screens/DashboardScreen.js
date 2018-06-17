@@ -115,7 +115,7 @@ class DashboardScreen extends React.Component {
     console.log('componentDidMount Dashboard');
     //TODO
     //await this.props.getTimes();
-    //this.props.getMyActivities({ page: 1 });
+    this.props.getMyActivities({ page: 1 });
     //this.props.getTags();
   }
 
@@ -173,17 +173,19 @@ class DashboardScreen extends React.Component {
   }
 
   onRefresh = () => {
-    console.log('onRefresh');
-    this.setState({
-      refreshing: true
-    }, () => {
-      this.timeout = setTimeout(() => {
-        clearTimeout(this.timeout);
-        this.setState({
-          refreshing: false
-        });
-      }, 800);
-    });
+    this.props.getMyActivities({ page: 1 });
+
+    // console.log('onRefresh');
+    // this.setState({
+    //   refreshing: true
+    // }, () => {
+    //   this.timeout = setTimeout(() => {
+    //     clearTimeout(this.timeout);
+    //     this.setState({
+    //       refreshing: false
+    //     });
+    //   }, 800);
+    // });
   }
 
 
@@ -222,6 +224,15 @@ class DashboardScreen extends React.Component {
       }
     });
   }
+  onStatsPress = (activity) => {
+    this.props.navigator.push({
+      screen: 'app.StatsScreen',
+      title: 'Statistics',
+      passProps: {
+        activity
+      }
+    });
+  }
   setOfflineMode = () => {
     let subtitle = null;
     if (this.props.network.offlineMode) {
@@ -256,15 +267,15 @@ class DashboardScreen extends React.Component {
     //this.flatListRef.scrollToOffset({ x: 0, y: 0, animated: true });
   }
 
-  // loadMore = () => {
-  //   let { page } = this.props.myActivities;
-  //   const { totalPages } = this.props.myActivities;
-  //   page += 1;
-  //   if (page <= totalPages) {
-  //     //console.log('loadMore', page, totalPages);
-  //     this.props.getMyActivities({ page });
-  //   }
-  // }
+  loadMore = () => {
+    let { page } = this.props.myActivities;
+    const { totalPages } = this.props.myActivities;
+    page += 1;
+    if (page <= totalPages) {
+      //console.log('loadMore', page, totalPages);
+      this.props.getMyActivities({ page });
+    }
+  }
 
   stopActivity = (timeId, activityId, groupId, activityName, sentence, timeDiff, startedAt) => {
 
@@ -411,6 +422,7 @@ class DashboardScreen extends React.Component {
         scrollToOffset={this.scrollToOffset}
         onSharePress={this.onSharePress}
         onTimeHistoryPress={this.onTimeHistoryPress}
+        onStatsPress={this.onStatsPress}
         rand={rand}
         //rand={this.state.refreshing}
       />
@@ -435,12 +447,12 @@ class DashboardScreen extends React.Component {
           //ListFooterComponent={this.renderListFooter}
           refreshControl={
             <RefreshControl
-              refreshing={this.state.refreshing}
+              refreshing={myActivities.refreshing}
               onRefresh={this.onRefresh}
             />
           }
-          //onEndReached={this.loadMore}
-          //onEndReachedThreshold={0.2}
+          onEndReached={this.loadMore}
+          onEndReachedThreshold={0.2}
 
         />
 
